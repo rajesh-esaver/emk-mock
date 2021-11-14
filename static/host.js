@@ -6,6 +6,15 @@ class Question {
     }
 }
 
+// time
+var maxSeconds = 10;    // time in seconds
+var currSeconds = maxSeconds;
+var interval = 1000;
+var isPaused = false;
+var secondsEle = "";
+var timer = "";
+
+// questions
 const options = ["Option A", "Option B", "Option C", "Option D"];
 const questions = []
 questions.push(new Question("Question 1", options))
@@ -20,6 +29,40 @@ var isSocketConnected = false;
 socket.on('connect', function() {
     isSocketConnected = true;
 });
+
+function startTimer() {
+    window.clearTimeout(timer);
+    currSeconds = maxSeconds;
+    timer = setInterval(() => {
+        if(!isPaused) {
+            if(currSeconds >= 0) {
+                secondsEle.innerHTML = parseInt(currSeconds);
+                currSeconds -= 1;
+            } else {
+                // timeout, send event
+                window.clearTimeout(timer);
+            }
+        }
+    }, interval);
+}
+
+function addEventListeners() {
+    secondsEle = document.querySelector(".seconds");
+    // buttons
+    var pauseButton = document.getElementById("pause");
+    var resumeButton = document.getElementById("resume");
+
+    pauseButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        isPaused = true;
+    });
+
+    resumeButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        isPaused = false;
+    });
+
+}
 
 function loadQuestions() {
     var questionsDev = document.getElementById("questions");
@@ -38,6 +81,7 @@ function loadQuestions() {
             console.log(question.question);
             if(isSocketConnected) {
                 socket.send(question);
+                startTimer();
             }
         };
 
@@ -46,5 +90,6 @@ function loadQuestions() {
 }
 
 $(document).ready(function() {
+    addEventListeners();
     loadQuestions();
 });
