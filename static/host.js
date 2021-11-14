@@ -37,6 +37,8 @@ function startTimer() {
         if(!isPaused) {
             if(currSeconds >= 0) {
                 secondsEle.innerHTML = parseInt(currSeconds);
+                // sending the event to the server
+                socket.emit("set_timer", currSeconds);
                 currSeconds -= 1;
             } else {
                 // timeout, send event

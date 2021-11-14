@@ -9,3 +9,7 @@ socket.on('connect', function() {
 socket.on('message', function(msg) {
     console.log(msg);
 });
+
+socket.on('curr_timer', function(msg) {
+    console.log(msg);
+});
