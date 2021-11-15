@@ -1,8 +1,19 @@
 
 class Question {
-    constructor(question, options) {
+    // correctOptionIdx 0,1,2,3
+    constructor(question, options, correctOptionIdx) {
         this.question = question;
         this.options = options;
+        this.correctOptionIdx = correctOptionIdx;
+    }
+}
+
+class AnswerUpdate {
+
+    constructor(isAnsweredCorrectly, correctOptionIdx, amountWon) {
+        this.isAnsweredCorrectly = isAnsweredCorrectly;
+        this.correctOptionIdx = correctOptionIdx;
+        this.amountWon = amountWon;
     }
 }
 
@@ -15,16 +26,18 @@ var secondsEle = "";
 var timer = "";
 var currQuestion = "";
 var isLifeLinesBeingShowed = true;
+var revealAnswerButton;
+var answerUpdateObj;
 var lifeLines = ["Line 1", "Line 2", "Line 3"];
 
 // questions
 const options = ["Option A", "Option B", "Option C", "Option D"];
 const questions = []
-questions.push(new Question("Question 1", options))
-questions.push(new Question("Question 2", options))
-questions.push(new Question("Question 3", options))
-questions.push(new Question("Question 4", options))
-questions.push(new Question("Question 5", options))
+questions.push(new Question("Question 1, from these", options, 0))
+questions.push(new Question("Question 2, what is it", options, 1))
+questions.push(new Question("Question 3, which of it is", options, 2))
+questions.push(new Question("Question 4, pick the one", options, 3))
+questions.push(new Question("Question 5, which one", options, 1))
 
 var socket = io.connect('http://127.0.0.1:5000');
 var isSocketConnected = false;
@@ -36,6 +49,7 @@ socket.on('connect', function() {
 function startTimer() {
     window.clearTimeout(timer);
     currSeconds = maxSeconds;
+    isPaused = false;
     timer = setInterval(() => {
         if(!isPaused) {
             if(currSeconds >= 0) {
@@ -57,22 +71,23 @@ function addEventListeners() {
     var pauseButton = document.getElementById("pause");
     var resumeButton = document.getElementById("resume");
     var lifeLinesButton = document.getElementById("btn_lifelines");
-    var answerButton = document.getElementById("btn_answer");
+    revealAnswerButton = document.getElementById("btn_reveal_answer");
+
+    revealAnswerButton.disabled = true;
 
     pauseButton.addEventListener("click", (e) => {
         e.preventDefault();
-        //isPaused = true;
         pauseTimer()
     });
 
     resumeButton.addEventListener("click", (e) => {
         e.preventDefault();
-        //isPaused = false;
         resumeTimer();
     });
 
-    answerButton.addEventListener("click", (e) => {
-        console.log("answer "+currQuestion.options[0]);
+    revealAnswerButton.addEventListener("click", (e) => {
+        //console.log("answer "+currQuestion.options[0]);
+        revealAnswerToContestant();
     });
 
     lifeLinesButton.addEventListener("click", (e) => {
@@ -100,18 +115,46 @@ function clearOptions() {
 
 }
 
-function optionListener(button, option) {
+function revealAnswerToContestant() {
+    revealAnswerButton.disabled = true;
+    socket.emit("set_answer", answerUpdateObj);
+}
+
+function showCorrectAnswerToHost(selectedOptionIdx) {
+    const option_a = document.getElementById("option_a");
+    const option_b = document.getElementById("option_b");
+    const option_c = document.getElementById("option_c");
+    const option_d = document.getElementById("option_d");
+
+    const txtAnswerStat = document.getElementById("txt_answer_stat");
+
+    const correctOptionIdx = currQuestion.correctOptionIdx;
+
+    answerUpdateObj = new AnswerUpdate(false, correctOptionIdx, 0);
+    if(selectedOptionIdx == correctOptionIdx) {
+        txtAnswerStat.innerHTML = "Right Answer";
+        answerUpdateObj.isAnsweredCorrectly = true;
+    } else {
+        txtAnswerStat.innerHTML = "Wrong Answer";
+        answerUpdateObj.isAnsweredCorrectly = false;
+    }
+}
+
+function optionListener(button, selectedOptionIdx) {
     button.onclick = function() {
         pauseTimer();
-        button.style.background='#ffff';
-        socket.emit("set_locked_answer", option);
+        button.disabled = true;
+        showCorrectAnswerToHost(selectedOptionIdx)
+        socket.emit("set_locked_answer", selectedOptionIdx);
+        revealAnswerButton.disabled = false;
     };
 }
 
 function questionListener(button, question) {
     button.onclick = function() {
         showQuestion(question);
-        button.style.background='#ffff';
+        //button.style.background='#ffff';
+        button.disabled = true;
         if(isSocketConnected) {
             socket.send(question);
             startTimer();
@@ -121,14 +164,27 @@ function questionListener(button, question) {
 
 function showQuestion(question) {
     currQuestion = question;
+    // setting question text
     const txt_question = document.getElementById("txt_question");
+    const txtAnswerStat = document.getElementById("txt_answer_stat");
     txt_question.innerHTML = question.question;
+
+    // hiding answer text and reveal button
+    txtAnswerStat.innerHTML = "";
+    revealAnswerButton.disabled = true;
+
 
     // create dynamic option buttons
     const option_a = document.getElementById("option_a");
     const option_b = document.getElementById("option_b");
     const option_c = document.getElementById("option_c");
     const option_d = document.getElementById("option_d");
+
+    // enabling all the options
+    option_a.disabled = false;
+    option_b.disabled = false;
+    option_c.disabled = false;
+    option_d.disabled = false;
 
     console.log(question.options);
     option_a.innerHTML = question.options[0];
@@ -137,9 +193,9 @@ function showQuestion(question) {
     option_d.innerHTML = question.options[3];
 
     optionListener(option_a, 0);
-    optionListener(option_b, 0);
-    optionListener(option_c, 0);
-    optionListener(option_d, 0);
+    optionListener(option_b, 1);
+    optionListener(option_c, 2);
+    optionListener(option_d, 3);
 }
 
 function loadQuestions() {

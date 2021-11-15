@@ -36,5 +36,17 @@ def set_timer(curr_timer):
     emit("curr_timer", curr_timer, broadcast=True)
 
 
+@socketio.on("set_locked_answer")
+def set_locked_answer(option_idx):
+    print("locked answer: "+str(option_idx))
+    # send("locked_answer", option_idx, broadcast=True)
+
+
+@socketio.on("set_answer")
+def set_answer(answer_obj):
+    print("correct answer: " + str(answer_obj))
+    # send("answer", option_idx, broadcast=True)
+
+
 if __name__ == "__main__":
     socketio.run(app)
