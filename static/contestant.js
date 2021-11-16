@@ -5,6 +5,7 @@ var divTable = "";
 var divOptionA, divOptionB, divOptionC, divOptionD;
 var divQuestion;
 var currLockedOptionIdx = "";
+var spTimer;
 
 socket.on('connect', function() {
     socket.send("client connect");
@@ -14,8 +15,9 @@ socket.on('message', function(msg) {
     console.log(msg);
 });
 
-socket.on('curr_timer', function(msg) {
-    console.log(msg);
+socket.on('curr_timer', function(time) {
+    console.log(time);
+    updateTimer(time);
 });
 
 socket.on('question', function(questionObj) {
@@ -35,6 +37,7 @@ socket.on('locked_answer', function(msg) {
 
 socket.on('answer', function(answerObj) {
     // show answer
+    // correct answer: {'isAnsweredCorrectly': True, 'correctOptionIdx': 1, 'amountWon': 0}
     console.log(answerObj);
     revealAnswer(answerObj);
 });
@@ -96,6 +99,10 @@ function setLockedAnswer(selectedOptionIdx) {
     applyLockedAnswerStyle(selectedDiv);
 }
 
+function updateTimer(time) {
+    spTimer.innerHTML = time;
+}
+
 function applyLockedAnswerStyle(optionDiv) {
     optionDiv.style.backgroundColor = "yellow";
 }
@@ -115,6 +122,8 @@ function readElements() {
     divOptionB = document.getElementById("div_option_b");
     divOptionC = document.getElementById("div_option_c");
     divOptionD = document.getElementById("div_option_d");
+
+    spTimer = document.getElementById("sp_timer");
 }
 
 $(document).ready(function() {

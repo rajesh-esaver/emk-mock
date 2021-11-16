@@ -33,7 +33,7 @@ var lifeLines = ["Line 1", "Line 2", "Line 3"];
 // questions
 const options = ["Option A", "Option B", "Option C", "Option D"];
 const questions = []
-questions.push(new Question("Question 1, from these", options, 0))
+questions.push(new Question("Question 1, some long question to see how it's gonna display", options, 0))
 questions.push(new Question("Question 2, what is it", options, 1))
 questions.push(new Question("Question 3, which of it is", options, 2))
 questions.push(new Question("Question 4, pick the one", options, 3))
