@@ -45,7 +45,7 @@ def set_answer(question_obj):
 @socketio.on("set_locked_answer")
 def set_locked_answer(option_idx):
     print("locked answer: "+str(option_idx))
-    # send("locked_answer", option_idx, broadcast=True)
+    emit("locked_answer", option_idx, broadcast=True)
 
 
 @socketio.on("set_answer")
