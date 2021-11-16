@@ -156,7 +156,8 @@ function questionListener(button, question) {
         //button.style.background='#ffff';
         button.disabled = true;
         if(isSocketConnected) {
-            socket.send(question);
+            //socket.send(question);
+            socket.emit("set_question", question);
             startTimer();
         }
     };
