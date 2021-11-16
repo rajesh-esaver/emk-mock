@@ -19,7 +19,19 @@
 }
 
 .bottom {
-    position:absolute;
+    position: absolute;
     bottom: 20%;
     left: 0;
+}
+
+#div_won_amount {
+    width: 70%;
+    height: 60px;
+    margin: auto;
+    bottom: 20%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: yellow;
 }

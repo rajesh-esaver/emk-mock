@@ -130,7 +130,7 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
 
     const correctOptionIdx = currQuestion.correctOptionIdx;
 
-    answerUpdateObj = new AnswerUpdate(false, correctOptionIdx, 0);
+    answerUpdateObj = new AnswerUpdate(false, correctOptionIdx, 100);
     if(selectedOptionIdx == correctOptionIdx) {
         txtAnswerStat.innerHTML = "Right Answer";
         answerUpdateObj.isAnsweredCorrectly = true;

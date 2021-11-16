@@ -3,9 +3,11 @@
 var socket = io.connect('http://127.0.0.1:5000');
 var divTable = "";
 var divOptionA, divOptionB, divOptionC, divOptionD;
-var divQuestion;
+var divQuestion, divWonAmount;
 var currLockedOptionIdx = "";
-var spTimer;
+var spTimer, spWonAmount;
+const wonAmountShowSeconds = 5000;
+const rightAnswerShowSeconds = 4000;
 
 socket.on('connect', function() {
     socket.send("client connect");
@@ -50,6 +52,14 @@ function showHideTableDiv(show) {
     }
 }
 
+function showHideDivSection(div, show) {
+    if(show) {
+        div.style.display = "block";
+    } else {
+        div.style.display = "none";
+    }
+}
+
 function revealAnswer(answerObj) {
     const optionDiv = getOptionDivByIndex(currLockedOptionIdx);
     if(currLockedOptionIdx != answerObj.correctOptionIdx) {
@@ -63,7 +73,15 @@ function revealAnswer(answerObj) {
         // marking current selected option as right
         applyCorrectAnswerStyle(optionDiv);
         //showHideTableDiv(false);
+        window.setTimeout(showWonAmount, rightAnswerShowSeconds, answerObj.amountWon);
     }
+}
+
+function showWonAmount(amount) {
+    spWonAmount.innerHTML = "Rs. " + String(amount);
+    showHideTableDiv(false);
+    showHideDivSection(divWonAmount, true);
+    window.setTimeout(showHideDivSection, wonAmountShowSeconds, divWonAmount, false);
 }
 
 function showQuestion(question) {
@@ -123,10 +141,14 @@ function readElements() {
     divOptionC = document.getElementById("div_option_c");
     divOptionD = document.getElementById("div_option_d");
 
+    divWonAmount = document.getElementById("div_won_amount");
+
     spTimer = document.getElementById("sp_timer");
+    spWonAmount = document.getElementById("sp_won_amount");
 }
 
 $(document).ready(function() {
     readElements();
     showHideTableDiv(false);
+    showHideDivSection(divWonAmount, false);
 });
