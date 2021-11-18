@@ -14,6 +14,8 @@ var answerUpdateObj;
 var lifeLines = ["Line 1", "Line 2", "Line 3"];
 var divOptionA, divOptionB, divOptionC, divOptionD;
 var divQuestion;
+var tableQuestionsList, btnNextQuestion;
+var lastViewedQuestionIdx = -1;
 
 class Question {
     // correctOptionIdx 0,1,2,3
@@ -92,6 +94,11 @@ function addEventListeners() {
     revealAnswerButton.addEventListener("click", (e) => {
         //console.log("answer "+currQuestion.options[0]);
         revealAnswerToContestant();
+        hideShowNextQuestionOption(true);
+    });
+
+    btnNextQuestion.addEventListener("click", (e) => {
+        loadNextQuestion();
     });
 
     lifeLinesButton.addEventListener("click", (e) => {
@@ -256,7 +263,7 @@ function loadQuestions() {
     var questionsDev = document.getElementById("questions");
     //Append the element in page (in span).
 
-    for(let i=0; i< options.length; i++) {
+    for(let i=0; i< questions.length; i++) {
         let question = questions[i];
 
         var element = document.createElement("button");
@@ -269,6 +276,46 @@ function loadQuestions() {
 
         questionsDev.appendChild(element);
     }
+}
+
+function addQuestionsToTable() {
+    for(let i=questions.length-1; i >= 0; i--) {
+        let question = questions[i];
+        var row = tableQuestionsList.insertRow(-1);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+
+        // question number
+        cell1.innerHTML = i+1;
+        // amount
+        cell2.innerHTML = "100";
+    }
+}
+
+function hideShowNextQuestionOption(show) {
+    if(show) {
+        btnNextQuestion.disabled = false;
+    } else {
+        btnNextQuestion.disabled = true;
+    }
+}
+
+function loadNextQuestion() {
+    lastViewedQuestionIdx += 1;
+    if(lastViewedQuestionIdx >= questions.length) {
+        console.log("all questions read");
+        return;
+    }
+    showQuestion(questions[lastViewedQuestionIdx]);
+    socket.emit("set_question", question);
+
+    // modifying table
+    const currQuestionTableIdx = questions.length - lastViewedQuestionIdx;
+    tableQuestionsList.rows[currQuestionTableIdx].cells[0].innerHTML = '<del>'+String(lastViewedQuestionIdx+1)+"</dev>";
+    const price = tableQuestionsList.rows[currQuestionTableIdx].cells[1].innerHTML;
+    tableQuestionsList.rows[currQuestionTableIdx].cells[1].innerHTML = '<del>'+String(price)+"</dev>";
+    hideShowNextQuestionOption(false);
+    startTimer();
 }
 
 function applyLockedAnswerStyle(optionDiv) {
@@ -291,10 +338,14 @@ function readElements() {
     divOptionC = document.getElementById("div_option_c");
     divOptionD = document.getElementById("div_option_d");
 
+    tableQuestionsList = document.getElementById("table_questions_list");
+    btnNextQuestion = document.getElementById("btn_next_question");
+
 }
 
 $(document).ready(function() {
     readElements();
     addEventListeners();
     loadQuestions();
+    addQuestionsToTable();
 });
