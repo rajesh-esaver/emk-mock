@@ -1,4 +1,20 @@
 
+
+// time
+var maxSeconds = 10;    // time in seconds
+var currSeconds = maxSeconds;
+var interval = 1000;
+var isPaused = false;
+var secondsEle = "";
+var timer = "";
+var currQuestion = "";
+var isLifeLinesBeingShowed = true;
+var revealAnswerButton;
+var answerUpdateObj;
+var lifeLines = ["Line 1", "Line 2", "Line 3"];
+var divOptionA, divOptionB, divOptionC, divOptionD;
+var divQuestion;
+
 class Question {
     // correctOptionIdx 0,1,2,3
     constructor(question, options, correctOptionIdx) {
@@ -17,18 +33,6 @@ class AnswerUpdate {
     }
 }
 
-// time
-var maxSeconds = 10;    // time in seconds
-var currSeconds = maxSeconds;
-var interval = 1000;
-var isPaused = false;
-var secondsEle = "";
-var timer = "";
-var currQuestion = "";
-var isLifeLinesBeingShowed = true;
-var revealAnswerButton;
-var answerUpdateObj;
-var lifeLines = ["Line 1", "Line 2", "Line 3"];
 
 // questions
 const options = ["Option A", "Option B", "Option C", "Option D"];
@@ -134,10 +138,35 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
     if(selectedOptionIdx == correctOptionIdx) {
         txtAnswerStat.innerHTML = "Right Answer";
         answerUpdateObj.isAnsweredCorrectly = true;
+        applyCorrectAnswerStyle(getOptionDivByIndex(selectedOptionIdx));
     } else {
         txtAnswerStat.innerHTML = "Wrong Answer";
         answerUpdateObj.isAnsweredCorrectly = false;
+        applyWrongAnswerStyle(getOptionDivByIndex(selectedOptionIdx));
+        applyCorrectAnswerStyle(getOptionDivByIndex(correctOptionIdx));
     }
+}
+
+function showHideDivSection(div, show) {
+    if(show) {
+        div.style.display = "block";
+    } else {
+        div.style.display = "none";
+    }
+}
+
+function getOptionDivByIndex(optionIdx) {
+    var selectedDiv = "";
+    if(optionIdx == 0) {
+        selectedDiv = divOptionA;
+    } else if(optionIdx == 1) {
+        selectedDiv = divOptionB;
+    } else if(optionIdx == 2) {
+        selectedDiv = divOptionC;
+    } else if(optionIdx == 3) {
+        selectedDiv = divOptionD;
+    }
+    return selectedDiv;
 }
 
 function optionListener(button, selectedOptionIdx) {
@@ -164,6 +193,30 @@ function questionListener(button, question) {
 }
 
 function showQuestion(question) {
+    currQuestion = question;
+    divOptionA.style.backgroundColor = "lightblue";
+    divOptionB.style.backgroundColor = "lightblue";
+    divOptionC.style.backgroundColor = "lightblue";
+    divOptionD.style.backgroundColor = "lightblue";
+
+    divQuestion.innerHTML = question.question;
+    divOptionA.innerHTML = question.options[0];
+    divOptionB.innerHTML = question.options[1];
+    divOptionC.innerHTML = question.options[2];
+    divOptionD.innerHTML = question.options[3];
+
+    // hiding answer text and reveal button
+    const txtAnswerStat = document.getElementById("txt_answer_stat");
+    txtAnswerStat.innerHTML = "";
+    revealAnswerButton.disabled = true;
+
+    optionListener(divOptionA, 0);
+    optionListener(divOptionB, 1);
+    optionListener(divOptionC, 2);
+    optionListener(divOptionD, 3);
+}
+
+function showQuestions(question) {
     currQuestion = question;
     // setting question text
     const txt_question = document.getElementById("txt_question");
@@ -218,7 +271,30 @@ function loadQuestions() {
     }
 }
 
+function applyLockedAnswerStyle(optionDiv) {
+    optionDiv.style.backgroundColor = "yellow";
+}
+
+function applyCorrectAnswerStyle(optionDiv) {
+    optionDiv.style.backgroundColor = "green";
+}
+
+function applyWrongAnswerStyle(optionDiv) {
+    optionDiv.style.backgroundColor = "red";
+}
+
+function readElements() {
+    divTable = document.getElementById("div_table");
+    divQuestion = document.getElementById("div_question");
+    divOptionA = document.getElementById("div_option_a");
+    divOptionB = document.getElementById("div_option_b");
+    divOptionC = document.getElementById("div_option_c");
+    divOptionD = document.getElementById("div_option_d");
+
+}
+
 $(document).ready(function() {
+    readElements();
     addEventListeners();
     loadQuestions();
 });

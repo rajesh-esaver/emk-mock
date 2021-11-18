@@ -6,6 +6,7 @@
     <script type='text/javascript' src="static/lib/socket.io-client/dist/socket.io.js" crossorigin="anonymous"></script>
     <script type='text/javascript' src="static/lib/jquery-3.6.0.min.js"></script>
     <script type='text/javascript' src="static/host.js"></script>
+    <link type="text/css" rel="stylesheet" href="static/css/question.css">
 </head>
 <body>
     <div id="questions"></div><br /><br />
@@ -33,6 +34,34 @@
         <button id="lifeline_1">Line 1</button>
         <button id="lifeline_2">Line 2</button>
         <button id="lifeline_3">Line 3</button>
+    </div>
+    <div id="div_table" class="table bottom" style="width:100%; text-align: center; position: relative, bottom;">
+        <table style="width:70%; margin-left:auto; margin-right:auto;">
+            <tr>
+                <td colspan="2"><div id="div_timer">
+                    <span id="sp_timer" class="sp_timer" style="font-size: 40px;"></span>
+                </div></td>
+            </tr>
+            <tr>
+                <td colspan="2"><div id="div_question" class="question"></div></td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="div_option_a" class="option"></div>
+                </td>
+                <td>
+                    <div id="div_option_b" class="option"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="div_option_c" class="option"></div>
+                </td>
+                <td>
+                    <div id="div_option_d" class="option"></div>
+                </td>
+            </tr>
+        </table>
     </div>
 </body>
 </html>
