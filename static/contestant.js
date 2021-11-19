@@ -7,7 +7,9 @@ var divQuestion, divWonAmount;
 var currLockedOptionIdx = "";
 var spTimer, spWonAmount;
 const wonAmountShowSeconds = 5000;
+const wrongAnswerShowSeconds = 4000;
 const rightAnswerShowSeconds = 4000;
+const showAnswerAfterSeconds = 4000;
 
 socket.on('connect', function() {
     socket.send("client connect");
@@ -68,12 +70,14 @@ function revealAnswer(answerObj) {
         applyWrongAnswerStyle(optionDiv);
         // marking correct option as answer
         applyCorrectAnswerStyle(getOptionDivByIndex(answerObj.correctOptionIdx));
+        // show amount won
+        window.setTimeout(showWonAmount, showAnswerAfterSeconds, answerObj.amountWon);
     } else {
         // right answer, show won amount
         // marking current selected option as right
         applyCorrectAnswerStyle(optionDiv);
         //showHideTableDiv(false);
-        window.setTimeout(showWonAmount, rightAnswerShowSeconds, answerObj.amountWon);
+        window.setTimeout(showWonAmount, showAnswerAfterSeconds, answerObj.amountWon);
     }
 }
 
@@ -95,6 +99,9 @@ function showQuestion(question) {
     divOptionB.innerHTML = question.options[1];
     divOptionC.innerHTML = question.options[2];
     divOptionD.innerHTML = question.options[3];
+
+    // marking time empty initially
+    updateTimer("");
 }
 
 function getOptionDivByIndex(optionIdx) {

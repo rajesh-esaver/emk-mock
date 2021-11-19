@@ -19,10 +19,14 @@ var lastViewedQuestionIdx = -1;
 
 class Question {
     // correctOptionIdx 0,1,2,3
-    constructor(question, options, correctOptionIdx) {
+    constructor(question, options, correctOptionIdx, winAmount, amountWonForWrong, trivia, maxSeconds) {
         this.question = question;
         this.options = options;
         this.correctOptionIdx = correctOptionIdx;
+        this.winAmount = winAmount;
+        this.amountWonForWrong = amountWonForWrong;
+        this.trivia = trivia;
+        this.maxSeconds = maxSeconds;
     }
 }
 
@@ -39,11 +43,11 @@ class AnswerUpdate {
 // questions
 const options = ["Option A", "Option B", "Option C", "Option D"];
 const questions = []
-questions.push(new Question("Question 1, some long question to see how it's gonna display", options, 0))
-questions.push(new Question("Question 2, what is it", options, 1))
-questions.push(new Question("Question 3, which of it is", options, 2))
-questions.push(new Question("Question 4, pick the one", options, 3))
-questions.push(new Question("Question 5, which one", options, 1))
+questions.push(new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10))
+questions.push(new Question("Question 2, what is it", options, 1, 10, 0, "right is 2", 10))
+questions.push(new Question("Question 3, which of it is", options, 2, 100, 0, "answer 3", 15))
+questions.push(new Question("Question 4, pick the one", options, 3, 1000, 0, "correct 4", 15))
+questions.push(new Question("Question 5, which one", options, 1, 2000, 1000, "it's 5", 0))
 
 var socket = io.connect('http://127.0.0.1:5000');
 var isSocketConnected = false;
@@ -52,14 +56,19 @@ socket.on('connect', function() {
     isSocketConnected = true;
 });
 
-function startTimer() {
+function startTimer(currMaxSeconds) {
     window.clearTimeout(timer);
-    currSeconds = maxSeconds;
+    //currSeconds = maxSeconds;
+    currSeconds = currMaxSeconds;
+    if(currMaxSeconds == 0) {
+        return;
+    }
     isPaused = false;
     timer = setInterval(() => {
         if(!isPaused) {
             if(currSeconds >= 0) {
-                secondsEle.innerHTML = parseInt(currSeconds);
+                //secondsEle.innerHTML = parseInt(currSeconds);
+                updateTimer(currSeconds);
                 //spTimer.innerHTML = parseInt(currSeconds);
                 // sending the event to the server
                 socket.emit("set_timer", currSeconds);
@@ -123,6 +132,10 @@ function resumeTimer() {
     isPaused = false;
 }
 
+function updateTimer(time) {
+    secondsEle.innerHTML = time;
+}
+
 function clearOptions() {
 
 }
@@ -144,16 +157,18 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
 
     const correctOptionIdx = currQuestion.correctOptionIdx;
 
-    txtTrivia.innerHTML = "Information about the answer";
-    answerUpdateObj = new AnswerUpdate(false, correctOptionIdx, 100);
+    // showing answer trivia
+    txtTrivia.innerHTML = currQuestion.trivia;
+    answerUpdateObj = new AnswerUpdate(false, correctOptionIdx, currQuestion.winAmount);
 
     if(selectedOptionIdx == correctOptionIdx) {
-        txtAnswerStat.innerHTML = "Right Answer";
+        txtAnswerStat.innerHTML = "Right Answer, won - Rs."+String(currQuestion.winAmount);
         answerUpdateObj.isAnsweredCorrectly = true;
         applyCorrectAnswerStyle(getOptionDivByIndex(selectedOptionIdx));
     } else {
-        txtAnswerStat.innerHTML = "Wrong Answer";
+        txtAnswerStat.innerHTML = "Right Answer, won - Rs."+String(currQuestion.amountWonForWrong);
         answerUpdateObj.isAnsweredCorrectly = false;
+        answerUpdateObj.amountWon = currQuestion.amountWonForWrong;
         applyWrongAnswerStyle(getOptionDivByIndex(selectedOptionIdx));
         applyCorrectAnswerStyle(getOptionDivByIndex(correctOptionIdx));
     }
@@ -199,7 +214,7 @@ function questionListener(button, question) {
         if(isSocketConnected) {
             //socket.send(question);
             socket.emit("set_question", question);
-            startTimer();
+            startTimer(question.maxSeconds);
         }
     };
 }
@@ -316,13 +331,16 @@ function loadNextQuestion() {
     socket.emit("set_question", currQuestion);
     showHideDivSection(divAnswer, false);
 
+    // marking time empty initially
+    updateTimer("");
+
     // modifying table
     const currQuestionTableIdx = questions.length - lastViewedQuestionIdx;
     tableQuestionsList.rows[currQuestionTableIdx].cells[0].innerHTML = '<del>'+String(lastViewedQuestionIdx+1)+"</dev>";
     const price = tableQuestionsList.rows[currQuestionTableIdx].cells[1].innerHTML;
     tableQuestionsList.rows[currQuestionTableIdx].cells[1].innerHTML = '<del>'+String(price)+"</dev>";
     hideShowNextQuestionOption(false);
-    startTimer();
+    startTimer(currQuestion.maxSeconds);
 }
 
 function applyLockedAnswerStyle(optionDiv) {
