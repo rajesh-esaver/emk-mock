@@ -13,7 +13,7 @@ var revealAnswerButton;
 var answerUpdateObj;
 var lifeLines = ["Line 1", "Line 2", "Line 3"];
 var divOptionA, divOptionB, divOptionC, divOptionD;
-var divQuestion;
+var divQuestion, divAnswer;
 var tableQuestionsList, btnNextQuestion;
 var lastViewedQuestionIdx = -1;
 
@@ -60,6 +60,7 @@ function startTimer() {
         if(!isPaused) {
             if(currSeconds >= 0) {
                 secondsEle.innerHTML = parseInt(currSeconds);
+                spTimer.innerHTML = parseInt(currSeconds);
                 // sending the event to the server
                 socket.emit("set_timer", currSeconds);
                 currSeconds -= 1;
@@ -138,10 +139,14 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
     const option_d = document.getElementById("option_d");
 
     const txtAnswerStat = document.getElementById("txt_answer_stat");
+    const txtTrivia = document.getElementById("txt_trivia");
+    showHideDivSection(divAnswer, true);
 
     const correctOptionIdx = currQuestion.correctOptionIdx;
 
+    txtTrivia.innerHTML = "Information about the answer";
     answerUpdateObj = new AnswerUpdate(false, correctOptionIdx, 100);
+
     if(selectedOptionIdx == correctOptionIdx) {
         txtAnswerStat.innerHTML = "Right Answer";
         answerUpdateObj.isAnsweredCorrectly = true;
@@ -306,8 +311,10 @@ function loadNextQuestion() {
         console.log("all questions read");
         return;
     }
-    showQuestion(questions[lastViewedQuestionIdx]);
-    socket.emit("set_question", question);
+    currQuestion = questions[lastViewedQuestionIdx];
+    showQuestion(currQuestion);
+    socket.emit("set_question", currQuestion);
+    showHideDivSection(divAnswer, false);
 
     // modifying table
     const currQuestionTableIdx = questions.length - lastViewedQuestionIdx;
@@ -338,6 +345,8 @@ function readElements() {
     divOptionC = document.getElementById("div_option_c");
     divOptionD = document.getElementById("div_option_d");
 
+    divAnswer = document.getElementById("div_answer");
+    spTimer = document.getElementById("sp_timer");
     tableQuestionsList = document.getElementById("table_questions_list");
     btnNextQuestion = document.getElementById("btn_next_question");
 
@@ -346,6 +355,7 @@ function readElements() {
 $(document).ready(function() {
     readElements();
     addEventListeners();
-    loadQuestions();
+    //loadQuestions();
     addQuestionsToTable();
+    showHideDivSection(divAnswer, false);
 });

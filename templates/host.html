@@ -9,18 +9,6 @@
     <link type="text/css" rel="stylesheet" href="static/css/host.css">
 </head>
 <body>
-    <div id="questions"></div><br /><br />
-    <div id="question" style="border-style: solid; border-width: 1px;">
-        <span id="txt_answer_stat"></span>
-        <button id="btn_reveal_answer">Reveal Answer</button>
-        <br />
-        <span id="txt_question"></span>
-        <br />
-        <button id="option_a"></button>
-        <button id="option_b"></button>
-        <button id="option_c"></button>
-        <button id="option_d"></button>
-    </div><br />
     <div>
         <h1>
             <span class="seconds">00</span>
@@ -36,12 +24,19 @@
         <button id="lifeline_3">Line 3</button>
     </div>
     <div style="width: 100%;">
+        <div id="div_answer" style="border-style: solid; border-width: 1px; text-align: center;">
+            <span id="txt_answer_stat"></span><br/>
+            <span id="txt_trivia"></span><br/>
+            <button id="btn_reveal_answer">Reveal Answer</button>
+        </div>
         <div id="div_table" class="table bottom" style="width:70%;float: left;">
             <table style="width:70%; margin-left:auto; margin-right:auto;">
             <tr>
-                <td colspan="2"><div id="div_timer">
+                <td colspan="2">
+                    <div id="div_timer" style="text-align: center;">
                     <span id="sp_timer" class="sp_timer" style="font-size: 40px;"></span>
-                </div></td>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td colspan="2"><div id="div_question" class="question"></div></td>
