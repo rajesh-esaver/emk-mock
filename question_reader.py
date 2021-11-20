@@ -2,6 +2,9 @@
 # Seconds Limit,Trivia,Safe Level
 import enum
 import csv
+import os
+from os import listdir
+from os.path import isfile, join
 
 
 class QuestionSet:
@@ -53,6 +56,15 @@ class OptionsEnum(enum.Enum):
     B = 1
     C = 2
     D = 3
+
+
+def get_file_names():
+    cwd = os.getcwd()
+    cwd += "/questions_set"
+    full_file_names = [os.path.join(cwd, f) for f in os.listdir(cwd) if os.path.isfile(os.path.join(cwd, f))]
+    file_names = [os.path.basename(full_file_name) for full_file_name in full_file_names]
+    # print(file_names)
+    return file_names
 
 
 def get_option_idx_by_name(option_name):

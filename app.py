@@ -64,7 +64,6 @@ def set_answer(answer_obj):
 
 
 if __name__ == "__main__":
-    # question_reader.read_question_set_file("template.csv")
-    # question_reader.read_question_set_file("template.txt")
+    question_reader.get_file_names()
     socketio.run(app)
 
