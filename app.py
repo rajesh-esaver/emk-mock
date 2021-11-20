@@ -19,6 +19,11 @@ def get_host():
     return render_template("host.html")
 
 
+@app.route("/home_start")
+def get_home_start():
+    return render_template("home_start.html")
+
+
 @socketio.on("message")
 def handle_message(msg):
     print("message "+str(msg))
@@ -26,6 +31,14 @@ def handle_message(msg):
     # send(msg, broadcast=True)
     # data = {"q": "one", "0":4}
     send(data, broadcast=True)
+
+
+@socketio.on('get_file_names')
+def get_file_names():
+    file_names = question_reader.get_file_names()
+    print("Filenames: "+str(file_names))
+    # sending back the questions list
+    emit("get_file_names", file_names)
 
 
 @socketio.on('get_question_set')
@@ -64,6 +77,6 @@ def set_answer(answer_obj):
 
 
 if __name__ == "__main__":
-    question_reader.get_file_names()
+    # question_reader.get_file_names()
     socketio.run(app)
 
