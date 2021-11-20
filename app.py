@@ -43,7 +43,7 @@ def get_file_names():
 
 @socketio.on('get_question_set')
 def get_question_set(file_name):
-    questions_set = question_reader.read_question_set_file("template.csv")
+    questions_set = question_reader.read_question_set_file(file_name)
     print("No of questions: "+str(len(questions_set)))
     # sending back the questions list
     emit("get_question_set", questions_set)

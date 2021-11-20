@@ -389,11 +389,20 @@ function readElements() {
 
 }
 
+function read_file_name_and_load() {
+    const params = new URLSearchParams(window.location.search)
+    file_name = params.get("file_name");
+    if(file_name == null) {
+        file_name = "template.csv";
+    }
+    socket.emit("get_question_set", file_name);
+}
+
 $(document).ready(function() {
     readElements();
     addEventListeners();
+    read_file_name_and_load();
     //loadQuestions();
-    socket.emit("get_question_set", "user_name");
     //addQuestionsToTable();
     showHideDivSection(divAnswer, false);
 });
