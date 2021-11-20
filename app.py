@@ -28,6 +28,14 @@ def handle_message(msg):
     send(data, broadcast=True)
 
 
+@socketio.on('get_question_set')
+def get_question_set(file_name):
+    questions_set = question_reader.read_question_set_file("template.csv")
+    print("No of questions: "+str(len(questions_set)))
+    # sending back the questions list
+    emit("get_question_set", questions_set)
+
+
 @socketio.on('set_timer')
 def set_timer(curr_timer):
     # print(curr_timer)
@@ -56,7 +64,7 @@ def set_answer(answer_obj):
 
 
 if __name__ == "__main__":
-    question_reader.read_question_set_file("template.csv")
+    # question_reader.read_question_set_file("template.csv")
     # question_reader.read_question_set_file("template.txt")
     socketio.run(app)
 

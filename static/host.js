@@ -43,11 +43,13 @@ class AnswerUpdate {
 // questions
 const options = ["Option A", "Option B", "Option C", "Option D"];
 const questions = []
+/*
 questions.push(new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10))
 questions.push(new Question("Question 2, what is it", options, 1, 10, 0, "right is 2", 10))
 questions.push(new Question("Question 3, which of it is", options, 2, 100, 0, "answer 3", 15))
 questions.push(new Question("Question 4, pick the one", options, 3, 1000, 0, "correct 4", 15))
 questions.push(new Question("Question 5, which one", options, 1, 2000, 1000, "it's 5", 0))
+*/
 
 var socket = io.connect('http://127.0.0.1:5000');
 var isSocketConnected = false;
@@ -56,11 +58,28 @@ socket.on('connect', function() {
     isSocketConnected = true;
 });
 
+socket.on('get_question_set', function(questions_set) {
+    //console.log(questions_set);
+    for(let i=0; i < questions_set.length; i++) {
+        const question_set = questions_set[i];
+        question = new Question(question_set.question, question_set.options,
+            question_set.correctOptionIdx,
+            question_set.winAmount,
+            question_set.amountWonForWrong,
+            question_set.trivia,
+            question_set.maxSeconds)
+        console.log(question);
+        questions.push(question);
+    }
+    addQuestionsToTable();
+});
+
 function startTimer(currMaxSeconds) {
     window.clearTimeout(timer);
     //currSeconds = maxSeconds;
     currSeconds = currMaxSeconds;
     if(currMaxSeconds == 0) {
+        updateTimer("No Time Limit");
         return;
     }
     isPaused = false;
@@ -166,7 +185,7 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
         answerUpdateObj.isAnsweredCorrectly = true;
         applyCorrectAnswerStyle(getOptionDivByIndex(selectedOptionIdx));
     } else {
-        txtAnswerStat.innerHTML = "Right Answer, won - Rs."+String(currQuestion.amountWonForWrong);
+        txtAnswerStat.innerHTML = "Wrong Answer, won - Rs."+String(currQuestion.amountWonForWrong);
         answerUpdateObj.isAnsweredCorrectly = false;
         answerUpdateObj.amountWon = currQuestion.amountWonForWrong;
         applyWrongAnswerStyle(getOptionDivByIndex(selectedOptionIdx));
@@ -308,7 +327,7 @@ function addQuestionsToTable() {
         // question number
         cell1.innerHTML = i+1;
         // amount
-        cell2.innerHTML = "100";
+        cell2.innerHTML = "Rs. " +question.winAmount;
     }
 }
 
@@ -374,6 +393,7 @@ $(document).ready(function() {
     readElements();
     addEventListeners();
     //loadQuestions();
-    addQuestionsToTable();
+    socket.emit("get_question_set", "user_name");
+    //addQuestionsToTable();
     showHideDivSection(divAnswer, false);
 });
