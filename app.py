@@ -56,5 +56,7 @@ def set_answer(answer_obj):
 
 
 if __name__ == "__main__":
-    socketio.run(app)
     question_reader.read_question_set_file("template.csv")
+    # question_reader.read_question_set_file("template.txt")
+    socketio.run(app)
+

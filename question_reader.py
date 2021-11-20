@@ -24,13 +24,14 @@ class QuestionSet:
 
 def read_question_set_file(file_name):
     full_path = "questions_set/" + file_name
-    print(full_path)
-    csv_reader = csv.DictReader(full_path)
-    line_count = 0
-    for row in csv_reader:
-        if line_count == 0:
-            print(f'Column names are {", ".join(row)}')
+    # print(full_path)
+    with open(full_path, mode='r', encoding='utf-16') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                print(f'Column names are {", ".join(row)}')
+                line_count += 1
+            else:
+                print(row)
             line_count += 1
-        else:
-            print(row)
-        line_count += 1
