@@ -103,6 +103,17 @@ function showQuestion(question) {
     divOptionC.innerHTML = question.options[2];
     divOptionD.innerHTML = question.options[3];*/
 
+    // prefixes = ['-o-', '-ms-', '-moz-', '-webkit-'];
+    divOptionA.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
+    divOptionB.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
+    divOptionC.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
+    divOptionD.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
+
+    divOptionA.style.color = "white";
+    divOptionB.style.color = "white";
+    divOptionC.style.color = "white";
+    divOptionD.style.color = "white";
+
     pOptionA.innerHTML = question.options[0];
     pOptionB.innerHTML = question.options[1];
     pOptionC.innerHTML = question.options[2];
@@ -137,15 +148,21 @@ function updateTimer(time) {
 }
 
 function applyLockedAnswerStyle(optionDiv) {
-    optionDiv.style.backgroundColor = "yellow";
+    //optionDiv.style.backgroundColor = "yellow";
+    optionDiv.style.background = "yellow";
+    optionDiv.style.color = "black";
 }
 
 function applyCorrectAnswerStyle(optionDiv) {
-    optionDiv.style.backgroundColor = "green";
+    //optionDiv.style.backgroundColor = "green";
+    optionDiv.style.background = "green";
+    optionDiv.style.color = "black";
 }
 
 function applyWrongAnswerStyle(optionDiv) {
-    optionDiv.style.backgroundColor = "red";
+    //optionDiv.style.backgroundColor = "red";
+    optionDiv.style.background = "red";
+    optionDiv.style.color = "black";
 }
 
 function readElements() {

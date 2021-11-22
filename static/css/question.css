@@ -2,22 +2,34 @@
 
 .option {
     background-color: lightblue;
+    background-image: linear-gradient(#232366 15%, #273296 90%, #232366);
     border-radius: 10% / 50%;
     height: 60px;
     text-align: center;
     font-size: 1vw;
     line-height: normal;
     padding: 1px 15px 1px 15px;
+
+    color: white;
+    border-style: solid;
+    border-color: orange;
+    border-width: 2px;
 }
 
 .question {
-    background-color: lightblue;
+    background-color: #273296;
+    background-image: linear-gradient(#232366 15%, #273296 90%, #232366);
     border-radius: 10% / 50%;
     min-height: 80px;
     text-align: center;
     line-height: 120%;
     padding: 10px 15px 10px 15px;
     font-size: 1.5vw;
+
+    color: white;
+    border-style: solid;
+    border-color: orange;
+    border-width: 2px;
 }
 
 .bottom {
