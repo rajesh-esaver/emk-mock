@@ -12,8 +12,9 @@ var isLifeLinesBeingShowed = true;
 var revealAnswerButton;
 var answerUpdateObj;
 var lifeLines = ["Line 1", "Line 2", "Line 3"];
+var pOptionA, pOptionB, pOptionC, pOptionD;
 var divOptionA, divOptionB, divOptionC, divOptionD;
-var divQuestion, divAnswer;
+var divQuestion, divAnswer, pQuestion;
 var tableQuestionsList, btnNextQuestion;
 var lastViewedQuestionIdx = -1;
 
@@ -245,11 +246,17 @@ function showQuestion(question) {
     divOptionC.style.backgroundColor = "lightblue";
     divOptionD.style.backgroundColor = "lightblue";
 
-    divQuestion.innerHTML = question.question;
+    /*divQuestion.innerHTML = question.question;
     divOptionA.innerHTML = question.options[0];
     divOptionB.innerHTML = question.options[1];
     divOptionC.innerHTML = question.options[2];
-    divOptionD.innerHTML = question.options[3];
+    divOptionD.innerHTML = question.options[3];*/
+
+    pQuestion.innerHTML = question.question;
+    pOptionA.innerHTML = question.options[0];
+    pOptionB.innerHTML = question.options[1];
+    pOptionC.innerHTML = question.options[2];
+    pOptionD.innerHTML = question.options[3];
 
     // hiding answer text and reveal button
     const txtAnswerStat = document.getElementById("txt_answer_stat");
@@ -377,10 +384,17 @@ function applyWrongAnswerStyle(optionDiv) {
 function readElements() {
     divTable = document.getElementById("div_table");
     divQuestion = document.getElementById("div_question");
+    pQuestion = document.getElementById("p_question");
+
     divOptionA = document.getElementById("div_option_a");
     divOptionB = document.getElementById("div_option_b");
     divOptionC = document.getElementById("div_option_c");
     divOptionD = document.getElementById("div_option_d");
+
+    pOptionA = document.getElementById("p_option_a");
+    pOptionB = document.getElementById("p_option_b");
+    pOptionC = document.getElementById("p_option_c");
+    pOptionD = document.getElementById("p_option_d");
 
     divAnswer = document.getElementById("div_answer");
     spTimer = document.getElementById("sp_timer");

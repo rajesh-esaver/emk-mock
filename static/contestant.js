@@ -152,6 +152,7 @@ function readElements() {
     divTable = document.getElementById("div_table");
     divQuestion = document.getElementById("div_question");
     pQuestion = document.getElementById("p_question");
+
     divOptionA = document.getElementById("div_option_a");
     divOptionB = document.getElementById("div_option_b");
     divOptionC = document.getElementById("div_option_c");

@@ -30,7 +30,7 @@
             <button id="btn_reveal_answer">Reveal Answer</button>
         </div>
         <div id="div_table" class="table bottom" style="width:70%;float: left;">
-            <table style="width:70%; margin-left:auto; margin-right:auto;">
+            <table style="width:70%; margin-left:auto; margin-right:auto; table-layout:fixed;">
             <tr>
                 <td colspan="2">
                     <div id="div_timer" style="text-align: center;">
@@ -39,22 +39,32 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><div id="div_question" class="question"></div></td>
+                <td colspan="2"><div id="div_question" class="question">
+                    <p id="p_question"></p>
+                </div></td>
             </tr>
             <tr>
                 <td>
-                    <div id="div_option_a" class="option"></div>
+                    <div id="div_option_a" class="option">
+                        <p id="p_option_a"></p>
+                    </div>
                 </td>
                 <td>
-                    <div id="div_option_b" class="option"></div>
+                    <div id="div_option_b" class="option">
+                        <p id="p_option_b"></p>
+                    </div>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <div id="div_option_c" class="option"></div>
+                    <div id="div_option_c" class="option">
+                        <p id="p_option_c"></p>
+                    </div>
                 </td>
                 <td>
-                    <div id="div_option_d" class="option"></div>
+                    <div id="div_option_d" class="option">
+                        <p id="p_option_d"></p>
+                    </div>
                 </td>
             </tr>
         </table>
