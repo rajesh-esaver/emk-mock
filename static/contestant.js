@@ -3,6 +3,7 @@ var url = 'http://192.168.0.108:5000';
 var socket = io.connect(url);
 var divTable = "";
 var divOptionA, divOptionB, divOptionC, divOptionD;
+var pOptionA, pOptionB, pOptionC, pOptionD;
 var divQuestion, divWonAmount, pQuestion;
 var currLockedOptionIdx = "";
 var spTimer, spWonAmount;
@@ -97,10 +98,15 @@ function showQuestion(question) {
     //divQuestion.innerHTML = question.question;
     pQuestion.innerHTML = question.question;
 
-    divOptionA.innerHTML = question.options[0];
+    /*divOptionA.innerHTML = question.options[0];
     divOptionB.innerHTML = question.options[1];
     divOptionC.innerHTML = question.options[2];
-    divOptionD.innerHTML = question.options[3];
+    divOptionD.innerHTML = question.options[3];*/
+
+    pOptionA.innerHTML = question.options[0];
+    pOptionB.innerHTML = question.options[1];
+    pOptionC.innerHTML = question.options[2];
+    pOptionD.innerHTML = question.options[3];
 
     // marking time empty initially
     updateTimer("");
@@ -150,6 +156,11 @@ function readElements() {
     divOptionB = document.getElementById("div_option_b");
     divOptionC = document.getElementById("div_option_c");
     divOptionD = document.getElementById("div_option_d");
+
+    pOptionA = document.getElementById("p_option_a");
+    pOptionB = document.getElementById("p_option_b");
+    pOptionC = document.getElementById("p_option_c");
+    pOptionD = document.getElementById("p_option_d");
 
     divWonAmount = document.getElementById("div_won_amount");
 

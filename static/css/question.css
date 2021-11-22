@@ -3,10 +3,11 @@
 .option {
     background-color: lightblue;
     border-radius: 10% / 50%;
-    height: 50px;
+    height: 60px;
     text-align: center;
-    min-height: 50px;
-    font-size: 20px;
+    font-size: 1vw;
+    line-height: normal;
+    padding: 1px 15px 1px 15px;
 }
 
 .question {
@@ -15,7 +16,7 @@
     min-height: 80px;
     text-align: center;
     line-height: 120%;
-    padding: 10px;
+    padding: 10px 15px 10px 15px;
     font-size: 1.5vw;
 }
 
