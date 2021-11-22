@@ -3,7 +3,7 @@ var url = 'http://192.168.0.108:5000';
 var socket = io.connect(url);
 var divTable = "";
 var divOptionA, divOptionB, divOptionC, divOptionD;
-var divQuestion, divWonAmount;
+var divQuestion, divWonAmount, pQuestion;
 var currLockedOptionIdx = "";
 var spTimer, spWonAmount;
 const wonAmountShowSeconds = 5000;
@@ -94,7 +94,9 @@ function showQuestion(question) {
     divOptionC.style.backgroundColor = "lightblue";
     divOptionD.style.backgroundColor = "lightblue";
 
-    divQuestion.innerHTML = question.question;
+    //divQuestion.innerHTML = question.question;
+    pQuestion.innerHTML = question.question;
+
     divOptionA.innerHTML = question.options[0];
     divOptionB.innerHTML = question.options[1];
     divOptionC.innerHTML = question.options[2];
@@ -143,6 +145,7 @@ function applyWrongAnswerStyle(optionDiv) {
 function readElements() {
     divTable = document.getElementById("div_table");
     divQuestion = document.getElementById("div_question");
+    pQuestion = document.getElementById("p_question");
     divOptionA = document.getElementById("div_option_a");
     divOptionB = document.getElementById("div_option_b");
     divOptionC = document.getElementById("div_option_c");
