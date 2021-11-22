@@ -1,5 +1,5 @@
 
-
+var url = 'http://192.168.0.108:5000';
 // time
 var maxSeconds = 10;    // time in seconds
 var currSeconds = maxSeconds;
@@ -51,7 +51,7 @@ questions.push(new Question("Question 4, pick the one", options, 3, 1000, 0, "co
 questions.push(new Question("Question 5, which one", options, 1, 2000, 1000, "it's 5", 0))
 */
 
-var socket = io.connect('http://127.0.0.1:5000');
+var socket = io.connect(url);
 var isSocketConnected = false;
 
 socket.on('connect', function() {
