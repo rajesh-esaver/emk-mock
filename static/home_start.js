@@ -1,4 +1,6 @@
-var url = 'http://127.0.0.1:5000';
+//var url = 'http://127.0.0.1:5000';
+//var url = 'http://192.168.0.108';
+var url = 'http://192.168.0.108:5000';
 var socket = io.connect(url);
 var isSocketConnected = false;
 var btnLoadQuestions, tableNames;

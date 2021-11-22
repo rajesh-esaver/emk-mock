@@ -1,12 +1,19 @@
 from flask import Flask
 from flask_socketio import SocketIO, send, emit
 from flask import render_template
+from flask_ngrok import run_with_ngrok
+from pyngrok import ngrok
+from flask_cors import CORS
+
 
 import question_reader
 
 app = Flask(__name__)
+
 app.config['SECRET_KEY'] = 'secret'
 socketio = SocketIO(app)
+# CORS(app)
+# run_with_ngrok(app)
 
 
 @app.route("/")
@@ -78,5 +85,10 @@ def set_answer(answer_obj):
 
 if __name__ == "__main__":
     # question_reader.get_file_names()
-    socketio.run(app)
+    # map_url = ngrok.connect(5000)
+    # print(map_url)
+    # to run as sudo, sudo venv/bin/python3.7 app.py
+    # if we run at host "0.0.0.0" then we can access the server using it's ip
+    # from other machines which are in the same network
+    socketio.run(app, host="0.0.0.0", port=5000)
 
