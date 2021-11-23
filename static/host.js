@@ -41,6 +41,23 @@ class AnswerUpdate {
     }
 }
 
+class LifeLine {
+
+    constructor(isUsed, name) {
+        this.isUsed = isUsed;
+        this.name = name;
+    }
+}
+
+class LifeLinesInfo {
+
+    // lifeLines - array of LifeLine objects
+    constructor(lifeLines, showLifeLines) {
+        this.life_lines = lifeLines;
+        this.showLifeLines = showLifeLines;
+    }
+}
+
 
 // questions
 const options = ["Option A", "Option B", "Option C", "Option D"];

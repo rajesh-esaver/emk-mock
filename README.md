@@ -24,7 +24,23 @@ set_answer: to receive the current answer(right/wrong)<br>
 {is_answered_correctly: False, correct_option: A, amount_won: 100}
 
 set_lifelines: to receive the list of lifelines <br>
-{[line1: False, line2: True, line3: True]}
+{
+  "lines": [
+    {
+      "used": "False",
+      "name": "Life Line 1"
+    },
+    {
+      "used": "True",
+      "name": "Life Line 2"
+    },
+    {
+      "used": "True",
+      "name": "Life Line 3"
+    }
+  ],
+  "show_life_lines": "False"
+}
 
 
 
