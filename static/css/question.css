@@ -5,10 +5,10 @@
     background-image: linear-gradient(#232366 15%, #273296 90%, #232366);
     border-radius: 10% / 50%;
     height: 60px;
-    text-align: center;
+    text-align: left;
     font-size: 1vw;
     line-height: normal;
-    padding: 1px 15px 1px 15px;
+    padding: 1px 15px 1px 30px;
 
     color: white;
     border-style: solid;

@@ -138,10 +138,10 @@ function showQuestion(question) {
     divOptionC.style.color = "white";
     divOptionD.style.color = "white";
 
-    pOptionA.innerHTML = question.options[0];
-    pOptionB.innerHTML = question.options[1];
-    pOptionC.innerHTML = question.options[2];
-    pOptionD.innerHTML = question.options[3];
+    pOptionA.innerHTML = "A. " + question.options[0];
+    pOptionB.innerHTML = "B. " + question.options[1];
+    pOptionC.innerHTML = "C. " + question.options[2];
+    pOptionD.innerHTML = "D. " + question.options[3];
 
     // marking time empty initially
     updateTimer("");
@@ -153,15 +153,16 @@ function showLifeLines(lifelinesObj) {
         return;
     }
     showHideDivSection(divLifelines, true);
+    const lineHideOpacity = 0.3;
     if(lifelinesObj.lifelines[0].isUsed) {
-        imgLifeline1.style.opacity = 0.5;
+        imgLifeline1.style.opacity = lineHideOpacity;
     }
     if(lifelinesObj.lifelines[1].isUsed) {
         // it's 50:50, remove 2 options
-        imgLifeline2.style.opacity = 0.5;
+        imgLifeline2.style.opacity = lineHideOpacity;
     }
     if(lifelinesObj.lifelines[2].isUsed) {
-        imgLifeline3.style.opacity = 0.5;
+        imgLifeline3.style.opacity = lineHideOpacity;
     }
 }
 
@@ -251,6 +252,6 @@ function readElements() {
 $(document).ready(function() {
     readElements();
     showHideTableDiv(false);
-    //showHideDivSection(divLifelines, false);
+    showHideDivSection(divLifelines, false);
     showHideDivSection(divWonAmount, false);
 });
