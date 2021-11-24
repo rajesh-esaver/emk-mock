@@ -89,6 +89,12 @@ def set_lifelines(lifelines_obj):
     emit("lifelines", lifelines_obj, broadcast=True)
 
 
+@socketio.on("set_5050")
+def set_5050(removed_indexes):
+    print("removed_indexes: " + str(removed_indexes))
+    emit("lifeline_5050", removed_indexes, broadcast=True)
+
+
 if __name__ == "__main__":
     # question_reader.get_file_names()
     # map_url = ngrok.connect(5000)

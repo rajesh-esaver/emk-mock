@@ -388,6 +388,8 @@ function activate5050() {
     removedIndexes.push(tmpOptions[index2]);
     console.log(removedIndexes);
     // send it to client
+    socket.emit("set_5050", removedIndexes);
+    // remove for host
     for(let i=0; i<removedIndexes.length; i++) {
         let indexToRemove = removedIndexes[i];
         getOptionEleByIndex(indexToRemove).innerHTML = "";

@@ -57,6 +57,13 @@ socket.on('lifelines', function(lifelinesObj) {
     showLifeLines(lifelinesObj);
 });
 
+socket.on('lifeline_5050', function(removedIndexes) {
+    // remove 2 options
+    // [0, 1]
+    console.log(removedIndexes);
+    activateLifeline5050(removedIndexes);
+});
+
 function showHideTableDiv(show) {
     if(show) {
         divTable.style.display = "block";
@@ -97,6 +104,13 @@ function showWonAmount(amount) {
     showHideTableDiv(false);
     showHideDivSection(divWonAmount, true);
     window.setTimeout(showHideDivSection, wonAmountShowSeconds, divWonAmount, false);
+}
+
+function activateLifeline5050(removedIndexes) {
+    for(let i=0; i<removedIndexes.length; i++) {
+        let indexToRemove = removedIndexes[i];
+        getOptionEleByIndex(indexToRemove).innerHTML = "";
+    }
 }
 
 function showQuestion(question) {
@@ -163,6 +177,20 @@ function getOptionDivByIndex(optionIdx) {
         selectedDiv = divOptionD;
     }
     return selectedDiv;
+}
+
+function getOptionEleByIndex(optionIdx) {
+    var selectedEle = "";
+    if(optionIdx == 0) {
+        selectedEle = pOptionA;
+    } else if(optionIdx == 1) {
+        selectedEle = pOptionB;
+    } else if(optionIdx == 2) {
+        selectedEle = pOptionC;
+    } else if(optionIdx == 3) {
+        selectedEle = pOptionD;
+    }
+    return selectedEle;
 }
 
 function setLockedAnswer(selectedOptionIdx) {
