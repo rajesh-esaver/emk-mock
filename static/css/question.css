@@ -39,13 +39,15 @@
 }
 
 .img_lifeline {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
+    padding: 10px;
+    border-radius: 1cm;
 }
 
 #div_lifelines {
     width: 100%;
-    bottom: 50%;
+    bottom: 60%;
     position: absolute;
     text-align: center;
 }

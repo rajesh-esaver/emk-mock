@@ -251,6 +251,6 @@ function readElements() {
 $(document).ready(function() {
     readElements();
     showHideTableDiv(false);
-    showHideDivSection(divLifelines, false);
+    //showHideDivSection(divLifelines, false);
     showHideDivSection(divWonAmount, false);
 });

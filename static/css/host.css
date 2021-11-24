@@ -25,6 +25,11 @@
     font-size: 1.5vw;
 }
 
+.img_lifeline {
+    width: 100px;
+    height: 100px;
+}
+
 /*
 .bottom {
     position: absolute;
