@@ -9,7 +9,7 @@ var divQuestion, divWonAmount, pQuestion;
 var divLifelines, imgLifeline1, imgLifeline2, imgLifeline3;
 var currLockedOptionIdx = "";
 var spTimer, spWonAmount;
-const wonAmountShowSeconds = 5000;
+const wonAmountShowSeconds = 4000;
 const wrongAnswerShowSeconds = 4000;
 const rightAnswerShowSeconds = 4000;
 const showAnswerAfterSeconds = 4000;
