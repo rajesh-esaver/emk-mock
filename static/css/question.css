@@ -38,6 +38,18 @@
     left: 0;
 }
 
+.img_lifeline {
+    width: 100px;
+    height: 100px;
+}
+
+#div_lifelines {
+    width: 100%;
+    bottom: 50%;
+    position: absolute;
+    text-align: center;
+}
+
 #div_won_amount {
     width: 70%;
     height: 60px;

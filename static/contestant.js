@@ -6,6 +6,7 @@ var divTable = "";
 var divOptionA, divOptionB, divOptionC, divOptionD;
 var pOptionA, pOptionB, pOptionC, pOptionD;
 var divQuestion, divWonAmount, pQuestion;
+var divLifelines, imgLifeline1, imgLifeline2, imgLifeline3;
 var currLockedOptionIdx = "";
 var spTimer, spWonAmount;
 const wonAmountShowSeconds = 5000;
@@ -46,6 +47,14 @@ socket.on('answer', function(answerObj) {
     // correct answer: {'isAnsweredCorrectly': True, 'correctOptionIdx': 1, 'amountWon': 0}
     console.log(answerObj);
     revealAnswer(answerObj);
+});
+
+socket.on('lifelines', function(lifelinesObj) {
+    // show lifelines
+    // Lifelines: {'lifelines': [{'isUsed': True, 'name': 'Audience Poll'}, {'isUsed': True, 'name': '50:50'},
+    // {'isUsed': True, 'name': 'Dial A Dost'}], 'showLifeLines': False}
+    console.log(lifelinesObj);
+    showLifeLines(lifelinesObj);
 });
 
 function showHideTableDiv(show) {
@@ -124,6 +133,23 @@ function showQuestion(question) {
     updateTimer("");
 }
 
+function showLifeLines(lifelinesObj) {
+    if(!lifelinesObj.showLifeLines) {
+        showHideDivSection(divLifelines, false);
+        return;
+    }
+    showHideDivSection(divLifelines, true);
+    if(lifelinesObj.lifelines[0].isUsed) {
+        imgLifeline1.style.opacity = 0.5;
+    }
+    if(lifelinesObj.lifelines[1].isUsed) {
+        imgLifeline2.style.opacity = 0.5;
+    }
+    if(lifelinesObj.lifelines[2].isUsed) {
+        imgLifeline3.style.opacity = 0.5;
+    }
+}
+
 function getOptionDivByIndex(optionIdx) {
     var selectedDiv = "";
     if(optionIdx == 0) {
@@ -185,10 +211,17 @@ function readElements() {
 
     spTimer = document.getElementById("sp_timer");
     spWonAmount = document.getElementById("sp_won_amount");
+
+    // lifelines
+    divLifelines = document.getElementById("div_lifelines");
+    imgLifeline1 = document.getElementById("img_line1");
+    imgLifeline2 = document.getElementById("img_line2");
+    imgLifeline3 = document.getElementById("img_line3");
 }
 
 $(document).ready(function() {
     readElements();
     showHideTableDiv(false);
+    showHideDivSection(divLifelines, false);
     showHideDivSection(divWonAmount, false);
 });
