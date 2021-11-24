@@ -17,7 +17,9 @@ var pOptionA, pOptionB, pOptionC, pOptionD;
 var divOptionA, divOptionB, divOptionC, divOptionD;
 var divQuestion, divAnswer, pQuestion;
 var tableQuestionsList, btnNextQuestion;
+var lifeline1, lifeline2, lifeline3, btnShowLifelines, btnHideLifelines, diveLifelines;
 var lastViewedQuestionIdx = -1;
+var lifeLinesInfo;
 
 class Question {
     // correctOptionIdx 0,1,2,3
@@ -52,8 +54,8 @@ class LifeLine {
 class LifeLinesInfo {
 
     // lifeLines - array of LifeLine objects
-    constructor(lifeLines, showLifeLines) {
-        this.life_lines = lifeLines;
+    constructor(lifelines, showLifeLines) {
+        this.lifelines = lifelines;
         this.showLifeLines = showLifeLines;
     }
 }
@@ -149,15 +151,42 @@ function addEventListeners() {
         loadNextQuestion();
     });
 
-    lifeLinesButton.addEventListener("click", (e) => {
-        var divLifeLines = document.getElementById("div_lifelines");
-        console.log(isLifeLinesBeingShowed);
-        if(isLifeLinesBeingShowed) {
-            $(".div_lifelines").hide();
-        } else {
-            $(".div_lifelines").show();
-        }
+    btnShowLifelines.addEventListener("click", (e) => {
+        // send event
+        lifeLinesInfo.showLifeLines = true;
         isLifeLinesBeingShowed = !isLifeLinesBeingShowed;
+        socket.emit("set_lifelines", lifeLinesInfo);
+    });
+
+    btnHideLifelines.addEventListener("click", (e) => {
+        // send event
+        lifeLinesInfo.showLifeLines = false;
+        isLifeLinesBeingShowed = !isLifeLinesBeingShowed;
+        socket.emit("set_lifelines", lifeLinesInfo);
+    });
+
+    lifeline1.addEventListener("click", (e) => {
+        // send event
+        lifeline1.disabled = true;
+        lifeLinesInfo.lifelines[0].isUsed = true;
+        lifeLinesInfo.showLifeLines = true;
+        socket.emit("set_lifelines", lifeLinesInfo);
+    });
+
+    lifeline2.addEventListener("click", (e) => {
+        // send event
+        lifeline2.disabled = true;
+        lifeLinesInfo.lifelines[1].isUsed = true;
+        lifeLinesInfo.showLifeLines = true;
+        socket.emit("set_lifelines", lifeLinesInfo);
+    });
+
+    lifeline3.addEventListener("click", (e) => {
+        // send event
+        lifeline3.disabled = true;
+        lifeLinesInfo.lifelines[2].isUsed = true;
+        lifeLinesInfo.showLifeLines = true;
+        socket.emit("set_lifelines", lifeLinesInfo);
     });
 
 }
@@ -401,9 +430,13 @@ function applyWrongAnswerStyle(optionDiv) {
 
 function readElements() {
     divTable = document.getElementById("div_table");
+    btnNextQuestion = document.getElementById("btn_next_question");
+
+    // question
     divQuestion = document.getElementById("div_question");
     pQuestion = document.getElementById("p_question");
 
+    // options
     divOptionA = document.getElementById("div_option_a");
     divOptionB = document.getElementById("div_option_b");
     divOptionC = document.getElementById("div_option_c");
@@ -414,11 +447,33 @@ function readElements() {
     pOptionC = document.getElementById("p_option_c");
     pOptionD = document.getElementById("p_option_d");
 
+
+    // answer
     divAnswer = document.getElementById("div_answer");
     spTimer = document.getElementById("sp_timer");
     tableQuestionsList = document.getElementById("table_questions_list");
-    btnNextQuestion = document.getElementById("btn_next_question");
 
+    // lifelines
+    diveLifelines = document.getElementById("div_lifelines");
+    btnShowLifelines = document.getElementById("btn_show_lifelines");
+    btnHideLifelines = document.getElementById("btn_hide_lifelines");
+    lifeline1 = document.getElementById("lifeline_1");
+    lifeline2 = document.getElementById("lifeline_2");
+    lifeline3 = document.getElementById("lifeline_3");
+
+}
+
+function loadLifeLines() {
+    var line1 = new LifeLine(false, "Audience Poll");
+    var line2 = new LifeLine(false, "50:50");
+    var line3 = new LifeLine(false, "Dial A Dost");
+
+    const lines = [line1, line2, line3];
+    lifeLinesInfo = new LifeLinesInfo(lines, false);
+
+    lifeline1.innerHTML = line1.name;
+    lifeline2.innerHTML = line2.name;
+    lifeline3.innerHTML = line3.name;
 }
 
 function read_file_name_and_load() {
@@ -434,6 +489,7 @@ $(document).ready(function() {
     readElements();
     addEventListeners();
     read_file_name_and_load();
+    loadLifeLines();
     //loadQuestions();
     //addQuestionsToTable();
     showHideDivSection(divAnswer, false);

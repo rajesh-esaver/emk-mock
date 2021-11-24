@@ -83,6 +83,12 @@ def set_answer(answer_obj):
     emit("answer", answer_obj, broadcast=True)
 
 
+@socketio.on("set_lifelines")
+def set_lifelines(lifelines_obj):
+    print("Lifelines: " + str(lifelines_obj))
+    emit("lifelines", lifelines_obj, broadcast=True)
+
+
 if __name__ == "__main__":
     # question_reader.get_file_names()
     # map_url = ngrok.connect(5000)
