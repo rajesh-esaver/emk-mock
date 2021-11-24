@@ -143,6 +143,7 @@ function showLifeLines(lifelinesObj) {
         imgLifeline1.style.opacity = 0.5;
     }
     if(lifelinesObj.lifelines[1].isUsed) {
+        // it's 50:50, remove 2 options
         imgLifeline2.style.opacity = 0.5;
     }
     if(lifelinesObj.lifelines[2].isUsed) {

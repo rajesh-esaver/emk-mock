@@ -175,10 +175,12 @@ function addEventListeners() {
 
     lifeline2.addEventListener("click", (e) => {
         // send event
+        // it's 50:50, remove 2 options
         lifeline2.disabled = true;
         lifeLinesInfo.lifelines[1].isUsed = true;
         lifeLinesInfo.showLifeLines = true;
         socket.emit("set_lifelines", lifeLinesInfo);
+        activate5050();
     });
 
     lifeline3.addEventListener("click", (e) => {
@@ -261,6 +263,20 @@ function getOptionDivByIndex(optionIdx) {
         selectedDiv = divOptionD;
     }
     return selectedDiv;
+}
+
+function getOptionEleByIndex(optionIdx) {
+    var selectedEle = "";
+    if(optionIdx == 0) {
+        selectedEle = pOptionA;
+    } else if(optionIdx == 1) {
+        selectedEle = pOptionB;
+    } else if(optionIdx == 2) {
+        selectedEle = pOptionC;
+    } else if(optionIdx == 3) {
+        selectedEle = pOptionD;
+    }
+    return selectedEle;
 }
 
 function optionListener(button, selectedOptionIdx) {
@@ -350,6 +366,32 @@ function showQuestions(question) {
     optionListener(option_b, 1);
     optionListener(option_c, 2);
     optionListener(option_d, 3);
+}
+
+function arrayRemove(arr, value) {
+    return arr.filter(function(ele){
+        return ele != value;
+    });
+}
+
+function activate5050() {
+    const correctOptionIdx = currQuestion.correctOptionIdx;
+    var tmpOptions = [0, 1, 2, 3];
+    tmpOptions.splice(correctOptionIdx, 1);
+
+    var removedIndexes = []
+    const index1 = Math.floor(Math.random()*tmpOptions.length);
+    removedIndexes.push(tmpOptions[index1]);
+    tmpOptions.splice(index1, 1);
+
+    const index2 = Math.floor(Math.random()*tmpOptions.length);
+    removedIndexes.push(tmpOptions[index2]);
+    console.log(removedIndexes);
+    // send it to client
+    for(let i=0; i<removedIndexes.length; i++) {
+        let indexToRemove = removedIndexes[i];
+        getOptionEleByIndex(indexToRemove).innerHTML = "";
+    }
 }
 
 function loadQuestions() {
