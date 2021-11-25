@@ -32,6 +32,8 @@ socket.on('question', function(questionObj) {
     console.log(questionObj);
     showHideTableDiv(true);
     showQuestion(questionObj);
+    /*var audio = new Audio('before_question.mp3');
+    audio.play();*/
 });
 
 socket.on('locked_answer', function(msg) {
