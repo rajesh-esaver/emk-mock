@@ -20,6 +20,7 @@ var tableQuestionsList, btnNextQuestion;
 var lifeline1, lifeline2, lifeline3, btnShowLifelines, btnHideLifelines, diveLifelines;
 var lastViewedQuestionIdx = -1;
 var lifeLinesInfo;
+var showQuestionAfterSeconds = 3000;
 
 class Question {
     // correctOptionIdx 0,1,2,3
@@ -89,7 +90,7 @@ socket.on('get_question_set', function(questions_set) {
             question_set.amountWonForWrong,
             question_set.trivia,
             question_set.maxSeconds)
-        console.log(question);
+        //console.log(question);
         questions.push(question);
     }
     addQuestionsToTable();
@@ -107,9 +108,7 @@ function startTimer(currMaxSeconds) {
     timer = setInterval(() => {
         if(!isPaused) {
             if(currSeconds >= 0) {
-                //secondsEle.innerHTML = parseInt(currSeconds);
                 updateTimer(currSeconds);
-                //spTimer.innerHTML = parseInt(currSeconds);
                 // sending the event to the server
                 socket.emit("set_timer", currSeconds);
                 currSeconds -= 1;
@@ -148,9 +147,9 @@ function addEventListeners() {
     });
 
     btnNextQuestion.addEventListener("click", (e) => {
-        loadNextQuestion();
-        var audio = new Audio('static/music/kbc_theme.mp3');
-        audio.play();
+        //loadNextQuestion();
+        playBeforeQuestionSound();
+        window.setTimeout(loadNextQuestion, showQuestionAfterSeconds);        
     });
 
     btnShowLifelines.addEventListener("click", (e) => {
@@ -209,6 +208,11 @@ function updateTimer(time) {
 
 function clearOptions() {
 
+}
+
+function playBeforeQuestionSound() {
+    var audio = new Audio('static/music/before_question.mp3');
+    audio.play();
 }
 
 function revealAnswerToContestant() {
@@ -334,42 +338,6 @@ function showQuestion(question) {
     optionListener(divOptionD, 3);
 }
 
-function showQuestions(question) {
-    currQuestion = question;
-    // setting question text
-    const txt_question = document.getElementById("txt_question");
-    const txtAnswerStat = document.getElementById("txt_answer_stat");
-    txt_question.innerHTML = question.question;
-
-    // hiding answer text and reveal button
-    txtAnswerStat.innerHTML = "";
-    revealAnswerButton.disabled = true;
-
-
-    // create dynamic option buttons
-    const option_a = document.getElementById("option_a");
-    const option_b = document.getElementById("option_b");
-    const option_c = document.getElementById("option_c");
-    const option_d = document.getElementById("option_d");
-
-    // enabling all the options
-    option_a.disabled = false;
-    option_b.disabled = false;
-    option_c.disabled = false;
-    option_d.disabled = false;
-
-    console.log(question.options);
-    option_a.innerHTML = question.options[0];
-    option_b.innerHTML = question.options[1];
-    option_c.innerHTML = question.options[2];
-    option_d.innerHTML = question.options[3];
-
-    optionListener(option_a, 0);
-    optionListener(option_b, 1);
-    optionListener(option_c, 2);
-    optionListener(option_d, 3);
-}
-
 function arrayRemove(arr, value) {
     return arr.filter(function(ele){
         return ele != value;
@@ -395,25 +363,6 @@ function activate5050() {
     for(let i=0; i<removedIndexes.length; i++) {
         let indexToRemove = removedIndexes[i];
         getOptionEleByIndex(indexToRemove).innerHTML = "";
-    }
-}
-
-function loadQuestions() {
-    var questionsDev = document.getElementById("questions");
-    //Append the element in page (in span).
-
-    for(let i=0; i< questions.length; i++) {
-        let question = questions[i];
-
-        var element = document.createElement("button");
-        //Assign different attributes to the element.
-        element.type = "button";
-        element.innerHTML = "Question "+(i+1);
-        element.className = 'btn-styled';
-
-        questionListener(element, question);
-
-        questionsDev.appendChild(element);
     }
 }
 
@@ -536,7 +485,6 @@ $(document).ready(function() {
     addEventListeners();
     read_file_name_and_load();
     loadLifeLines();
-    //loadQuestions();
     //addQuestionsToTable();
     showHideDivSection(divAnswer, false);
 });
