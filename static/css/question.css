@@ -2,26 +2,54 @@
 
 .option {
     background-color: lightblue;
+    background-image: linear-gradient(#232366 15%, #273296 90%, #232366);
     border-radius: 10% / 50%;
-    height: 50px;
-    text-align: center;
-    line-height: 50px;
-    font-size: 20px;
+    height: 60px;
+    text-align: left;
+    font-size: 1vw;
+    line-height: normal;
+    padding: 1px 15px 1px 30px;
+
+    color: white;
+    border-style: solid;
+    border-color: orange;
+    border-width: 2px;
 }
 
 .question {
-    background-color: lightblue;
+    background-color: #273296;
+    background-image: linear-gradient(#232366 15%, #273296 90%, #232366);
     border-radius: 10% / 50%;
-    height: 90px;
+    min-height: 80px;
     text-align: center;
-    line-height: 90px;
-    font-size: 30px;
+    line-height: 120%;
+    padding: 10px 15px 10px 15px;
+    font-size: 1.5vw;
+
+    color: white;
+    border-style: solid;
+    border-color: orange;
+    border-width: 2px;
 }
 
 .bottom {
     position: absolute;
-    bottom: 20%;
+    bottom: 15%;
     left: 0;
+}
+
+.img_lifeline {
+    width: 150px;
+    height: 150px;
+    padding: 10px;
+    border-radius: 1cm;
+}
+
+#div_lifelines {
+    width: 100%;
+    bottom: 60%;
+    position: absolute;
+    text-align: center;
 }
 
 #div_won_amount {

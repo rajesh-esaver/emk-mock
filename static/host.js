@@ -1,5 +1,6 @@
 
-
+//var url = 'http://192.168.1.48:5000';
+var url = base_url;
 // time
 var maxSeconds = 10;    // time in seconds
 var currSeconds = maxSeconds;
@@ -12,10 +13,13 @@ var isLifeLinesBeingShowed = true;
 var revealAnswerButton;
 var answerUpdateObj;
 var lifeLines = ["Line 1", "Line 2", "Line 3"];
+var pOptionA, pOptionB, pOptionC, pOptionD;
 var divOptionA, divOptionB, divOptionC, divOptionD;
-var divQuestion, divAnswer;
+var divQuestion, divAnswer, pQuestion;
 var tableQuestionsList, btnNextQuestion;
+var lifeline1, lifeline2, lifeline3, btnShowLifelines, btnHideLifelines, diveLifelines;
 var lastViewedQuestionIdx = -1;
+var lifeLinesInfo;
 
 class Question {
     // correctOptionIdx 0,1,2,3
@@ -39,6 +43,23 @@ class AnswerUpdate {
     }
 }
 
+class LifeLine {
+
+    constructor(isUsed, name) {
+        this.isUsed = isUsed;
+        this.name = name;
+    }
+}
+
+class LifeLinesInfo {
+
+    // lifeLines - array of LifeLine objects
+    constructor(lifelines, showLifeLines) {
+        this.lifelines = lifelines;
+        this.showLifeLines = showLifeLines;
+    }
+}
+
 
 // questions
 const options = ["Option A", "Option B", "Option C", "Option D"];
@@ -51,7 +72,7 @@ questions.push(new Question("Question 4, pick the one", options, 3, 1000, 0, "co
 questions.push(new Question("Question 5, which one", options, 1, 2000, 1000, "it's 5", 0))
 */
 
-var socket = io.connect('http://127.0.0.1:5000');
+var socket = io.connect(url);
 var isSocketConnected = false;
 
 socket.on('connect', function() {
@@ -130,15 +151,44 @@ function addEventListeners() {
         loadNextQuestion();
     });
 
-    lifeLinesButton.addEventListener("click", (e) => {
-        var divLifeLines = document.getElementById("div_lifelines");
-        console.log(isLifeLinesBeingShowed);
-        if(isLifeLinesBeingShowed) {
-            $(".div_lifelines").hide();
-        } else {
-            $(".div_lifelines").show();
-        }
+    btnShowLifelines.addEventListener("click", (e) => {
+        // send event
+        lifeLinesInfo.showLifeLines = true;
         isLifeLinesBeingShowed = !isLifeLinesBeingShowed;
+        socket.emit("set_lifelines", lifeLinesInfo);
+    });
+
+    btnHideLifelines.addEventListener("click", (e) => {
+        // send event
+        lifeLinesInfo.showLifeLines = false;
+        isLifeLinesBeingShowed = !isLifeLinesBeingShowed;
+        socket.emit("set_lifelines", lifeLinesInfo);
+    });
+
+    lifeline1.addEventListener("click", (e) => {
+        // send event
+        lifeline1.disabled = true;
+        lifeLinesInfo.lifelines[0].isUsed = true;
+        lifeLinesInfo.showLifeLines = true;
+        socket.emit("set_lifelines", lifeLinesInfo);
+    });
+
+    lifeline2.addEventListener("click", (e) => {
+        // send event
+        // it's 50:50, remove 2 options
+        lifeline2.disabled = true;
+        lifeLinesInfo.lifelines[1].isUsed = true;
+        lifeLinesInfo.showLifeLines = true;
+        socket.emit("set_lifelines", lifeLinesInfo);
+        activate5050();
+    });
+
+    lifeline3.addEventListener("click", (e) => {
+        // send event
+        lifeline3.disabled = true;
+        lifeLinesInfo.lifelines[2].isUsed = true;
+        lifeLinesInfo.showLifeLines = true;
+        socket.emit("set_lifelines", lifeLinesInfo);
     });
 
 }
@@ -215,6 +265,20 @@ function getOptionDivByIndex(optionIdx) {
     return selectedDiv;
 }
 
+function getOptionEleByIndex(optionIdx) {
+    var selectedEle = "";
+    if(optionIdx == 0) {
+        selectedEle = pOptionA;
+    } else if(optionIdx == 1) {
+        selectedEle = pOptionB;
+    } else if(optionIdx == 2) {
+        selectedEle = pOptionC;
+    } else if(optionIdx == 3) {
+        selectedEle = pOptionD;
+    }
+    return selectedEle;
+}
+
 function optionListener(button, selectedOptionIdx) {
     button.onclick = function() {
         pauseTimer();
@@ -245,11 +309,17 @@ function showQuestion(question) {
     divOptionC.style.backgroundColor = "lightblue";
     divOptionD.style.backgroundColor = "lightblue";
 
-    divQuestion.innerHTML = question.question;
+    /*divQuestion.innerHTML = question.question;
     divOptionA.innerHTML = question.options[0];
     divOptionB.innerHTML = question.options[1];
     divOptionC.innerHTML = question.options[2];
-    divOptionD.innerHTML = question.options[3];
+    divOptionD.innerHTML = question.options[3];*/
+
+    pQuestion.innerHTML = question.question;
+    pOptionA.innerHTML = question.options[0];
+    pOptionB.innerHTML = question.options[1];
+    pOptionC.innerHTML = question.options[2];
+    pOptionD.innerHTML = question.options[3];
 
     // hiding answer text and reveal button
     const txtAnswerStat = document.getElementById("txt_answer_stat");
@@ -296,6 +366,34 @@ function showQuestions(question) {
     optionListener(option_b, 1);
     optionListener(option_c, 2);
     optionListener(option_d, 3);
+}
+
+function arrayRemove(arr, value) {
+    return arr.filter(function(ele){
+        return ele != value;
+    });
+}
+
+function activate5050() {
+    const correctOptionIdx = currQuestion.correctOptionIdx;
+    var tmpOptions = [0, 1, 2, 3];
+    tmpOptions.splice(correctOptionIdx, 1);
+
+    var removedIndexes = []
+    const index1 = Math.floor(Math.random()*tmpOptions.length);
+    removedIndexes.push(tmpOptions[index1]);
+    tmpOptions.splice(index1, 1);
+
+    const index2 = Math.floor(Math.random()*tmpOptions.length);
+    removedIndexes.push(tmpOptions[index2]);
+    console.log(removedIndexes);
+    // send it to client
+    socket.emit("set_5050", removedIndexes);
+    // remove for host
+    for(let i=0; i<removedIndexes.length; i++) {
+        let indexToRemove = removedIndexes[i];
+        getOptionEleByIndex(indexToRemove).innerHTML = "";
+    }
 }
 
 function loadQuestions() {
@@ -376,17 +474,50 @@ function applyWrongAnswerStyle(optionDiv) {
 
 function readElements() {
     divTable = document.getElementById("div_table");
+    btnNextQuestion = document.getElementById("btn_next_question");
+
+    // question
     divQuestion = document.getElementById("div_question");
+    pQuestion = document.getElementById("p_question");
+
+    // options
     divOptionA = document.getElementById("div_option_a");
     divOptionB = document.getElementById("div_option_b");
     divOptionC = document.getElementById("div_option_c");
     divOptionD = document.getElementById("div_option_d");
 
+    pOptionA = document.getElementById("p_option_a");
+    pOptionB = document.getElementById("p_option_b");
+    pOptionC = document.getElementById("p_option_c");
+    pOptionD = document.getElementById("p_option_d");
+
+
+    // answer
     divAnswer = document.getElementById("div_answer");
     spTimer = document.getElementById("sp_timer");
     tableQuestionsList = document.getElementById("table_questions_list");
-    btnNextQuestion = document.getElementById("btn_next_question");
 
+    // lifelines
+    diveLifelines = document.getElementById("div_lifelines");
+    btnShowLifelines = document.getElementById("btn_show_lifelines");
+    btnHideLifelines = document.getElementById("btn_hide_lifelines");
+    lifeline1 = document.getElementById("lifeline_1");
+    lifeline2 = document.getElementById("lifeline_2");
+    lifeline3 = document.getElementById("lifeline_3");
+
+}
+
+function loadLifeLines() {
+    var line1 = new LifeLine(false, "Audience Poll");
+    var line2 = new LifeLine(false, "50:50");
+    var line3 = new LifeLine(false, "Dial A Dost");
+
+    const lines = [line1, line2, line3];
+    lifeLinesInfo = new LifeLinesInfo(lines, false);
+
+    lifeline1.innerHTML = line1.name;
+    lifeline2.innerHTML = line2.name;
+    lifeline3.innerHTML = line3.name;
 }
 
 function read_file_name_and_load() {
@@ -402,6 +533,7 @@ $(document).ready(function() {
     readElements();
     addEventListeners();
     read_file_name_and_load();
+    loadLifeLines();
     //loadQuestions();
     //addQuestionsToTable();
     showHideDivSection(divAnswer, false);

@@ -1,12 +1,19 @@
 from flask import Flask
 from flask_socketio import SocketIO, send, emit
 from flask import render_template
+from flask_ngrok import run_with_ngrok
+from pyngrok import ngrok
+from flask_cors import CORS
+
 
 import question_reader
 
 app = Flask(__name__)
+
 app.config['SECRET_KEY'] = 'secret'
 socketio = SocketIO(app)
+# CORS(app)
+# run_with_ngrok(app)
 
 
 @app.route("/")
@@ -76,7 +83,24 @@ def set_answer(answer_obj):
     emit("answer", answer_obj, broadcast=True)
 
 
+@socketio.on("set_lifelines")
+def set_lifelines(lifelines_obj):
+    print("Lifelines: " + str(lifelines_obj))
+    emit("lifelines", lifelines_obj, broadcast=True)
+
+
+@socketio.on("set_5050")
+def set_5050(removed_indexes):
+    print("removed_indexes: " + str(removed_indexes))
+    emit("lifeline_5050", removed_indexes, broadcast=True)
+
+
 if __name__ == "__main__":
     # question_reader.get_file_names()
-    socketio.run(app)
+    # map_url = ngrok.connect(5000)
+    # print(map_url)
+    # to run as sudo, sudo venv/bin/python3.7 app.py
+    # if we run at host "0.0.0.0" then we can access the server using it's ip
+    # from other machines which are in the same network
+    socketio.run(app, host="0.0.0.0", port=5000)
 
