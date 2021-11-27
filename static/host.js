@@ -149,6 +149,8 @@ function addEventListeners() {
 
     btnNextQuestion.addEventListener("click", (e) => {
         loadNextQuestion();
+        var audio = new Audio('static/music/kbc_theme.mp3');
+        audio.play();
     });
 
     btnShowLifelines.addEventListener("click", (e) => {
