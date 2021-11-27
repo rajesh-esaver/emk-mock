@@ -20,7 +20,9 @@ var tableQuestionsList, btnNextQuestion;
 var lifeline1, lifeline2, lifeline3, btnShowLifelines, btnHideLifelines, diveLifelines;
 var lastViewedQuestionIdx = -1;
 var lifeLinesInfo;
-var showQuestionAfterSeconds = 3000;
+var showQuestionAfterSeconds = 4000;
+var startTimerAfterSeconds = 3000;
+var timerSound;
 
 class Question {
     // correctOptionIdx 0,1,2,3
@@ -99,12 +101,15 @@ socket.on('get_question_set', function(questions_set) {
 function startTimer(currMaxSeconds) {
     window.clearTimeout(timer);
     //currSeconds = maxSeconds;
+
     currSeconds = currMaxSeconds;
     if(currMaxSeconds == 0) {
         updateTimer("No Time Limit");
         return;
     }
+
     isPaused = false;
+    playStopTimerSound(false);
     timer = setInterval(() => {
         if(!isPaused) {
             if(currSeconds >= 0) {
@@ -115,9 +120,11 @@ function startTimer(currMaxSeconds) {
             } else {
                 // timeout, send event
                 window.clearTimeout(timer);
+                playStopTimerSound(false);
             }
         }
     }, interval);
+    playStopTimerSound(true);
 }
 
 function addEventListeners() {
@@ -148,6 +155,7 @@ function addEventListeners() {
 
     btnNextQuestion.addEventListener("click", (e) => {
         //loadNextQuestion();
+        clearExistingQuestion();
         playBeforeQuestionSound();
         window.setTimeout(loadNextQuestion, showQuestionAfterSeconds);        
     });
@@ -196,10 +204,12 @@ function addEventListeners() {
 
 function pauseTimer() {
     isPaused = true;
+    playStopTimerSound(false);
 }
 
 function resumeTimer() {
     isPaused = false;
+    playStopTimerSound(true);
 }
 
 function updateTimer(time) {
@@ -208,6 +218,17 @@ function updateTimer(time) {
 
 function clearOptions() {
 
+}
+
+function playStopTimerSound(play) {
+    if(play) {
+        timerSound = new Audio('static/music/kbc_clock.mp3');
+        timerSound.play();
+    } else {
+        if(timerSound != null) {
+            timerSound.pause();    
+        }
+    }
 }
 
 function playBeforeQuestionSound() {
@@ -308,18 +329,33 @@ function questionListener(button, question) {
     };
 }
 
+function clearExistingQuestion() {
+    divOptionA.style.backgroundColor = "lightblue";
+    divOptionB.style.backgroundColor = "lightblue";
+    divOptionC.style.backgroundColor = "lightblue";
+    divOptionD.style.backgroundColor = "lightblue";
+
+    pQuestion.innerHTML = "";
+    pOptionA.innerHTML = "";
+    pOptionB.innerHTML = "";
+    pOptionC.innerHTML = "";
+    pOptionD.innerHTML = "";
+
+    // hiding answer text and reveal button
+    const txtAnswerStat = document.getElementById("txt_answer_stat");
+    txtAnswerStat.innerHTML = "";
+    revealAnswerButton.disabled = true;
+
+    updateTimer("");
+    showHideDivSection(divAnswer, false);
+}
+
 function showQuestion(question) {
     currQuestion = question;
     divOptionA.style.backgroundColor = "lightblue";
     divOptionB.style.backgroundColor = "lightblue";
     divOptionC.style.backgroundColor = "lightblue";
     divOptionD.style.backgroundColor = "lightblue";
-
-    /*divQuestion.innerHTML = question.question;
-    divOptionA.innerHTML = question.options[0];
-    divOptionB.innerHTML = question.options[1];
-    divOptionC.innerHTML = question.options[2];
-    divOptionD.innerHTML = question.options[3];*/
 
     pQuestion.innerHTML = question.question;
     pOptionA.innerHTML = question.options[0];
@@ -392,15 +428,22 @@ function loadNextQuestion() {
     lastViewedQuestionIdx += 1;
     if(lastViewedQuestionIdx >= questions.length) {
         console.log("all questions read");
+        alert("all questions read");
         return;
     }
     currQuestion = questions[lastViewedQuestionIdx];
     showQuestion(currQuestion);
     socket.emit("set_question", currQuestion);
-    showHideDivSection(divAnswer, false);
 
     // marking time empty initially
-    updateTimer("");
+    if(currQuestion.maxSeconds == 0) {
+        updateTimer("");
+    } else {
+        updateTimer(currQuestion.maxSeconds);
+        // sending max time before the countdown begining
+        socket.emit("set_timer", currQuestion.maxSeconds);
+    }
+    
 
     // modifying table
     const currQuestionTableIdx = questions.length - lastViewedQuestionIdx;
@@ -408,7 +451,9 @@ function loadNextQuestion() {
     const price = tableQuestionsList.rows[currQuestionTableIdx].cells[1].innerHTML;
     tableQuestionsList.rows[currQuestionTableIdx].cells[1].innerHTML = '<del>'+String(price)+"</dev>";
     hideShowNextQuestionOption(false);
-    startTimer(currQuestion.maxSeconds);
+
+    //startTimer(currQuestion.maxSeconds);
+    window.setTimeout(startTimer, startTimerAfterSeconds, currQuestion.maxSeconds);
 }
 
 function applyLockedAnswerStyle(optionDiv) {
@@ -456,6 +501,7 @@ function readElements() {
     lifeline2 = document.getElementById("lifeline_2");
     lifeline3 = document.getElementById("lifeline_3");
 
+    timerSound = new Audio('static/music/kbc_clock.mp3');
 }
 
 function loadLifeLines() {
