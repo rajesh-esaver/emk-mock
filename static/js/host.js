@@ -231,14 +231,29 @@ function playStopTimerSound(play) {
     }
 }
 
+function playRightAnswerSound() {
+    var tmpAudio = new Audio('static/music/right_answer.mp3');
+    tmpAudio.play();
+}
+
+function playWrongAnswerSound() {
+    var tmpAudio = new Audio('static/music/wrong_answer.mp3');
+    tmpAudio.play();
+}
+
 function playBeforeQuestionSound() {
-    var audio = new Audio('static/music/before_question.mp3');
-    audio.play();
+    var tmpAudio = new Audio('static/music/before_question.mp3');
+    tmpAudio.play();
 }
 
 function revealAnswerToContestant() {
     revealAnswerButton.disabled = true;
     socket.emit("set_answer", answerUpdateObj);
+    if(answerUpdateObj.isAnsweredCorrectly) {
+        playRightAnswerSound();
+    } else {
+        playWrongAnswerSound();
+    }
 }
 
 function showCorrectAnswerToHost(selectedOptionIdx) {
