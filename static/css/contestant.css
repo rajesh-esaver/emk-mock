@@ -45,9 +45,25 @@
     border-radius: 1cm;
 }
 
+#img_logo {
+    width: 250px;
+    height: 250px;
+    padding: 10px;
+    border-radius: 5cm;
+}
+
+#div_logo {
+    top: 20%;
+    left: 10px;
+    right: 10px;
+    position: absolute;
+    text-align: center;
+}
+
 #div_lifelines {
-    width: 100%;
-    bottom: 60%;
+    top: 25%;
+    left: 10px;
+    right: 10px;
     position: absolute;
     text-align: center;
 }
