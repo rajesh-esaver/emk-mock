@@ -231,6 +231,11 @@ function playStopTimerSound(play) {
     }
 }
 
+function playOptionLockSound() {
+    var tmpAudio = new Audio('static/music/option_lock.mp3');
+    tmpAudio.play();
+}
+
 function playRightAnswerSound() {
     var tmpAudio = new Audio('static/music/right_answer.mp3');
     tmpAudio.play();
@@ -325,6 +330,7 @@ function optionListener(button, selectedOptionIdx) {
     button.onclick = function() {
         pauseTimer();
         button.disabled = true;
+        playOptionLockSound();
         showCorrectAnswerToHost(selectedOptionIdx)
         socket.emit("set_locked_answer", selectedOptionIdx);
         revealAnswerButton.disabled = false;
