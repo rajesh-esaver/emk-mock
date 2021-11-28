@@ -64,9 +64,13 @@
     height: 100px;
     width: 200px;
     border-radius: 150px 150px 0 0;
-    background-color: linear-gradient(#232366 15%, #273296 90%, #232366);
     text-align: center;
     line-height: 100px;
+
+    background-image: linear-gradient(#232366 15%, #273296 90%, #232366);
+    border-style: solid;
+    border-color: orange;
+    border-width: 2px;
 }
 
 #sp_timer {

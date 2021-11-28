@@ -9,7 +9,7 @@ var divQuestion, divWonAmount, pQuestion;
 var divLifelines, imgLifeline1, imgLifeline2, imgLifeline3;
 var divLogo;
 var currLockedOptionIdx = "";
-var spTimer, spWonAmount;
+var divTimer, spTimer, spWonAmount;
 const wonAmountShowSeconds = 4000;
 const wrongAnswerShowSeconds = 4000;
 const rightAnswerShowSeconds = 4000;
@@ -24,7 +24,7 @@ socket.on('message', function(msg) {
 });
 
 socket.on('curr_timer', function(time) {
-    console.log(time);
+    //console.log(time);
     updateTimer(time);
 });
 
@@ -102,7 +102,7 @@ function revealAnswer(answerObj) {
 
 function showWonAmount(amount) {
     showHideDivSection(divLogo, true);
-    
+
     spWonAmount.innerHTML = "Rs. " + String(amount);
     showHideTableDiv(false);
     showHideDivSection(divWonAmount, true);
@@ -118,6 +118,12 @@ function activateLifeline5050(removedIndexes) {
 
 function showQuestion(question) {
     showHideDivSection(divLogo, false);
+
+    if(question.maxSeconds == 0) {
+        showHideDivSection(divTimer, false);
+    } else {
+        showHideDivSection(divTimer, true);
+    }
 
     divOptionA.style.backgroundColor = "lightblue";
     divOptionB.style.backgroundColor = "lightblue";
@@ -249,6 +255,7 @@ function readElements() {
     imgLifeline3 = document.getElementById("img_line3");
 
     divLogo = document.getElementById("div_logo");
+    divTimer = document.getElementById("div_timer");
 }
 
 $(document).ready(function() {
