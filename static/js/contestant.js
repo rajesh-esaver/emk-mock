@@ -7,8 +7,9 @@ var divOptionA, divOptionB, divOptionC, divOptionD;
 var pOptionA, pOptionB, pOptionC, pOptionD;
 var divQuestion, divWonAmount, pQuestion;
 var divLifelines, imgLifeline1, imgLifeline2, imgLifeline3;
+var divLogo;
 var currLockedOptionIdx = "";
-var spTimer, spWonAmount;
+var divTimer, spTimer, spWonAmount;
 const wonAmountShowSeconds = 4000;
 const wrongAnswerShowSeconds = 4000;
 const rightAnswerShowSeconds = 4000;
@@ -23,17 +24,15 @@ socket.on('message', function(msg) {
 });
 
 socket.on('curr_timer', function(time) {
-    console.log(time);
+    //console.log(time);
     updateTimer(time);
 });
 
 socket.on('question', function(questionObj) {
     // show question
-    console.log(questionObj);
+    //console.log(questionObj);
     showHideTableDiv(true);
     showQuestion(questionObj);
-    /*var audio = new Audio('before_question.mp3');
-    audio.play();*/
 });
 
 socket.on('locked_answer', function(msg) {
@@ -102,6 +101,8 @@ function revealAnswer(answerObj) {
 }
 
 function showWonAmount(amount) {
+    showHideDivSection(divLogo, true);
+
     spWonAmount.innerHTML = "Rs. " + String(amount);
     showHideTableDiv(false);
     showHideDivSection(divWonAmount, true);
@@ -116,6 +117,14 @@ function activateLifeline5050(removedIndexes) {
 }
 
 function showQuestion(question) {
+    showHideDivSection(divLogo, false);
+
+    if(question.maxSeconds == 0) {
+        showHideDivSection(divTimer, false);
+    } else {
+        showHideDivSection(divTimer, true);
+    }
+
     divOptionA.style.backgroundColor = "lightblue";
     divOptionB.style.backgroundColor = "lightblue";
     divOptionC.style.backgroundColor = "lightblue";
@@ -123,11 +132,6 @@ function showQuestion(question) {
 
     //divQuestion.innerHTML = question.question;
     pQuestion.innerHTML = question.question;
-
-    /*divOptionA.innerHTML = question.options[0];
-    divOptionB.innerHTML = question.options[1];
-    divOptionC.innerHTML = question.options[2];
-    divOptionD.innerHTML = question.options[3];*/
 
     // prefixes = ['-o-', '-ms-', '-moz-', '-webkit-'];
     divOptionA.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
@@ -249,6 +253,9 @@ function readElements() {
     imgLifeline1 = document.getElementById("img_line1");
     imgLifeline2 = document.getElementById("img_line2");
     imgLifeline3 = document.getElementById("img_line3");
+
+    divLogo = document.getElementById("div_logo");
+    divTimer = document.getElementById("div_timer");
 }
 
 $(document).ready(function() {
