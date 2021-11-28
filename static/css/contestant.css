@@ -60,6 +60,21 @@
     text-align: center;
 }
 
+#div_timer {
+    height: 100px;
+    width: 200px;
+    border-radius: 150px 150px 0 0;
+    background-color: linear-gradient(#232366 15%, #273296 90%, #232366);
+    text-align: center;
+    line-height: 100px;
+}
+
+#sp_timer {
+    font-size: 55px;
+    color: #DAA520;
+    font-weight: bold;
+}
+
 #div_lifelines {
     top: 25%;
     left: 10px;
