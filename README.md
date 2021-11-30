@@ -1,3 +1,15 @@
+#### Running:
+python app.py <br>
+Update server url in static/js/constants.js(base_url) file
+
+Host needs to open: <br>
+<base_url>/home_start<br>
+<base_url>/host?file_name=user_1.csv
+
+Contestant needs to open: <br>
+<base_url>/
+
+
 #### events
 ######Contestant side:<br/>
 
