@@ -5,24 +5,31 @@
     <title>Contestant</title>
     <script type='text/javascript' src="static/lib/socket.io-client/dist/socket.io.js" crossorigin="anonymous"></script>
     <script type='text/javascript' src="static/lib/jquery-3.6.0.min.js"></script>
-    <script type='text/javascript' src="static/constants.js"></script>
-    <script type='text/javascript' src="static/contestant.js"></script>
-    <link type="text/css" rel="stylesheet" href="static/css/question.css">
+    <script type='text/javascript' src="static/js/constants.js"></script>
+    <script type='text/javascript' src="static/js/contestant.js"></script>
+    <link type="text/css" rel="stylesheet" href="static/css/contestant.css">
     <!--<script src="https://cdn.socket.io/4.3.2/socket.io.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>-->
 </head>
 <body style="background-color:powderblue;">
     <div id="div_lifelines">
-        <img id="img_line1" src="{{url_for('static', filename = 'audience_poll.png')}}" class="img_lifeline">
-        <img id="img_line2" src="{{url_for('static', filename = 'lifeline_5050.png')}}" class="img_lifeline">
-        <img id="img_line3" src="{{url_for('static', filename = 'lifeline_call.png')}}" class="img_lifeline">
+        <img id="img_line1" src="{{url_for('static', filename = 'images/audience_poll.png')}}" class="img_lifeline">
+        <img id="img_line2" src="{{url_for('static', filename = 'images/lifeline_5050.png')}}" class="img_lifeline">
+        <img id="img_line3" src="{{url_for('static', filename = 'images/lifeline_call.png')}}" class="img_lifeline">
+    </div>
+    <div id="div_logo">
+        <img id="img_logo" src="{{url_for('static', filename = 'images/mek_logo.jpg')}}" class="img_logo">
     </div>
     <div id="div_table" class="table bottom" style="width:100%; text-align: center; position: relative, bottom;">
         <table style="width:60%; margin-left:auto; margin-right:auto; table-layout:fixed;">
             <tr>
-                <td colspan="2"><div id="div_timer">
-                    <span id="sp_timer" class="sp_timer" style="font-size: 40px;"></span>
-                </div></td>
+                <td colspan="2" style="text-align: center;">
+                    <center>
+                    <div id="div_timer">
+                    <span id="sp_timer" class="sp_timer"></span>
+                    </div>
+                    </center>
+                </td>
             </tr>
             <tr>
                 <td colspan="2"><div id="div_question" class="question">

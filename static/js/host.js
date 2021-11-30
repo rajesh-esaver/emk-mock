@@ -20,6 +20,9 @@ var tableQuestionsList, btnNextQuestion;
 var lifeline1, lifeline2, lifeline3, btnShowLifelines, btnHideLifelines, diveLifelines;
 var lastViewedQuestionIdx = -1;
 var lifeLinesInfo;
+var showQuestionAfterSeconds = 4000;
+var startTimerAfterSeconds = 3000;
+var timerSound;
 
 class Question {
     // correctOptionIdx 0,1,2,3
@@ -89,7 +92,7 @@ socket.on('get_question_set', function(questions_set) {
             question_set.amountWonForWrong,
             question_set.trivia,
             question_set.maxSeconds)
-        console.log(question);
+        //console.log(question);
         questions.push(question);
     }
     addQuestionsToTable();
@@ -98,27 +101,30 @@ socket.on('get_question_set', function(questions_set) {
 function startTimer(currMaxSeconds) {
     window.clearTimeout(timer);
     //currSeconds = maxSeconds;
+
     currSeconds = currMaxSeconds;
     if(currMaxSeconds == 0) {
         updateTimer("No Time Limit");
         return;
     }
+
     isPaused = false;
+    playStopTimerSound(false);
     timer = setInterval(() => {
         if(!isPaused) {
             if(currSeconds >= 0) {
-                //secondsEle.innerHTML = parseInt(currSeconds);
                 updateTimer(currSeconds);
-                //spTimer.innerHTML = parseInt(currSeconds);
                 // sending the event to the server
                 socket.emit("set_timer", currSeconds);
                 currSeconds -= 1;
             } else {
                 // timeout, send event
                 window.clearTimeout(timer);
+                playStopTimerSound(false);
             }
         }
     }, interval);
+    playStopTimerSound(true);
 }
 
 function addEventListeners() {
@@ -148,7 +154,10 @@ function addEventListeners() {
     });
 
     btnNextQuestion.addEventListener("click", (e) => {
-        loadNextQuestion();
+        //loadNextQuestion();
+        clearExistingQuestion();
+        playBeforeQuestionSound();
+        window.setTimeout(loadNextQuestion, showQuestionAfterSeconds);        
     });
 
     btnShowLifelines.addEventListener("click", (e) => {
@@ -195,10 +204,12 @@ function addEventListeners() {
 
 function pauseTimer() {
     isPaused = true;
+    playStopTimerSound(false);
 }
 
 function resumeTimer() {
     isPaused = false;
+    playStopTimerSound(true);
 }
 
 function updateTimer(time) {
@@ -209,9 +220,45 @@ function clearOptions() {
 
 }
 
+function playStopTimerSound(play) {
+    if(play) {
+        timerSound = new Audio('static/music/kbc_clock.mp3');
+        timerSound.play();
+    } else {
+        if(timerSound != null) {
+            timerSound.pause();    
+        }
+    }
+}
+
+function playOptionLockSound() {
+    var tmpAudio = new Audio('static/music/option_lock.mp3');
+    tmpAudio.play();
+}
+
+function playRightAnswerSound() {
+    var tmpAudio = new Audio('static/music/right_answer.mp3');
+    tmpAudio.play();
+}
+
+function playWrongAnswerSound() {
+    var tmpAudio = new Audio('static/music/wrong_answer.mp3');
+    tmpAudio.play();
+}
+
+function playBeforeQuestionSound() {
+    var tmpAudio = new Audio('static/music/before_question.mp3');
+    tmpAudio.play();
+}
+
 function revealAnswerToContestant() {
     revealAnswerButton.disabled = true;
     socket.emit("set_answer", answerUpdateObj);
+    if(answerUpdateObj.isAnsweredCorrectly) {
+        playRightAnswerSound();
+    } else {
+        playWrongAnswerSound();
+    }
 }
 
 function showCorrectAnswerToHost(selectedOptionIdx) {
@@ -283,6 +330,7 @@ function optionListener(button, selectedOptionIdx) {
     button.onclick = function() {
         pauseTimer();
         button.disabled = true;
+        playOptionLockSound();
         showCorrectAnswerToHost(selectedOptionIdx)
         socket.emit("set_locked_answer", selectedOptionIdx);
         revealAnswerButton.disabled = false;
@@ -302,18 +350,33 @@ function questionListener(button, question) {
     };
 }
 
+function clearExistingQuestion() {
+    divOptionA.style.backgroundColor = "lightblue";
+    divOptionB.style.backgroundColor = "lightblue";
+    divOptionC.style.backgroundColor = "lightblue";
+    divOptionD.style.backgroundColor = "lightblue";
+
+    pQuestion.innerHTML = "";
+    pOptionA.innerHTML = "";
+    pOptionB.innerHTML = "";
+    pOptionC.innerHTML = "";
+    pOptionD.innerHTML = "";
+
+    // hiding answer text and reveal button
+    const txtAnswerStat = document.getElementById("txt_answer_stat");
+    txtAnswerStat.innerHTML = "";
+    revealAnswerButton.disabled = true;
+
+    updateTimer("");
+    showHideDivSection(divAnswer, false);
+}
+
 function showQuestion(question) {
     currQuestion = question;
     divOptionA.style.backgroundColor = "lightblue";
     divOptionB.style.backgroundColor = "lightblue";
     divOptionC.style.backgroundColor = "lightblue";
     divOptionD.style.backgroundColor = "lightblue";
-
-    /*divQuestion.innerHTML = question.question;
-    divOptionA.innerHTML = question.options[0];
-    divOptionB.innerHTML = question.options[1];
-    divOptionC.innerHTML = question.options[2];
-    divOptionD.innerHTML = question.options[3];*/
 
     pQuestion.innerHTML = question.question;
     pOptionA.innerHTML = question.options[0];
@@ -330,42 +393,6 @@ function showQuestion(question) {
     optionListener(divOptionB, 1);
     optionListener(divOptionC, 2);
     optionListener(divOptionD, 3);
-}
-
-function showQuestions(question) {
-    currQuestion = question;
-    // setting question text
-    const txt_question = document.getElementById("txt_question");
-    const txtAnswerStat = document.getElementById("txt_answer_stat");
-    txt_question.innerHTML = question.question;
-
-    // hiding answer text and reveal button
-    txtAnswerStat.innerHTML = "";
-    revealAnswerButton.disabled = true;
-
-
-    // create dynamic option buttons
-    const option_a = document.getElementById("option_a");
-    const option_b = document.getElementById("option_b");
-    const option_c = document.getElementById("option_c");
-    const option_d = document.getElementById("option_d");
-
-    // enabling all the options
-    option_a.disabled = false;
-    option_b.disabled = false;
-    option_c.disabled = false;
-    option_d.disabled = false;
-
-    console.log(question.options);
-    option_a.innerHTML = question.options[0];
-    option_b.innerHTML = question.options[1];
-    option_c.innerHTML = question.options[2];
-    option_d.innerHTML = question.options[3];
-
-    optionListener(option_a, 0);
-    optionListener(option_b, 1);
-    optionListener(option_c, 2);
-    optionListener(option_d, 3);
 }
 
 function arrayRemove(arr, value) {
@@ -396,25 +423,6 @@ function activate5050() {
     }
 }
 
-function loadQuestions() {
-    var questionsDev = document.getElementById("questions");
-    //Append the element in page (in span).
-
-    for(let i=0; i< questions.length; i++) {
-        let question = questions[i];
-
-        var element = document.createElement("button");
-        //Assign different attributes to the element.
-        element.type = "button";
-        element.innerHTML = "Question "+(i+1);
-        element.className = 'btn-styled';
-
-        questionListener(element, question);
-
-        questionsDev.appendChild(element);
-    }
-}
-
 function addQuestionsToTable() {
     for(let i=questions.length-1; i >= 0; i--) {
         let question = questions[i];
@@ -441,15 +449,22 @@ function loadNextQuestion() {
     lastViewedQuestionIdx += 1;
     if(lastViewedQuestionIdx >= questions.length) {
         console.log("all questions read");
+        alert("all questions read");
         return;
     }
     currQuestion = questions[lastViewedQuestionIdx];
     showQuestion(currQuestion);
     socket.emit("set_question", currQuestion);
-    showHideDivSection(divAnswer, false);
 
     // marking time empty initially
-    updateTimer("");
+    if(currQuestion.maxSeconds == 0) {
+        updateTimer("");
+    } else {
+        updateTimer(currQuestion.maxSeconds);
+        // sending max time before the countdown begining
+        socket.emit("set_timer", currQuestion.maxSeconds);
+    }
+    
 
     // modifying table
     const currQuestionTableIdx = questions.length - lastViewedQuestionIdx;
@@ -457,7 +472,9 @@ function loadNextQuestion() {
     const price = tableQuestionsList.rows[currQuestionTableIdx].cells[1].innerHTML;
     tableQuestionsList.rows[currQuestionTableIdx].cells[1].innerHTML = '<del>'+String(price)+"</dev>";
     hideShowNextQuestionOption(false);
-    startTimer(currQuestion.maxSeconds);
+
+    //startTimer(currQuestion.maxSeconds);
+    window.setTimeout(startTimer, startTimerAfterSeconds, currQuestion.maxSeconds);
 }
 
 function applyLockedAnswerStyle(optionDiv) {
@@ -505,6 +522,7 @@ function readElements() {
     lifeline2 = document.getElementById("lifeline_2");
     lifeline3 = document.getElementById("lifeline_3");
 
+    timerSound = new Audio('static/music/kbc_clock.mp3');
 }
 
 function loadLifeLines() {
@@ -534,7 +552,6 @@ $(document).ready(function() {
     addEventListeners();
     read_file_name_and_load();
     loadLifeLines();
-    //loadQuestions();
     //addQuestionsToTable();
     showHideDivSection(divAnswer, false);
 });
