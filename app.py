@@ -31,6 +31,11 @@ def get_home_start():
     return render_template("home_start.html")
 
 
+@app.route("/spectator")
+def get_spectator():
+    return render_template("spectator.html")
+
+
 @socketio.on("message")
 def handle_message(msg):
     print("message "+str(msg))
