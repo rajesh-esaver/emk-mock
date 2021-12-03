@@ -105,6 +105,7 @@ def set_locked_answer(option_idx):
 
 @socketio.on("set_audience_locked_answer")
 def set_audience_locked_answer(option_idx):
+    print("audience answer: "+str(option_idx))
     add_audience_vote(option_idx)
 
 

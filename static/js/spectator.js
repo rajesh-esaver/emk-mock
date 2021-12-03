@@ -91,12 +91,11 @@ function lockUserGivenOption(lockOptionIdx) {
 	var selectedDiv = getOptionDivByIndex(lockOptionIdx);
 	applyLockedAnswerStyle(selectedDiv);
 	disableAllOptions(true);
+	// sending locked option
+	sendUserSelectedOption(lockOptionIdx);
 }
 
 function sendUserSelectedOption(lockOptionIdx) {
-	if(isLockedOption) {
-		return;
-	}
 	socket.emit("set_audience_locked_answer", lockOptionIdx);
 }
 
@@ -154,22 +153,18 @@ function showQuestion(question) {
 function addEventListeners() {
     divOptionA.addEventListener("click", (e) => {
         lockUserGivenOption(0);
-        sendUserSelectedOption(0);
     });
 
     divOptionB.addEventListener("click", (e) => {
         lockUserGivenOption(1);
-        sendUserSelectedOption(1);
     });
 
     divOptionC.addEventListener("click", (e) => {
         lockUserGivenOption(2);
-        sendUserSelectedOption(2);
     });
 
     divOptionD.addEventListener("click", (e) => {
         lockUserGivenOption(3);
-        sendUserSelectedOption(3);
     });
 
 }
