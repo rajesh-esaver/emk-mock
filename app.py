@@ -12,8 +12,23 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'secret'
 socketio = SocketIO(app)
+audience_votes = {}
 # CORS(app)
 # run_with_ngrok(app)
+
+
+def clear_votes():
+    audience_votes.clear()
+
+
+def get_current_votes_status():
+    return audience_votes
+
+
+def add_audience_vote(locked_option_idx):
+    if locked_option_idx not in audience_votes:
+        audience_votes[locked_option_idx] = 0
+    audience_votes[locked_option_idx] += 1
 
 
 @app.route("/")
@@ -61,6 +76,11 @@ def get_question_set(file_name):
     emit("get_question_set", questions_set)
 
 
+@socketio.on('get_audience_poll_data')
+def get_audience_poll_data():
+    emit("audience_poll_data", get_current_votes_status(), broadcast=True)
+
+
 @socketio.on('set_timer')
 def set_timer(curr_timer):
     # print(curr_timer)
@@ -73,6 +93,7 @@ def set_timer(curr_timer):
 @socketio.on("set_question")
 def set_answer(question_obj):
     print("question : " + str(question_obj))
+    clear_votes()
     emit("question", question_obj, broadcast=True)
 
 
@@ -80,6 +101,11 @@ def set_answer(question_obj):
 def set_locked_answer(option_idx):
     print("locked answer: "+str(option_idx))
     emit("locked_answer", option_idx, broadcast=True)
+
+
+@socketio.on("set_audience_locked_answer")
+def set_audience_locked_answer(option_idx):
+    add_audience_vote(option_idx)
 
 
 @socketio.on("set_answer")

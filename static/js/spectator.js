@@ -97,9 +97,14 @@ function sendUserSelectedOption(lockOptionIdx) {
 	if(isLockedOption) {
 		return;
 	}
+	socket.emit("set_audience_locked_answer", lockOptionIdx);
 }
 
 function revealAnswer(answerObj) {
+    if(currLockedOptionIdx == null) {
+        applyCorrectAnswerStyle(getOptionDivByIndex(answerObj.correctOptionIdx));
+        return;
+    }
     const optionDiv = getOptionDivByIndex(currLockedOptionIdx);
     if(currLockedOptionIdx != answerObj.correctOptionIdx) {
         // wrong answer, stop
@@ -142,6 +147,7 @@ function showQuestion(question) {
     pOptionD.innerHTML = "D. " + question.options[3];
 
     isLockedOption = false;
+    currLockedOptionIdx = null;
     disableAllOptions(false);
 }
 
