@@ -8,6 +8,7 @@
     <script type='text/javascript' src="static/js/constants.js"></script>
     <script type='text/javascript' src="static/js/host.js"></script>
     <link type="text/css" rel="stylesheet" href="static/css/host.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div style="border-style: solid; border-width: 1px; text-align: center;">
@@ -23,6 +24,11 @@
             <span id="txt_answer_stat"></span><br/>
             <span id="txt_trivia"></span><br/>
             <button id="btn_reveal_answer">Reveal Answer</button>
+        </div>
+        <div id="div_audience_data">
+            <canvas id="cn_audience_poll" style="width:100%;max-width:300px; height: 100%; max-height: 300px;">
+                
+            </canvas>
         </div>
         <div id="div_table" class="table bottom" style="width:70%;float: left;">
             <table style="width:70%; margin-left:auto; margin-right:auto; table-layout:fixed;">

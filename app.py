@@ -12,13 +12,14 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'secret'
 socketio = SocketIO(app)
-audience_votes = {}
+audience_votes = [0, 0, 0, 0]
 # CORS(app)
 # run_with_ngrok(app)
 
 
 def clear_votes():
-    audience_votes.clear()
+    for i in range(0, 4):
+        audience_votes[i] = 0
 
 
 def get_current_votes_status():
@@ -26,8 +27,8 @@ def get_current_votes_status():
 
 
 def add_audience_vote(locked_option_idx):
-    if locked_option_idx not in audience_votes:
-        audience_votes[locked_option_idx] = 0
+    # if locked_option_idx not in audience_votes:
+    #     audience_votes[locked_option_idx] = 0
     audience_votes[locked_option_idx] += 1
 
 
@@ -134,5 +135,6 @@ if __name__ == "__main__":
     # to run as sudo, sudo venv/bin/python3.7 app.py
     # if we run at host "0.0.0.0" then we can access the server using it's ip
     # from other machines which are in the same network
+    # clear_votes()
     socketio.run(app, host="0.0.0.0", port=5000)
 

@@ -21,6 +21,7 @@ var lifeline1, lifeline2, lifeline3, btnShowLifelines, btnHideLifelines, diveLif
 var btnShowAudienceData;
 var lastViewedQuestionIdx = -1;
 var lifeLinesInfo;
+var barChart;
 var showQuestionAfterSeconds = 4000;
 var startTimerAfterSeconds = 3000;
 var timerSound;
@@ -83,8 +84,9 @@ socket.on('connect', function() {
     isSocketConnected = true;
 });
 
-socket.on('audience_poll_data', function(audience_poll) {
-    console.log(audience_poll);
+socket.on('audience_poll_data', function(audience_poll_data) {
+    console.log(audience_poll_data);
+    showAudiencePollData(audience_poll_data);
 });
 
 socket.on('get_question_set', function(questions_set) {
@@ -298,6 +300,42 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
         applyWrongAnswerStyle(getOptionDivByIndex(selectedOptionIdx));
         applyCorrectAnswerStyle(getOptionDivByIndex(correctOptionIdx));
     }
+}
+
+function showAudiencePollData(audienceData) {
+    const ctx = document.getElementById('cn_audience_poll');
+
+    var totVotes = 0;
+    for(let i=0; i<audienceData.length; i++) {
+        totVotes += audienceData[i];
+    }
+
+    bars = []
+    for(let i=0; i<audienceData.length; i++) {
+        var optionPerc = (audienceData[i]/totVotes)*100;
+        bars.push(Math.round(optionPerc));
+    }
+    console.log(bars);
+
+    if(barChart != null) {
+        barChart.destroy();
+    }
+
+    barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['A', 'B', 'C', 'D'],
+            datasets: [{
+                label: 'Audience Poll',
+                data: bars,
+                borderColor: 'rgb(255, 99, 132)',
+                borderWidth: 1,
+                barPercentage: 1.0
+            }]
+        },
+        options: {}
+
+    });
 }
 
 function showHideDivSection(div, show) {
@@ -564,5 +602,6 @@ $(document).ready(function() {
     read_file_name_and_load();
     loadLifeLines();
     //addQuestionsToTable();
+    //showAudiencePollData([10, 5, 20, 1]);
     showHideDivSection(divAnswer, false);
 });
