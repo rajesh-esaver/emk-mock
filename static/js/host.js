@@ -86,7 +86,8 @@ socket.on('connect', function() {
 
 socket.on('audience_poll_data', function(audience_poll_data) {
     console.log(audience_poll_data);
-    showAudiencePollData(audience_poll_data);
+    //showAudiencePollData(audience_poll_data);
+    showAudiencePoll(audience_poll_data);
 });
 
 socket.on('get_question_set', function(questions_set) {
@@ -300,6 +301,44 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
         applyWrongAnswerStyle(getOptionDivByIndex(selectedOptionIdx));
         applyCorrectAnswerStyle(getOptionDivByIndex(correctOptionIdx));
     }
+}
+
+function showAudiencePoll(audienceData) {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Option');
+    data.addColumn('number', 'Percentage');
+    data.addColumn({ role: 'annotation' }, 'annotation');
+
+    /*data.addRows([
+        ["A", 10, '10'],
+        ["B", 10],
+        ["C", 10],
+        ["D", 10]
+      ]);*/
+
+    var totVotes = 0;
+    for(let i=0; i<audienceData.length; i++) {
+        totVotes += audienceData[i];
+    }
+
+    options = ['A', 'B', 'C', 'D'];
+
+    for(let i=0; i<audienceData.length; i++) {
+        var optionPerc = (audienceData[i]/totVotes)*100;
+        optionPerc = Math.round(optionPerc);
+
+        const val = [options[i], optionPerc, String(optionPerc)];
+        data.addRow(val);
+    }
+    
+
+    var options = {'title':'Audience Poll',
+                       'width':400,
+                       'height':300};
+
+    // Instantiate and draw the chart.
+    var chart = new google.visualization.ColumnChart(document.getElementById('div_audience_data'));
+    chart.draw(data, options);
 }
 
 function showAudiencePollData(audienceData) {
@@ -603,5 +642,6 @@ $(document).ready(function() {
     loadLifeLines();
     //addQuestionsToTable();
     //showAudiencePollData([10, 5, 20, 1]);
+    google.charts.load('current', {packages: ['corechart', 'bar']});
     showHideDivSection(divAnswer, false);
 });
