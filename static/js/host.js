@@ -304,9 +304,12 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
 }
 
 function showAudiencePoll(audienceData) {
+    //audienceData = [10,0,1,1];
+
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Option');
     data.addColumn('number', 'Percentage');
+    data.addColumn({ role: 'style' }, 'style');
     data.addColumn({ role: 'annotation' }, 'annotation');
 
     /*data.addRows([
@@ -321,20 +324,25 @@ function showAudiencePoll(audienceData) {
         totVotes += audienceData[i];
     }
 
-    options = ['A', 'B', 'C', 'D'];
+    const optionNames = ['A', 'B', 'C', 'D'];
 
     for(let i=0; i<audienceData.length; i++) {
         var optionPerc = (audienceData[i]/totVotes)*100;
         optionPerc = Math.round(optionPerc);
 
-        const val = [options[i], optionPerc, String(optionPerc)];
+        barStyle = 'stroke-color: #232366; stroke-opacity: 0.6; stroke-width: 2; fill-color: #273296;'
+        const val = [optionNames[i], optionPerc, barStyle, String(optionPerc)+"%"];
         data.addRow(val);
     }
     
 
     var options = {'title':'Audience Poll',
-                       'width':400,
-                       'height':300};
+                    vAxis: {
+                        minValue: 0,
+                        maxValue: 100
+                      },
+                    'width':400,
+                    'height':300};
 
     // Instantiate and draw the chart.
     var chart = new google.visualization.ColumnChart(document.getElementById('div_audience_data'));
@@ -643,5 +651,6 @@ $(document).ready(function() {
     //addQuestionsToTable();
     //showAudiencePollData([10, 5, 20, 1]);
     google.charts.load('current', {packages: ['corechart', 'bar']});
+    //google.charts.setOnLoadCallback(showAudiencePoll);
     showHideDivSection(divAnswer, false);
 });
