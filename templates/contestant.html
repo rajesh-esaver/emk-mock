@@ -8,6 +8,7 @@
     <script type='text/javascript' src="static/js/constants.js"></script>
     <script type='text/javascript' src="static/js/contestant.js"></script>
     <link type="text/css" rel="stylesheet" href="static/css/contestant.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <!--<script src="https://cdn.socket.io/4.3.2/socket.io.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>-->
 </head>
@@ -19,6 +20,9 @@
     </div>
     <div id="div_logo">
         <img id="img_logo" src="{{url_for('static', filename = 'images/mek_logo.jpg')}}" class="img_logo">
+    </div>
+    <div id="div_audience_poll">
+        <div id="div_audience_poll_chart"></div>    
     </div>
     <div id="div_table" class="table bottom" style="width:100%; text-align: center; position: relative, bottom;">
         <table style="width:60%; margin-left:auto; margin-right:auto; table-layout:fixed;">

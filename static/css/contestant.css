@@ -60,6 +60,13 @@
     text-align: center;
 }
 
+#div_audience_poll {
+    top: 12%;
+    right: 5%;
+    position: absolute;
+    text-align: center;
+}
+
 #div_timer {
     height: 100px;
     width: 200px;
@@ -80,7 +87,7 @@
 }
 
 #div_lifelines {
-    top: 25%;
+    top: 15%;
     left: 10px;
     right: 10px;
     position: absolute;
