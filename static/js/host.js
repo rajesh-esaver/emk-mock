@@ -19,7 +19,7 @@ var divQuestion, divAnswer, pQuestion;
 var tableQuestionsList, btnNextQuestion;
 var lifeline1, lifeline2, lifeline3, btnShowLifelines, btnHideLifelines, diveLifelines;
 var btnShowAudienceData;
-var divAudiencePoll;
+var divAudiencePoll, divAudiencePollChart;
 var lastViewedQuestionIdx = -1;
 var lifeLinesInfo;
 var barChart;
@@ -179,6 +179,7 @@ function addEventListeners() {
         // send event
         lifeLinesInfo.showLifeLines = false;
         isLifeLinesBeingShowed = !isLifeLinesBeingShowed;
+        showHideAudiencePollChart(false);
         socket.emit("set_lifelines", lifeLinesInfo);
     });
 
@@ -304,7 +305,8 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
 }
 
 function showAudiencePollData(audienceData) {
-    audienceData = [10,0,1,1];
+    showHideAudiencePollChart(true);
+    //audienceData = [10,0,1,1];
 
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Option');
@@ -347,6 +349,14 @@ function showAudiencePollData(audienceData) {
     // Instantiate and draw the chart.
     var chart = new google.visualization.ColumnChart(document.getElementById('div_audience_poll_chart'));
     chart.draw(data, options);
+}
+
+function showHideAudiencePollChart(show) {
+    if(show) {
+        showHideDivSection(divAudiencePollChart, show);
+    } else {
+        showHideDivSection(divAudiencePollChart, show);
+    }
 }
 
 function showHideDivSection(div, show) {
@@ -583,6 +593,7 @@ function readElements() {
     lifeline3 = document.getElementById("lifeline_3");
 
     divAudiencePoll = document.getElementById("div_audience_poll");
+    divAudiencePollChart = document.getElementById("div_audience_poll_chart");
     timerSound = new Audio('static/music/kbc_clock.mp3');
 }
 
@@ -614,6 +625,6 @@ $(document).ready(function() {
     read_file_name_and_load();
     loadLifeLines();
     google.charts.load('current', {packages: ['corechart', 'bar']});
-    google.charts.setOnLoadCallback(showAudiencePollData);
+    //google.charts.setOnLoadCallback(showAudiencePollData);
     showHideDivSection(divAnswer, false);
 });
