@@ -1,8 +1,10 @@
+.control_box {
+    border-style: solid;
+    border-color: orange;
+    border-width: 1px;
 
-#div_questions_list {
-    background-color: orange;
-    width: 30%;
-    height: 100px;
+    text-align: center;
+    align-items: center;
 }
 
 .option {

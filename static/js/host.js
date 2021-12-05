@@ -19,6 +19,7 @@ var divQuestion, divAnswer, pQuestion;
 var tableQuestionsList, btnNextQuestion;
 var lifeline1, lifeline2, lifeline3, btnShowLifelines, btnHideLifelines, diveLifelines;
 var btnShowAudienceData;
+var divAudiencePoll;
 var lastViewedQuestionIdx = -1;
 var lifeLinesInfo;
 var barChart;
@@ -84,10 +85,9 @@ socket.on('connect', function() {
     isSocketConnected = true;
 });
 
-socket.on('audience_poll_data', function(audience_poll_data) {
-    console.log(audience_poll_data);
-    //showAudiencePollData(audience_poll_data);
-    showAudiencePoll(audience_poll_data);
+socket.on('audience_poll_data', function(audiencePollData) {
+    console.log(audiencePollData);
+    showAudiencePollData(audiencePollData);
 });
 
 socket.on('get_question_set', function(questions_set) {
@@ -303,8 +303,8 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
     }
 }
 
-function showAudiencePoll(audienceData) {
-    //audienceData = [10,0,1,1];
+function showAudiencePollData(audienceData) {
+    audienceData = [10,0,1,1];
 
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Option');
@@ -345,44 +345,8 @@ function showAudiencePoll(audienceData) {
                     'height':300};
 
     // Instantiate and draw the chart.
-    var chart = new google.visualization.ColumnChart(document.getElementById('div_audience_data'));
+    var chart = new google.visualization.ColumnChart(document.getElementById('div_audience_poll_chart'));
     chart.draw(data, options);
-}
-
-function showAudiencePollData(audienceData) {
-    const ctx = document.getElementById('cn_audience_poll');
-
-    var totVotes = 0;
-    for(let i=0; i<audienceData.length; i++) {
-        totVotes += audienceData[i];
-    }
-
-    bars = []
-    for(let i=0; i<audienceData.length; i++) {
-        var optionPerc = (audienceData[i]/totVotes)*100;
-        bars.push(Math.round(optionPerc));
-    }
-    console.log(bars);
-
-    if(barChart != null) {
-        barChart.destroy();
-    }
-
-    barChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['A', 'B', 'C', 'D'],
-            datasets: [{
-                label: 'Audience Poll',
-                data: bars,
-                borderColor: 'rgb(255, 99, 132)',
-                borderWidth: 1,
-                barPercentage: 1.0
-            }]
-        },
-        options: {}
-
-    });
 }
 
 function showHideDivSection(div, show) {
@@ -618,6 +582,7 @@ function readElements() {
     lifeline2 = document.getElementById("lifeline_2");
     lifeline3 = document.getElementById("lifeline_3");
 
+    divAudiencePoll = document.getElementById("div_audience_poll");
     timerSound = new Audio('static/music/kbc_clock.mp3');
 }
 
@@ -648,9 +613,7 @@ $(document).ready(function() {
     addEventListeners();
     read_file_name_and_load();
     loadLifeLines();
-    //addQuestionsToTable();
-    //showAudiencePollData([10, 5, 20, 1]);
     google.charts.load('current', {packages: ['corechart', 'bar']});
-    //google.charts.setOnLoadCallback(showAudiencePoll);
+    google.charts.setOnLoadCallback(showAudiencePollData);
     showHideDivSection(divAnswer, false);
 });
