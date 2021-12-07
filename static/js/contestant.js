@@ -7,6 +7,7 @@ var divOptionA, divOptionB, divOptionC, divOptionD;
 var pOptionA, pOptionB, pOptionC, pOptionD;
 var divQuestion, divWonAmount, pQuestion;
 var divLifelines, imgLifeline1, imgLifeline2, imgLifeline3;
+var divAudiencePoll;
 var divLogo;
 var currLockedOptionIdx = "";
 var divTimer, spTimer, spWonAmount;
@@ -56,6 +57,9 @@ socket.on('lifelines', function(lifelinesObj) {
     // {'isUsed': True, 'name': 'Dial A Dost'}], 'showLifeLines': False}
     console.log(lifelinesObj);
     showLifeLines(lifelinesObj);
+    if(!lifelinesObj.showLifeLines) {
+        showHideDivSection(divAudiencePoll, false);
+    }
 });
 
 socket.on('lifeline_5050', function(removedIndexes) {
@@ -63,6 +67,12 @@ socket.on('lifeline_5050', function(removedIndexes) {
     // [0, 1]
     console.log(removedIndexes);
     activateLifeline5050(removedIndexes);
+});
+
+socket.on('audience_poll_data', function(audiencePollData) {
+    console.log(audiencePollData);
+    showHideDivSection(divLifelines, false);
+    showAudiencePollData(audiencePollData);
 });
 
 function showHideTableDiv(show) {
@@ -114,6 +124,45 @@ function activateLifeline5050(removedIndexes) {
         let indexToRemove = removedIndexes[i];
         getOptionEleByIndex(indexToRemove).innerHTML = "";
     }
+}
+
+function showAudiencePollData(audienceData) {
+    //audienceData = [10,0,1,1];
+    showHideDivSection(div_audience_poll, true);
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Option');
+    data.addColumn('number', 'Percentage');
+    data.addColumn({ role: 'style' }, 'style');
+    data.addColumn({ role: 'annotation' }, 'annotation');
+
+    var totVotes = 0;
+    for(let i=0; i<audienceData.length; i++) {
+        totVotes += audienceData[i];
+    }
+
+    const optionNames = ['A', 'B', 'C', 'D'];
+
+    for(let i=0; i<audienceData.length; i++) {
+        var optionPerc = (audienceData[i]/totVotes)*100;
+        optionPerc = Math.round(optionPerc);
+
+        barStyle = 'stroke-color: #232366; stroke-opacity: 0.6; stroke-width: 2; fill-color: #273296;'
+        const val = [optionNames[i], optionPerc, barStyle, String(optionPerc)+"%"];
+        data.addRow(val);
+    }
+    
+    var options = {'title':'Audience Poll',
+        vAxis: {
+            minValue: 0,
+            maxValue: 100
+        },
+        'width':400,
+        'height':300};
+
+    // Instantiate and draw the chart.
+    var chart = new google.visualization.ColumnChart(document.getElementById('div_audience_poll_chart'));
+    chart.draw(data, options);
 }
 
 function showQuestion(question) {
@@ -256,6 +305,8 @@ function readElements() {
 
     divLogo = document.getElementById("div_logo");
     divTimer = document.getElementById("div_timer");
+
+    divAudiencePoll = document.getElementById("div_audience_poll");
 }
 
 $(document).ready(function() {
@@ -263,4 +314,6 @@ $(document).ready(function() {
     showHideTableDiv(false);
     showHideDivSection(divLifelines, false);
     showHideDivSection(divWonAmount, false);
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    //google.charts.setOnLoadCallback(showAudiencePollData);
 });

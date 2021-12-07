@@ -1,8 +1,10 @@
+.control_box {
+    border-style: solid;
+    border-color: orange;
+    border-width: 1px;
 
-#div_questions_list {
-    background-color: orange;
-    width: 30%;
-    height: 100px;
+    text-align: center;
+    align-items: center;
 }
 
 .option {
@@ -25,13 +27,15 @@
     font-size: 1.5vw;
 }
 
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
 .img_lifeline {
     width: 100px;
     height: 100px;
 }
-
-/*
-.bottom {
-    position: absolute;
-    bottom: 20%;
-}*/

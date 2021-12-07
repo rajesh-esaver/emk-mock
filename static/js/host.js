@@ -18,8 +18,11 @@ var divOptionA, divOptionB, divOptionC, divOptionD;
 var divQuestion, divAnswer, pQuestion;
 var tableQuestionsList, btnNextQuestion;
 var lifeline1, lifeline2, lifeline3, btnShowLifelines, btnHideLifelines, diveLifelines;
+var btnShowAudienceData;
+var divAudiencePoll, divAudiencePollChart;
 var lastViewedQuestionIdx = -1;
 var lifeLinesInfo;
+var barChart;
 var showQuestionAfterSeconds = 4000;
 var startTimerAfterSeconds = 3000;
 var timerSound;
@@ -80,6 +83,11 @@ var isSocketConnected = false;
 
 socket.on('connect', function() {
     isSocketConnected = true;
+});
+
+socket.on('audience_poll_data', function(audiencePollData) {
+    console.log(audiencePollData);
+    showAudiencePollData(audiencePollData);
 });
 
 socket.on('get_question_set', function(questions_set) {
@@ -171,7 +179,13 @@ function addEventListeners() {
         // send event
         lifeLinesInfo.showLifeLines = false;
         isLifeLinesBeingShowed = !isLifeLinesBeingShowed;
+        showHideAudiencePollChart(false);
         socket.emit("set_lifelines", lifeLinesInfo);
+    });
+
+    btnShowAudienceData.addEventListener("click", (e) => {
+        // send event
+        socket.emit("get_audience_poll_data");
     });
 
     lifeline1.addEventListener("click", (e) => {
@@ -287,6 +301,61 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
         answerUpdateObj.amountWon = currQuestion.amountWonForWrong;
         applyWrongAnswerStyle(getOptionDivByIndex(selectedOptionIdx));
         applyCorrectAnswerStyle(getOptionDivByIndex(correctOptionIdx));
+    }
+}
+
+function showAudiencePollData(audienceData) {
+    showHideAudiencePollChart(true);
+    //audienceData = [10,0,1,1];
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Option');
+    data.addColumn('number', 'Percentage');
+    data.addColumn({ role: 'style' }, 'style');
+    data.addColumn({ role: 'annotation' }, 'annotation');
+
+    /*data.addRows([
+        ["A", 10, '10'],
+        ["B", 10],
+        ["C", 10],
+        ["D", 10]
+      ]);*/
+
+    var totVotes = 0;
+    for(let i=0; i<audienceData.length; i++) {
+        totVotes += audienceData[i];
+    }
+
+    const optionNames = ['A', 'B', 'C', 'D'];
+
+    for(let i=0; i<audienceData.length; i++) {
+        var optionPerc = (audienceData[i]/totVotes)*100;
+        optionPerc = Math.round(optionPerc);
+
+        barStyle = 'stroke-color: #232366; stroke-opacity: 0.6; stroke-width: 2; fill-color: #273296;'
+        const val = [optionNames[i], optionPerc, barStyle, String(optionPerc)+"%"];
+        data.addRow(val);
+    }
+    
+
+    var options = {'title':'Audience Poll',
+                    vAxis: {
+                        minValue: 0,
+                        maxValue: 100
+                      },
+                    'width':400,
+                    'height':300};
+
+    // Instantiate and draw the chart.
+    var chart = new google.visualization.ColumnChart(document.getElementById('div_audience_poll_chart'));
+    chart.draw(data, options);
+}
+
+function showHideAudiencePollChart(show) {
+    if(show) {
+        showHideDivSection(divAudiencePollChart, show);
+    } else {
+        showHideDivSection(divAudiencePollChart, show);
     }
 }
 
@@ -518,10 +587,13 @@ function readElements() {
     diveLifelines = document.getElementById("div_lifelines");
     btnShowLifelines = document.getElementById("btn_show_lifelines");
     btnHideLifelines = document.getElementById("btn_hide_lifelines");
+    btnShowAudienceData = document.getElementById("btn_show_audience_data");
     lifeline1 = document.getElementById("lifeline_1");
     lifeline2 = document.getElementById("lifeline_2");
     lifeline3 = document.getElementById("lifeline_3");
 
+    divAudiencePoll = document.getElementById("div_audience_poll");
+    divAudiencePollChart = document.getElementById("div_audience_poll_chart");
     timerSound = new Audio('static/music/kbc_clock.mp3');
 }
 
@@ -552,6 +624,7 @@ $(document).ready(function() {
     addEventListeners();
     read_file_name_and_load();
     loadLifeLines();
-    //addQuestionsToTable();
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    //google.charts.setOnLoadCallback(showAudiencePollData);
     showHideDivSection(divAnswer, false);
 });

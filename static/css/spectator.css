@@ -1,0 +1,36 @@
+
+.question {
+    background-color: #273296;
+    background-image: linear-gradient(#232366 15%, #273296 90%, #232366);
+    /*border-radius: 10% / 50%;*/
+    min-height: 80px;
+    text-align: left;
+    line-height: 120%;
+    padding: 10px 15px 10px 15px;
+    font-size: 1em;
+
+    color: white;
+    border-style: solid;
+    border-color: orange;
+    border-width: 2px;
+
+    user-select: none;
+}
+
+.option {
+    background-color: lightblue;
+    background-image: linear-gradient(#232366 15%, #273296 90%, #232366);
+    border-radius: 10% / 50%;
+    height: 60px;
+    text-align: center;
+    font-size: 1.3em;
+    line-height: 60px;
+    /*padding: 1px 15px 1px 30px;*/
+
+    color: white;
+    border-style: solid;
+    border-color: orange;
+    border-width: 1px;
+
+    user-select: none;
+}
