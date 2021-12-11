@@ -34,6 +34,7 @@ def add_audience_vote(locked_option_idx):
 
 
 @app.route("/")
+@app.route("/contestant")
 def get_contestant():
     return render_template("contestant.html")
 
@@ -51,6 +52,11 @@ def get_home_start():
 @app.route("/spectator")
 def get_spectator():
     return render_template("spectator.html")
+
+
+@app.route("/url_qr")
+def get_url_qr():
+    return render_template("url_qr.html")
 
 
 @socketio.on("message")
@@ -134,8 +140,9 @@ if __name__ == "__main__":
     # if we run at host "0.0.0.0" then we can access the server using it's ip
     # from other machines which are in the same network
     # clear_votes()
-    url = ngrok.connect(5000).public_url
-    print(' * Tunnel URL:', url)
-    socketio.run(app, host="0.0.0.0", port=5000)
+    # url = ngrok.connect(5000).public_url
+    # print(' * Tunnel URL:', url)
+    socketio.run(app, debug=True, host="0.0.0.0", port=5000)
+    # socketio.run(app, host="0.0.0.0", port=5000)
 
 
