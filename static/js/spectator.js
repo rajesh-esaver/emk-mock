@@ -1,5 +1,6 @@
 
-var url = base_url;
+//var url = base_url;
+var url = getServerBaseUrl();
 var socket = io.connect(url);
 var divOptionA, divOptionB, divOptionC, divOptionD;
 var pOptionA, pOptionB, pOptionC, pOptionD;

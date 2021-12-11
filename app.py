@@ -142,7 +142,7 @@ if __name__ == "__main__":
     # clear_votes()
     # url = ngrok.connect(5000).public_url
     # print(' * Tunnel URL:', url)
-    socketio.run(app, debug=True, host="0.0.0.0", port=5000)
-    # socketio.run(app, host="0.0.0.0", port=5000)
+    # socketio.run(app, debug=True, host="0.0.0.0", port=5000)
+    socketio.run(app, host="0.0.0.0", port=5000)
 
 

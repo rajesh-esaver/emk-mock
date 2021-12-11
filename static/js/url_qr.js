@@ -3,14 +3,17 @@
 function generateQRCode() {
     let serverUrl = document.getElementById("inpUrl").value;
     if (serverUrl) {
+        let newBaseUrl = getBaseUrlPart(serverUrl);
+        saveServerBaseUrl(newBaseUrl);
+
         let divAudienceQr = document.getElementById("div_audience_qr");
-        let audienceQrUrl = getAudienceUrl(serverUrl);
+        let audienceQrUrl = getAudienceUrl(newBaseUrl);
         divAudienceQr.innerHTML = "";
         new QRCode(divAudienceQr, audienceQrUrl);
         document.getElementById("p_audience_qr").innerHTML = audienceQrUrl;
 
         let divContestantQr = document.getElementById("div_contestant_qr");
-        let contestantQrUrl = getContestantUrl(serverUrl);
+        let contestantQrUrl = getContestantUrl(newBaseUrl);
         divContestantQr.innerHTML = "";
         new QRCode(divContestantQr, contestantQrUrl);
         document.getElementById("p_contestant_qr").innerHTML = contestantQrUrl;
@@ -18,20 +21,18 @@ function generateQRCode() {
     }
 }
 
-function getAudienceUrl(serverUrl) {
-    if(serverUrl.endsWith("/")) {
-        BASE_URL = serverUrl.slice(0, -1);
-    } else {
-        //BASE_URL = serverUrl + "/";
+function getBaseUrlPart(newUrl) {
+    var newBaseUrl = newUrl;
+    if(newUrl.endsWith("/")) {
+        newBaseUrl = newUrl.slice(0, -1);
     }
-    return BASE_URL + AUDIENCE_ENDPOINT;
+    return newBaseUrl;
+}
+
+function getAudienceUrl(serverUrl) {
+    return serverUrl + AUDIENCE_ENDPOINT;
 }
 
 function getContestantUrl(serverUrl) {
-    if(serverUrl.endsWith("/")) {
-        BASE_URL = serverUrl.slice(0, -1);
-    } else {
-        //BASE_URL = serverUrl + "/";
-    }
-    return BASE_URL + CONTESTANT_ENDPOINT;
+    return serverUrl + CONTESTANT_ENDPOINT;
 }
