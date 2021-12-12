@@ -1,10 +1,9 @@
 
 
 function generateQRCode() {
-    let serverUrl = document.getElementById("inpUrl").value;
+    let serverUrl = document.getElementById("inp_url").value;
     if (serverUrl) {
         let newBaseUrl = getBaseUrlPart(serverUrl);
-        saveServerBaseUrl(newBaseUrl);
 
         let divAudienceQr = document.getElementById("div_audience_qr");
         let audienceQrUrl = getAudienceUrl(newBaseUrl);
@@ -36,3 +35,7 @@ function getAudienceUrl(serverUrl) {
 function getContestantUrl(serverUrl) {
     return serverUrl + CONTESTANT_ENDPOINT;
 }
+
+$(document).ready(function() {
+    document.getElementById("inp_url").value = BASE_URL;
+});
