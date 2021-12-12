@@ -11,7 +11,8 @@ import question_reader
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'secret'
-socketio = SocketIO(app)
+
+socketio = SocketIO(app, cors_allowed_origins="*")
 audience_votes = [0, 0, 0, 0]
 # CORS(app)
 # run_with_ngrok(app)
@@ -33,6 +34,7 @@ def add_audience_vote(locked_option_idx):
 
 
 @app.route("/")
+@app.route("/contestant")
 def get_contestant():
     return render_template("contestant.html")
 
@@ -50,6 +52,11 @@ def get_home_start():
 @app.route("/spectator")
 def get_spectator():
     return render_template("spectator.html")
+
+
+@app.route("/url_qr")
+def get_url_qr():
+    return render_template("url_qr.html")
 
 
 @socketio.on("message")
@@ -129,12 +136,13 @@ def set_5050(removed_indexes):
 
 
 if __name__ == "__main__":
-    # question_reader.get_file_names()
-    # map_url = ngrok.connect(5000)
-    # print(map_url)
     # to run as sudo, sudo venv/bin/python3.7 app.py
     # if we run at host "0.0.0.0" then we can access the server using it's ip
     # from other machines which are in the same network
     # clear_votes()
+    # url = ngrok.connect(5000).public_url
+    # print(' * Tunnel URL:', url)
+    # socketio.run(app, debug=True, host="0.0.0.0", port=5000)
     socketio.run(app, host="0.0.0.0", port=5000)
+
 

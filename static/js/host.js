@@ -1,6 +1,6 @@
 
 //var url = 'http://192.168.1.48:5000';
-var url = base_url;
+var url = getServerBaseUrl();
 // time
 var maxSeconds = 10;    // time in seconds
 var currSeconds = maxSeconds;
