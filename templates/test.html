@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div style="width:60%; height: 100px; margin-left:auto; margin-right:auto; background-color:red;">
+        <img src="{{url_for('static', filename = 'images/test.svg')}}" style="width: 100%; height: 100%">
+    </div>
+    <table style="width:60%; margin-left:auto; margin-right:auto; table-layout:fixed;">
+            <tr>
+                <td colspan="2">
+                    <div id="div_question" class="question">
+                        <p id="p_question"></p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="div_option_a" class="option">
+                        <p id="p_option_a"></p>
+                    </div>
+                </td>
+                <td>
+                    <div id="div_option_b" class="option">
+                        <p id="p_option_b"></p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="div_option_c" class="option">
+                        <p id="p_option_c"></p>
+                    </div>
+                </td>
+                <td>
+                    <div id="div_option_d" class="option">
+                        <p id="p_option_d"></p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+</body>
+</html>
