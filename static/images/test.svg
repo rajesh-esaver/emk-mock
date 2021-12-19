@@ -14,7 +14,7 @@
         </radialGradient>
     </defs>
 
-    <path d="M0,50 L40,10
+    <path id="box" d="M0,50 L40,10
             L470,10
             l30,40
             l-30,40
