@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    viewBox="0 0 500 100">
+
+    <defs>
+        <linearGradient id="linear-border-line" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+          <stop offset="0" stop-color="#8a801f"/>
+          <stop offset="1" stop-color="#f2ce31"/>
+        </linearGradient>
+
+        <radialGradient id="radial-question" cx="0.51" cy="0.5" r="0.655" gradientUnits="objectBoundingBox">
+          <stop offset="0" stop-color="#3400bd"/>
+          <stop offset="0.526" stop-color="#25008f"/>
+          <stop offset="1" stop-color="#100051"/>
+        </radialGradient>
+    </defs>
+
+    <path d="M10,50 L40,10
+            L450,10
+            l30,40
+            l-30,40
+            L40,90
+            L10,50
+            z"
+          style="stroke: url(#linear-border-line);
+            stroke-width: 3;
+            fill: url(#radial-question);"
+    />
+</svg>

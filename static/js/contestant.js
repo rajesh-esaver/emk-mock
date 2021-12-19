@@ -166,6 +166,7 @@ function showAudiencePollData(audienceData) {
 }
 
 function showQuestion(question) {
+    showHideTableDiv(true);
     showHideDivSection(divLogo, false);
 
     if(question.maxSeconds == 0) {
@@ -316,4 +317,8 @@ $(document).ready(function() {
     showHideDivSection(divWonAmount, false);
     google.charts.load('current', {packages: ['corechart', 'bar']});
     //google.charts.setOnLoadCallback(showAudiencePollData);
+
+    const options = ["Option A", "Option B", "Option C", "Option D"];
+    var question = new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10);
+    showQuestion(question);
 });
