@@ -14,12 +14,12 @@
         </radialGradient>
     </defs>
 
-    <path d="M10,50 L40,10
-            L450,10
+    <path d="M0,50 L40,10
+            L470,10
             l30,40
             l-30,40
             L40,90
-            L10,50
+            L0,50
             z"
           style="stroke: url(#linear-border-line);
             stroke-width: 1.5;
