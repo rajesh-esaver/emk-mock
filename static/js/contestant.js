@@ -6,6 +6,7 @@ var divTable = "";
 var divOptionA, divOptionB, divOptionC, divOptionD;
 var pOptionA, pOptionB, pOptionC, pOptionD;
 var divQuestion, divWonAmount, pQuestion;
+var divQuestionBack, divQuestionText;
 var divLifelines, imgLifeline1, imgLifeline2, imgLifeline3;
 var divAudiencePoll;
 var divLogo;
@@ -181,7 +182,8 @@ function showQuestion(question) {
     divOptionD.style.backgroundColor = "lightblue";
 
     //divQuestion.innerHTML = question.question;
-    pQuestion.innerHTML = question.question;
+    //pQuestion.innerHTML = question.question;
+    divQuestionText.innerHTML = question.question;
 
     // prefixes = ['-o-', '-ms-', '-moz-', '-webkit-'];
     divOptionA.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
@@ -281,6 +283,8 @@ function applyWrongAnswerStyle(optionDiv) {
 function readElements() {
     divTable = document.getElementById("div_table");
     divQuestion = document.getElementById("div_question");
+    divQuestionBack = document.getElementById("div_question_back");
+    divQuestionText = document.getElementById("div_question_text");
     pQuestion = document.getElementById("p_question");
 
     divOptionA = document.getElementById("div_option_a");
