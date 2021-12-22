@@ -16,6 +16,25 @@
     color: white;
 }
 
+.div_option_back {
+    position: relative;
+    text-align: center;
+}
+
+.obj_option_back {
+    width: 100%;
+    height: 75px;
+}
+
+.div_option_text {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+    font-size:1.1vw;
+    color: white;
+}
+
 .option {
     background-color: lightblue;
     background-image: linear-gradient(#232366 15%, #273296 90%, #232366);

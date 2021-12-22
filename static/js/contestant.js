@@ -6,7 +6,10 @@ var divTable = "";
 var divOptionA, divOptionB, divOptionC, divOptionD;
 var pOptionA, pOptionB, pOptionC, pOptionD;
 var divQuestion, divWonAmount, pQuestion;
+
 var divQuestionBack, divQuestionText;
+var divOptionABack, divOptionAText;
+
 var divLifelines, imgLifeline1, imgLifeline2, imgLifeline3;
 var divAudiencePoll;
 var divLogo;
@@ -176,7 +179,7 @@ function showQuestion(question) {
         showHideDivSection(divTimer, true);
     }
 
-    divOptionA.style.backgroundColor = "lightblue";
+    //divOptionA.style.backgroundColor = "lightblue";
     divOptionB.style.backgroundColor = "lightblue";
     divOptionC.style.backgroundColor = "lightblue";
     divOptionD.style.backgroundColor = "lightblue";
@@ -186,17 +189,18 @@ function showQuestion(question) {
     divQuestionText.innerHTML = question.question;
 
     // prefixes = ['-o-', '-ms-', '-moz-', '-webkit-'];
-    divOptionA.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
+    //divOptionA.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
     divOptionB.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
     divOptionC.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
     divOptionD.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
 
-    divOptionA.style.color = "white";
+    //divOptionA.style.color = "white";
     divOptionB.style.color = "white";
     divOptionC.style.color = "white";
     divOptionD.style.color = "white";
 
-    pOptionA.innerHTML = "A. " + question.options[0];
+    //pOptionA.innerHTML = "A. " + question.options[0];
+    divOptionAText.innerHTML = "A. " + question.options[0];
     pOptionB.innerHTML = "B. " + question.options[1];
     pOptionC.innerHTML = "C. " + question.options[2];
     pOptionD.innerHTML = "D. " + question.options[3];
@@ -253,6 +257,10 @@ function getOptionEleByIndex(optionIdx) {
 }
 
 function setLockedAnswer(selectedOptionIdx) {
+    /*var svg = document.getElementById('obj_option_a').contentDocument;
+    console.log(svg);
+    svg.getElementById("box").style.fill = 'red';*/
+
     var selectedDiv = "";
     selectedDiv = getOptionDivByIndex(selectedOptionIdx);
     applyLockedAnswerStyle(selectedDiv);
@@ -291,6 +299,9 @@ function readElements() {
     divOptionB = document.getElementById("div_option_b");
     divOptionC = document.getElementById("div_option_c");
     divOptionD = document.getElementById("div_option_d");
+    divOptionABack = document.getElementById("div_option_a_back");
+    divOptionAText = document.getElementById("div_option_a_text");
+
 
     pOptionA = document.getElementById("p_option_a");
     pOptionB = document.getElementById("p_option_b");
@@ -322,7 +333,11 @@ $(document).ready(function() {
     google.charts.load('current', {packages: ['corechart', 'bar']});
     //google.charts.setOnLoadCallback(showAudiencePollData);
 
-    const options = ["Option A", "Option B", "Option C", "Option D"];
+    const options = ["some long option which can be long and it's long", "Option B", "Option C", "Option D"];
     var question = new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10);
     showQuestion(question);
+
+    /*var svg = document.getElementById('obj_option_a').contentDocument;
+    console.log(svg);
+    svg.getElementById("box").style.fill = 'red';*/
 });
