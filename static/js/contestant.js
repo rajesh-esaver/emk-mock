@@ -52,7 +52,7 @@ socket.on('answer', function(answerObj) {
     // show answer
     // correct answer: {'isAnsweredCorrectly': True, 'correctOptionIdx': 1, 'amountWon': 0}
     console.log(answerObj);
-    revealAnswer(answerObj);
+    //revealAnswer(answerObj);
 });
 
 socket.on('lifelines', function(lifelinesObj) {
@@ -179,6 +179,10 @@ function showQuestion(question) {
         showHideDivSection(divTimer, true);
     }
 
+    //var svg = document.getElementById('obj_option_a').contentDocument;
+    //console.log(svg);
+    //svg.getElementById("option").textContent = 'red';
+
     //divOptionA.style.backgroundColor = "lightblue";
     divOptionB.style.backgroundColor = "lightblue";
     divOptionC.style.backgroundColor = "lightblue";
@@ -257,9 +261,14 @@ function getOptionEleByIndex(optionIdx) {
 }
 
 function setLockedAnswer(selectedOptionIdx) {
-    /*var svg = document.getElementById('obj_option_a').contentDocument;
-    console.log(svg);
-    svg.getElementById("box").style.fill = 'red';*/
+    //var svg = document.getElementById('obj_option_a').contentDocument;
+    /*console.log(svg);
+    console.log(svg.getElementById('linear-border-line'));
+    //svg.getElementById("box").style.fill = 'red';
+    svg.getElementById("box").style.fill = svg.getElementById('linear-border-line');*/
+    //document.getElementById('obj_option_a').setAttribute("data", 'static/images/test.svg');
+    divOptionABack.style.backgroundImage = 'url(static/images/test.svg)';
+    return;
 
     var selectedDiv = "";
     selectedDiv = getOptionDivByIndex(selectedOptionIdx);
@@ -333,11 +342,32 @@ $(document).ready(function() {
     google.charts.load('current', {packages: ['corechart', 'bar']});
     //google.charts.setOnLoadCallback(showAudiencePollData);
 
-    const options = ["some long option which can be long and it's long", "Option B", "Option C", "Option D"];
+    const options = ["some long option which can ", "Option B", "Option C", "Option D"];
     var question = new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10);
     showQuestion(question);
 
-    /*var svg = document.getElementById('obj_option_a').contentDocument;
-    console.log(svg);
-    svg.getElementById("box").style.fill = 'red';*/
+    //var a = document.getElementById('obj_option_a');
+    //divOptionABack.style.backgroundImage = 'url(static/images/test.svg)';
+    //a.setAttribute("data", 'static/images/test.svg');
+    //a.data = "images/div_option_back.svg"
+    /*a.addEventListener("load",function(){
+        // get the inner DOM of alpha.svg
+        var svgDoc = a.contentDocument;
+        //svgDoc.getElementById("box").style.fill = 'red';
+        //var gradient = svgDoc.getElementById('radial-question');
+        //svgDoc.getElementById("box").style.fill = gradient.attributes;
+
+        //svgDoc.getElementById("box").setAttribute({fill: 'url(#radial-question)'});
+        //svgDoc.getElementById("box").style.fill = url('#radial-question');
+        console.log("hello");
+        //document.getElementById('obj_option_b').innerHTMl = svgDoc;
+        //svgDoc.getElementById("option").textContent = question.question;
+    }, false);*/
+
+    /*var a = document.getElementById('obj_option_a');
+    a.addEventListener("load",function(){
+        // get the inner DOM of alpha.svg
+        var svgDoc = a.contentDocument;
+        svgDoc.getElementById("option").textContent = question.question;
+    }, false);*/
 });

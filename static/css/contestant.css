@@ -4,12 +4,12 @@
     min-height: 120px;
     text-align: center;
     padding: 10px 25px 10px 25px;
-    font-size: 1.5vw;
+    font-size: 1.2vw;
 }
 
 #div_question_text {
     text-align: center;
-    font-size: 1.5vw;
+    font-size: 1.2vw;
     padding: 10px 25px 10px 25px;
     margin-top: 20px;
     margin-bottom: 5px;
@@ -17,22 +17,22 @@
 }
 
 .div_option_back {
-    position: relative;
-    text-align: center;
+    min-height: 80px;
+    text-align: left;
+    padding: 10px 25px 10px 25px;
 }
 
-.obj_option_back {
+/*.obj_option_back {
     width: 100%;
     height: 75px;
-}
+}*/
 
 .div_option_text {
-    position: absolute;
-    top: 50%;
-    left: 20%;
-    transform: translate(-50%, -50%);
-    font-size:1.1vw;
+    text-align: left;
+    font-size: 1.2vw;
     color: white;
+    top: 20%;
+    padding: 10px 25px 10px 25px;
 }
 
 .option {

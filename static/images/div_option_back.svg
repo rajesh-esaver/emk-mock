@@ -14,15 +14,18 @@
         </radialGradient>
     </defs>
 
-    <path id="box" d="M0,50 L40,10
-            L460,10
-            l40,40
-            l-40,40
-            L40,90
-            L0,50
-            z"
+    <path id="box" d="M 40,2
+            L460,2
+            q 75 50, 0,96
+            L40,98
+            M 40,2 q -75 50, 0,96
+            "
           style="stroke: url(#linear-border-line);
             stroke-width: 1.5;
-            fill: yellow"
+            fill: url(#radial-question);"
     />
+
+    <text id="option" x="50" y="55" font-size="5vw"
+          style="fill: #fff; ">
+    </text>
 </svg>
