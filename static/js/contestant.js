@@ -8,7 +8,8 @@ var pOptionA, pOptionB, pOptionC, pOptionD;
 var divQuestion, divWonAmount, pQuestion;
 
 var divQuestionBack, divQuestionText;
-var divOptionABack, divOptionAText;
+var divOptionABack, divOptionBBack, divOptionCBack, divOptionDBack;
+var divOptionAText, divOptionBText, divOptionCText, divOptionDText;
 
 var divLifelines, imgLifeline1, imgLifeline2, imgLifeline3;
 var divAudiencePoll;
@@ -52,7 +53,7 @@ socket.on('answer', function(answerObj) {
     // show answer
     // correct answer: {'isAnsweredCorrectly': True, 'correctOptionIdx': 1, 'amountWon': 0}
     console.log(answerObj);
-    //revealAnswer(answerObj);
+    revealAnswer(answerObj);
 });
 
 socket.on('lifelines', function(lifelinesObj) {
@@ -100,15 +101,15 @@ function revealAnswer(answerObj) {
     if(currLockedOptionIdx != answerObj.correctOptionIdx) {
         // wrong answer, stop
         // marking current selected option as wrong
-        applyWrongAnswerStyle(optionDiv);
+        applyWrongAnswerStyle(optionDiv, currLockedOptionIdx);
         // marking correct option as answer
-        applyCorrectAnswerStyle(getOptionDivByIndex(answerObj.correctOptionIdx));
+        applyCorrectAnswerStyle(getOptionDivByIndex(answerObj.correctOptionIdx), answerObj.correctOptionIdx);
         // show amount won
         window.setTimeout(showWonAmount, showAnswerAfterSeconds, answerObj.amountWon);
     } else {
         // right answer, show won amount
         // marking current selected option as right
-        applyCorrectAnswerStyle(optionDiv);
+        applyCorrectAnswerStyle(optionDiv, currLockedOptionIdx);
         //showHideTableDiv(false);
         window.setTimeout(showWonAmount, showAnswerAfterSeconds, answerObj.amountWon);
     }
@@ -179,35 +180,22 @@ function showQuestion(question) {
         showHideDivSection(divTimer, true);
     }
 
-    //var svg = document.getElementById('obj_option_a').contentDocument;
-    //console.log(svg);
-    //svg.getElementById("option").textContent = 'red';
+    divOptionABack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
+    divOptionBBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
+    divOptionCBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
+    divOptionDBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
 
-    //divOptionA.style.backgroundColor = "lightblue";
-    divOptionB.style.backgroundColor = "lightblue";
-    divOptionC.style.backgroundColor = "lightblue";
-    divOptionD.style.backgroundColor = "lightblue";
-
-    //divQuestion.innerHTML = question.question;
-    //pQuestion.innerHTML = question.question;
     divQuestionText.innerHTML = question.question;
 
-    // prefixes = ['-o-', '-ms-', '-moz-', '-webkit-'];
-    //divOptionA.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
-    divOptionB.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
-    divOptionC.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
-    divOptionD.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
+    divOptionAText.style.color = "white";
+    divOptionBText.style.color = "white";
+    divOptionCText.style.color = "white";
+    divOptionDText.style.color = "white";
 
-    //divOptionA.style.color = "white";
-    divOptionB.style.color = "white";
-    divOptionC.style.color = "white";
-    divOptionD.style.color = "white";
-
-    //pOptionA.innerHTML = "A. " + question.options[0];
     divOptionAText.innerHTML = "A. " + question.options[0];
-    pOptionB.innerHTML = "B. " + question.options[1];
-    pOptionC.innerHTML = "C. " + question.options[2];
-    pOptionD.innerHTML = "D. " + question.options[3];
+    divOptionBText.innerHTML = "B. " + question.options[1];
+    divOptionCText.innerHTML = "C. " + question.options[2];
+    divOptionDText.innerHTML = "D. " + question.options[3];
 
     // marking time empty initially
     updateTimer("");
@@ -235,13 +223,13 @@ function showLifeLines(lifelinesObj) {
 function getOptionDivByIndex(optionIdx) {
     var selectedDiv = "";
     if(optionIdx == 0) {
-        selectedDiv = divOptionA;
+        selectedDiv = divOptionABack;
     } else if(optionIdx == 1) {
-        selectedDiv = divOptionB;
+        selectedDiv = divOptionBBack;
     } else if(optionIdx == 2) {
-        selectedDiv = divOptionC;
+        selectedDiv = divOptionCBack;
     } else if(optionIdx == 3) {
-        selectedDiv = divOptionD;
+        selectedDiv = divOptionDBack;
     }
     return selectedDiv;
 }
@@ -249,73 +237,68 @@ function getOptionDivByIndex(optionIdx) {
 function getOptionEleByIndex(optionIdx) {
     var selectedEle = "";
     if(optionIdx == 0) {
-        selectedEle = pOptionA;
+        selectedEle = divOptionAText;
     } else if(optionIdx == 1) {
-        selectedEle = pOptionB;
+        selectedEle = divOptionBText;
     } else if(optionIdx == 2) {
-        selectedEle = pOptionC;
+        selectedEle = divOptionCText;
     } else if(optionIdx == 3) {
-        selectedEle = pOptionD;
+        selectedEle = divOptionDText;
     }
     return selectedEle;
 }
 
 function setLockedAnswer(selectedOptionIdx) {
-    //var svg = document.getElementById('obj_option_a').contentDocument;
-    /*console.log(svg);
-    console.log(svg.getElementById('linear-border-line'));
-    //svg.getElementById("box").style.fill = 'red';
-    svg.getElementById("box").style.fill = svg.getElementById('linear-border-line');*/
-    //document.getElementById('obj_option_a').setAttribute("data", 'static/images/test.svg');
-    divOptionABack.style.backgroundImage = 'url(static/images/test.svg)';
-    return;
-
     var selectedDiv = "";
     selectedDiv = getOptionDivByIndex(selectedOptionIdx);
-    applyLockedAnswerStyle(selectedDiv);
+    applyLockedAnswerStyle(selectedDiv, selectedOptionIdx);
 }
 
 function updateTimer(time) {
     spTimer.innerHTML = time;
 }
 
-function applyLockedAnswerStyle(optionDiv) {
+function applyLockedAnswerStyle(optionDiv, optionIndex) {
     //optionDiv.style.backgroundColor = "yellow";
-    optionDiv.style.background = "yellow";
-    optionDiv.style.color = "black";
+    optionDiv.style.backgroundImage = 'url(static/images/div_option_back_locked.svg)';
+    //optionDiv.style.color = "black";
+    getOptionEleByIndex(optionIndex).style.color = "black";
 }
 
-function applyCorrectAnswerStyle(optionDiv) {
+function applyCorrectAnswerStyle(optionDiv, optionIndex) {
     //optionDiv.style.backgroundColor = "green";
-    optionDiv.style.background = "green";
-    optionDiv.style.color = "black";
+    optionDiv.style.backgroundImage = 'url(static/images/div_option_back_correct.svg)';
+    //optionDiv.style.color = "black";
+    getOptionEleByIndex(optionIndex).style.color = "black";
 }
 
-function applyWrongAnswerStyle(optionDiv) {
+function applyWrongAnswerStyle(optionDiv, optionIndex) {
     //optionDiv.style.backgroundColor = "red";
-    optionDiv.style.background = "red";
-    optionDiv.style.color = "black";
+    optionDiv.style.backgroundImage = 'url(static/images/div_option_back_wrong.svg)';
+    //optionDiv.style.color = "black";
+    getOptionEleByIndex(optionIndex).style.color = "black";
 }
 
 function readElements() {
     divTable = document.getElementById("div_table");
-    divQuestion = document.getElementById("div_question");
+    //divQuestion = document.getElementById("div_question");
     divQuestionBack = document.getElementById("div_question_back");
     divQuestionText = document.getElementById("div_question_text");
-    pQuestion = document.getElementById("p_question");
+    //pQuestion = document.getElementById("p_question");
 
-    divOptionA = document.getElementById("div_option_a");
+    /*divOptionA = document.getElementById("div_option_a");
     divOptionB = document.getElementById("div_option_b");
     divOptionC = document.getElementById("div_option_c");
-    divOptionD = document.getElementById("div_option_d");
+    divOptionD = document.getElementById("div_option_d");*/
     divOptionABack = document.getElementById("div_option_a_back");
+    divOptionBBack = document.getElementById("div_option_b_back");
+    divOptionCBack = document.getElementById("div_option_c_back");
+    divOptionDBack = document.getElementById("div_option_d_back");
+
     divOptionAText = document.getElementById("div_option_a_text");
-
-
-    pOptionA = document.getElementById("p_option_a");
-    pOptionB = document.getElementById("p_option_b");
-    pOptionC = document.getElementById("p_option_c");
-    pOptionD = document.getElementById("p_option_d");
+    divOptionBText = document.getElementById("div_option_b_text");
+    divOptionCText = document.getElementById("div_option_c_text");
+    divOptionDText = document.getElementById("div_option_d_text");
 
     divWonAmount = document.getElementById("div_won_amount");
 
@@ -346,28 +329,4 @@ $(document).ready(function() {
     var question = new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10);
     showQuestion(question);
 
-    //var a = document.getElementById('obj_option_a');
-    //divOptionABack.style.backgroundImage = 'url(static/images/test.svg)';
-    //a.setAttribute("data", 'static/images/test.svg');
-    //a.data = "images/div_option_back.svg"
-    /*a.addEventListener("load",function(){
-        // get the inner DOM of alpha.svg
-        var svgDoc = a.contentDocument;
-        //svgDoc.getElementById("box").style.fill = 'red';
-        //var gradient = svgDoc.getElementById('radial-question');
-        //svgDoc.getElementById("box").style.fill = gradient.attributes;
-
-        //svgDoc.getElementById("box").setAttribute({fill: 'url(#radial-question)'});
-        //svgDoc.getElementById("box").style.fill = url('#radial-question');
-        console.log("hello");
-        //document.getElementById('obj_option_b').innerHTMl = svgDoc;
-        //svgDoc.getElementById("option").textContent = question.question;
-    }, false);*/
-
-    /*var a = document.getElementById('obj_option_a');
-    a.addEventListener("load",function(){
-        // get the inner DOM of alpha.svg
-        var svgDoc = a.contentDocument;
-        svgDoc.getElementById("option").textContent = question.question;
-    }, false);*/
 });

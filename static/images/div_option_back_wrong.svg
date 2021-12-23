@@ -22,7 +22,6 @@
             "
           style="stroke: url(#linear-border-line);
             stroke-width: 1.5;
-            fill: url(#radial-question);"
+            fill: red;"
     />
-
 </svg>

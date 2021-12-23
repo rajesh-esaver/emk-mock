@@ -17,15 +17,10 @@
 }
 
 .div_option_back {
-    min-height: 80px;
+    min-height: 50px;
     text-align: left;
     padding: 10px 25px 10px 25px;
 }
-
-/*.obj_option_back {
-    width: 100%;
-    height: 75px;
-}*/
 
 .div_option_text {
     text-align: left;
