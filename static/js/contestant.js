@@ -3,9 +3,7 @@
 var url = getServerBaseUrl();
 var socket = io.connect(url);
 var divTable = "";
-var divOptionA, divOptionB, divOptionC, divOptionD;
-var pOptionA, pOptionB, pOptionC, pOptionD;
-var divQuestion, divWonAmount, pQuestion;
+var divWonAmount;
 
 var divQuestionBack, divQuestionText;
 var divOptionABack, divOptionBBack, divOptionCBack, divOptionDBack;
@@ -281,10 +279,12 @@ function applyWrongAnswerStyle(optionDiv, optionIndex) {
 
 function readElements() {
     divTable = document.getElementById("div_table");
-    //divQuestion = document.getElementById("div_question");
+
+    // question
     divQuestionBack = document.getElementById("div_question_back");
     divQuestionText = document.getElementById("div_question_text");
 
+    // options
     divOptionABack = document.getElementById("div_option_a_back");
     divOptionBBack = document.getElementById("div_option_b_back");
     divOptionCBack = document.getElementById("div_option_c_back");
@@ -320,8 +320,8 @@ $(document).ready(function() {
     google.charts.load('current', {packages: ['corechart', 'bar']});
     //google.charts.setOnLoadCallback(showAudiencePollData);
 
-    const options = ["some long option which can ", "Option B", "Option C", "Option D"];
+    /*const options = ["some long option which can ", "Option B", "Option C", "Option D"];
     var question = new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10);
-    showQuestion(question);
+    showQuestion(question);*/
 
 });
