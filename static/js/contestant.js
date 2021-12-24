@@ -284,12 +284,7 @@ function readElements() {
     //divQuestion = document.getElementById("div_question");
     divQuestionBack = document.getElementById("div_question_back");
     divQuestionText = document.getElementById("div_question_text");
-    //pQuestion = document.getElementById("p_question");
 
-    /*divOptionA = document.getElementById("div_option_a");
-    divOptionB = document.getElementById("div_option_b");
-    divOptionC = document.getElementById("div_option_c");
-    divOptionD = document.getElementById("div_option_d");*/
     divOptionABack = document.getElementById("div_option_a_back");
     divOptionBBack = document.getElementById("div_option_b_back");
     divOptionCBack = document.getElementById("div_option_c_back");
