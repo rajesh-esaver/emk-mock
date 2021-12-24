@@ -15,16 +15,36 @@
 </head>
 <body>
     <div id="div_question_box" class="row pt-5" style="margin-left: 20px; margin-right: 20px;">
-      <div id="div_question" class="col-12 question">
-          <p id="p_question"></p>
-          <!--<p id="p_question">this is a long question to see how its gonna fit the question dev, may fit in 2 lines +
-           this is a long question to see how its gonna fit the question dev, may fit in 2 lines</p>-->
+      <div id="div_question_back" class="col-12"
+           style="background-image: url({{url_for('static', filename = 'images/div_spectator_question_back.svg')}});
+            background-size: cover;">
+          <div id="div_question_text"></div>
       </div>
-      <br/>
-      <div id="div_option_a" class="col-sm-12 col-md-6 option"><p id="p_option_a"></p></div>
-      <div id="div_option_b" class="col-sm-12 col-md-6 option"><p id="p_option_b"></p></div>
-      <div id="div_option_c" class="col-sm-12 col-md-6 option"><p id="p_option_c"></p></div>
-      <div id="div_option_d" class="col-sm-12 col-md-6 option"><p id="p_option_d"></p></div>
+      <div style="margin-top:1%"></div>
+
+      <div id="div_option_a_back" class="div_option_back col-sm-12 col-md-6 option"
+         style="background-image: url({{url_for('static', filename = 'images/div_option_back.svg')}});
+            background-size: cover;">
+        <div id="div_option_a_text" class="div_option_text"></div>
+      </div>
+
+      <div id="div_option_b_back" class="div_option_back col-sm-12 col-md-6 option"
+         style="background-image: url({{url_for('static', filename = 'images/div_option_back.svg')}});
+            background-size: cover;">
+        <div id="div_option_b_text" class="div_option_text"></div>
+      </div>
+
+      <div id="div_option_c_back" class="div_option_back col-sm-12 col-md-6 option"
+         style="background-image: url({{url_for('static', filename = 'images/div_option_back.svg')}});
+            background-size: cover;">
+        <div id="div_option_c_text" class="div_option_text"></div>
+      </div>
+
+      <div id="div_option_d_back" class="div_option_back col-sm-12 col-md-6 option"
+         style="background-image: url({{url_for('static', filename = 'images/div_option_back.svg')}});
+            background-size: cover;">
+        <div id="div_option_d_text" class="div_option_text"></div>
+      </div>
     </div>
 </body>
 </html>

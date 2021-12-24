@@ -27,7 +27,7 @@ var showQuestionAfterSeconds = 4000;
 var startTimerAfterSeconds = 3000;
 var timerSound;
 
-class Question {
+/*class Question {
     // correctOptionIdx 0,1,2,3
     constructor(question, options, correctOptionIdx, winAmount, amountWonForWrong, trivia, maxSeconds) {
         this.question = question;
@@ -38,7 +38,7 @@ class Question {
         this.trivia = trivia;
         this.maxSeconds = maxSeconds;
     }
-}
+}*/
 
 class AnswerUpdate {
 
