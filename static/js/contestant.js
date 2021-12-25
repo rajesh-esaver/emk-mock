@@ -222,18 +222,22 @@ function showLifeLines(lifelinesObj) {
         showHideLifelinesDivSection(false);
         return;
     }
+
     //showHideDivSection(divLifelines, true);
     showHideLifelinesDivSection(true);
     const lineHideOpacity = 0.3;
     if(lifelinesObj.lifelines[0].isUsed) {
-        imgLifeline1.style.opacity = lineHideOpacity;
+        //imgLifeline1.style.opacity = lineHideOpacity;
+        imgLifeline1.src = "static/images/audience_poll_used.png"
     }
     if(lifelinesObj.lifelines[1].isUsed) {
         // it's 50:50, remove 2 options
-        imgLifeline2.style.opacity = lineHideOpacity;
+        //imgLifeline2.style.opacity = lineHideOpacity;
+        imgLifeline2.src = "static/images/lifeline_5050_used.png"
     }
     if(lifelinesObj.lifelines[2].isUsed) {
-        imgLifeline3.style.opacity = lineHideOpacity;
+        //imgLifeline3.style.opacity = lineHideOpacity;
+        imgLifeline3.src = "static/images/lifeline_call_used.png"
     }
 }
 
