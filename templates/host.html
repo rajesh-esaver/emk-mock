@@ -39,7 +39,7 @@
             <button id="btn_show_audience_data">Show Audience Answer</button>
             <button id="btn_activate_5050">Activate 50:50</button>
             <br/>
-            <div id="div_lifelines" class="div_lifelines">
+            <div id="div_lifelines_list">
                 <button id="lifeline_1">Line 1</button>
                 <button id="lifeline_2">Line 2</button>
                 <button id="lifeline_3">Line 3</button>
@@ -60,37 +60,52 @@
             <table style="width:100%; margin-left:auto; margin-right:auto; table-layout:fixed;">
             <tr>
                 <td colspan="2">
-                    <div id="div_timer" style="text-align: center;">
-                    <span id="sp_timer" class="sp_timer" style="font-size: 40px;"></span>
+                    <div id="div_question_back" style="background-image: url({{url_for('static', filename = 'images/div_question_back.svg')}});
+                     background-size: cover;">
+                        <!--<p id="p_question"></p>-->
+                        <div id="div_question_text"></div>
                     </div>
                 </td>
             </tr>
-            <tr>
-                <td colspan="2"><div id="div_question" class="question">
-                    <p id="p_question"></p>
-                </div></td>
+            <tr id="tr_option_row_1">
+                <td>
+                    <div id="div_option_a_back" class="div_option_back"
+                         style="background-image: url({{url_for('static', filename = 'images/div_option_back.svg')}});
+                     background-size: cover;">
+                        <div id="div_option_a_text" class="div_option_text"></div>
+                    </div>
+                </td>
+                <td>
+                    <div id="div_option_b_back" class="div_option_back"
+                         style="background-image: url({{url_for('static', filename = 'images/div_option_back.svg')}});
+                     background-size: cover;">
+                        <div id="div_option_b_text" class="div_option_text"></div>
+                    </div>
+                </td>
             </tr>
-            <tr>
-                <td>
-                    <div id="div_option_a" class="option">
-                        <p id="p_option_a"></p>
+            <tr id="tr_option_row_2">
+                <td >
+                    <div id="div_option_c_back" class="div_option_back"
+                         style="background-image: url({{url_for('static', filename = 'images/div_option_back.svg')}});
+                     background-size: cover;">
+                        <div id="div_option_c_text" class="overlay div_option_text"></div>
                     </div>
                 </td>
-                <td>
-                    <div id="div_option_b" class="option">
-                        <p id="p_option_b"></p>
+                <td >
+                    <div id="div_option_d_back" class="div_option_back"
+                         style="background-image: url({{url_for('static', filename = 'images/div_option_back.svg')}});
+                     background-size: cover;">
+                        <div id="div_option_d_text" class="overlay div_option_text"></div>
                     </div>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <div id="div_option_c" class="option">
-                        <p id="p_option_c"></p>
-                    </div>
-                </td>
-                <td>
-                    <div id="div_option_d" class="option">
-                        <p id="p_option_d"></p>
+            <tr id="tr_lifelines">
+                <td colspan="2">
+                    <div id="div_lifelines" style="background-image: url({{url_for('static', filename = 'images/div_question_back.svg')}});
+                     background-size: cover; text-align: center;">
+                        <img id="img_line1" src="{{url_for('static', filename = 'images/audience_poll.png')}}" class="img_lifeline">
+                        <img id="img_line2" src="{{url_for('static', filename = 'images/lifeline_5050.png')}}" class="img_lifeline">
+                        <img id="img_line3" src="{{url_for('static', filename = 'images/lifeline_call.png')}}" class="img_lifeline">
                     </div>
                 </td>
             </tr>
