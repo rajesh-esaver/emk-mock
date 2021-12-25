@@ -9,7 +9,7 @@
 
 #div_question_text {
     text-align: center;
-    font-size: 1.2vw;
+    font-size: 1.4vw;
     padding: 10px 25px 10px 25px;
     margin-top: 20px;
     margin-bottom: 5px;
@@ -121,13 +121,13 @@
     font-weight: bold;
 }
 
-#div_lifelines {
+/*#div_lifelines {
     top: 15%;
     left: 10px;
     right: 10px;
     position: absolute;
     text-align: center;
-}
+}*/
 
 #div_won_amount {
     width: 70%;

@@ -74,7 +74,8 @@ socket.on('lifeline_5050', function(removedIndexes) {
 
 socket.on('audience_poll_data', function(audiencePollData) {
     console.log(audiencePollData);
-    showHideDivSection(divLifelines, false);
+    //showHideDivSection(divLifelines, false);
+    showHideLifelinesDivSection(false);
     showAudiencePollData(audiencePollData);
 });
 
@@ -91,6 +92,22 @@ function showHideDivSection(div, show) {
         div.style.display = "block";
     } else {
         div.style.display = "none";
+    }
+}
+
+function showHideLifelinesDivSection(show) {
+    const trOption1 = document.getElementById("tr_option_row_1");
+    const trOption2 = document.getElementById("tr_option_row_2");
+    const trLifelines = document.getElementById("tr_lifelines");
+
+    if(show) {
+        trOption1.setAttribute("hidden", "hidden");
+        trOption2.setAttribute("hidden", "hidden");
+        trLifelines.removeAttribute("hidden");
+    } else {
+        trLifelines.setAttribute("hidden", "hidden");
+        trOption1.removeAttribute("hidden");
+        trOption2.removeAttribute("hidden");
     }
 }
 
@@ -201,10 +218,12 @@ function showQuestion(question) {
 
 function showLifeLines(lifelinesObj) {
     if(!lifelinesObj.showLifeLines) {
-        showHideDivSection(divLifelines, false);
+        //showHideDivSection(divLifelines, false);
+        showHideLifelinesDivSection(false);
         return;
     }
-    showHideDivSection(divLifelines, true);
+    //showHideDivSection(divLifelines, true);
+    showHideLifelinesDivSection(true);
     const lineHideOpacity = 0.3;
     if(lifelinesObj.lifelines[0].isUsed) {
         imgLifeline1.style.opacity = lineHideOpacity;
@@ -315,13 +334,14 @@ function readElements() {
 $(document).ready(function() {
     readElements();
     showHideTableDiv(false);
-    showHideDivSection(divLifelines, false);
+    //showHideDivSection(divLifelines, false);
+    showHideLifelinesDivSection(false);
     showHideDivSection(divWonAmount, false);
     google.charts.load('current', {packages: ['corechart', 'bar']});
     //google.charts.setOnLoadCallback(showAudiencePollData);
 
-    /*const options = ["some long option which can ", "Option B", "Option C", "Option D"];
+    const options = ["some long option which can ", "Option B", "Option C", "Option D"];
     var question = new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10);
-    showQuestion(question);*/
+    showQuestion(question);
 
 });
