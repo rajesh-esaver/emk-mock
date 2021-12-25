@@ -18,7 +18,7 @@ var divOptionA, divOptionB, divOptionC, divOptionD;
 var divQuestion, divAnswer, pQuestion;
 var tableQuestionsList, btnNextQuestion;
 var lifeline1, lifeline2, lifeline3, btnShowLifelines, btnHideLifelines, diveLifelines;
-var btnShowAudienceData;
+var btnShowAudienceData, btnActivate5050;
 var divAudiencePoll, divAudiencePollChart;
 var lastViewedQuestionIdx = -1;
 var lifeLinesInfo;
@@ -188,6 +188,12 @@ function addEventListeners() {
         socket.emit("get_audience_poll_data");
     });
 
+    btnActivate5050.addEventListener("click", (e) => {
+        // send event
+        btnActivate5050.disabled = true;
+        activate5050();
+    });
+
     lifeline1.addEventListener("click", (e) => {
         // send event
         lifeline1.disabled = true;
@@ -203,7 +209,7 @@ function addEventListeners() {
         lifeLinesInfo.lifelines[1].isUsed = true;
         lifeLinesInfo.showLifeLines = true;
         socket.emit("set_lifelines", lifeLinesInfo);
-        activate5050();
+        //activate5050();
     });
 
     lifeline3.addEventListener("click", (e) => {
@@ -588,6 +594,7 @@ function readElements() {
     btnShowLifelines = document.getElementById("btn_show_lifelines");
     btnHideLifelines = document.getElementById("btn_hide_lifelines");
     btnShowAudienceData = document.getElementById("btn_show_audience_data");
+    btnActivate5050 = document.getElementById("btn_activate_5050");
     lifeline1 = document.getElementById("lifeline_1");
     lifeline2 = document.getElementById("lifeline_2");
     lifeline3 = document.getElementById("lifeline_3");
