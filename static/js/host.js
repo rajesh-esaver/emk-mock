@@ -14,9 +14,6 @@ var revealAnswerButton;
 var answerUpdateObj;
 var lifeLines = ["Line 1", "Line 2", "Line 3"];
 
-/*var pOptionA, pOptionB, pOptionC, pOptionD;
-var divOptionA, divOptionB, divOptionC, divOptionD;
-var divQuestion, divAnswer, pQuestion;*/
 
 var divQuestionBack, divQuestionText;
 var divOptionABack, divOptionBBack, divOptionCBack, divOptionDBack;
@@ -416,20 +413,6 @@ function getOptionDivByIndex(optionIdx) {
         selectedDiv = divOptionDBack;
     }
     return selectedDiv;
-}
-
-function getOptionEleByIndex(optionIdx) {
-    var selectedEle = "";
-    if(optionIdx == 0) {
-        selectedEle = pOptionA;
-    } else if(optionIdx == 1) {
-        selectedEle = pOptionB;
-    } else if(optionIdx == 2) {
-        selectedEle = pOptionC;
-    } else if(optionIdx == 3) {
-        selectedEle = pOptionD;
-    }
-    return selectedEle;
 }
 
 function getOptionTextDivByIndex(optionIdx) {
