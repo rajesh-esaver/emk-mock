@@ -142,7 +142,7 @@ function showWonAmount(amount) {
 function activateLifeline5050(removedIndexes) {
     for(let i=0; i<removedIndexes.length; i++) {
         let indexToRemove = removedIndexes[i];
-        getOptionEleByIndex(indexToRemove).innerHTML = "";
+        getOptionTextDivByIndex(indexToRemove).innerHTML = "";
     }
 }
 
@@ -255,7 +255,7 @@ function getOptionDivByIndex(optionIdx) {
     return selectedDiv;
 }
 
-function getOptionEleByIndex(optionIdx) {
+function getOptionTextDivByIndex(optionIdx) {
     var selectedEle = "";
     if(optionIdx == 0) {
         selectedEle = divOptionAText;
@@ -282,22 +282,19 @@ function updateTimer(time) {
 function applyLockedAnswerStyle(optionDiv, optionIndex) {
     //optionDiv.style.backgroundColor = "yellow";
     optionDiv.style.backgroundImage = 'url(static/images/div_option_back_locked.svg)';
-    //optionDiv.style.color = "black";
-    getOptionEleByIndex(optionIndex).style.color = "black";
+    getOptionTextDivByIndex(optionIndex).style.color = "black";
 }
 
 function applyCorrectAnswerStyle(optionDiv, optionIndex) {
     //optionDiv.style.backgroundColor = "green";
     optionDiv.style.backgroundImage = 'url(static/images/div_option_back_correct.svg)';
-    //optionDiv.style.color = "black";
-    getOptionEleByIndex(optionIndex).style.color = "black";
+    getOptionTextDivByIndex(optionIndex).style.color = "black";
 }
 
 function applyWrongAnswerStyle(optionDiv, optionIndex) {
     //optionDiv.style.backgroundColor = "red";
     optionDiv.style.backgroundImage = 'url(static/images/div_option_back_wrong.svg)';
-    //optionDiv.style.color = "black";
-    getOptionEleByIndex(optionIndex).style.color = "black";
+    getOptionTextDivByIndex(optionIndex).style.color = "black";
 }
 
 function readElements() {
