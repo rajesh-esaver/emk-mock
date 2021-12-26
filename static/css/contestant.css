@@ -85,13 +85,18 @@
 }
 
 #div_won_amount {
-    width: 70%;
-    height: 60px;
+    width: 60%;
+    height: 80px;
     margin: auto;
-    bottom: 20%;
+    bottom: 15%;
     position: absolute;
     left: 0;
     right: 0;
     text-align: center;
-    background-color: yellow;
+    //background-color: yellow;
+}
+
+#sp_won_amount {
+    font-size: 50px;
+    line-height: 80px;
 }

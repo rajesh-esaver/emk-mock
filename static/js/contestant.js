@@ -82,8 +82,15 @@ socket.on('audience_poll_data', function(audiencePollData) {
 function showHideTableDiv(show) {
     if(show) {
         divTable.style.display = "block";
+        //$("#div_question_back").show(1000);
+        //$("#div_table").slideDown(1000);
+        //$("#div_question_back").slideDown(1000);
+
     } else {
         divTable.style.display = "none";
+        //$("#div_table").hide();
+        //$("#div_question_back").slideUp();
+        //$("#div_table").slideUp();
     }
 }
 
@@ -341,8 +348,8 @@ $(document).ready(function() {
     google.charts.load('current', {packages: ['corechart', 'bar']});
     //google.charts.setOnLoadCallback(showAudiencePollData);
 
-    const options = ["some long option which can ", "Option B", "Option C", "Option D"];
+    /*const options = ["some long option which can ", "Option B", "Option C", "Option D"];
     var question = new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10);
-    showQuestion(question);
+    showQuestion(question);*/
 
 });
