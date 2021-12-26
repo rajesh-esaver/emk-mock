@@ -10,14 +10,13 @@
             background-image: linear-gradient(#232366 15%, #273296 90%, #232366);
             border-radius: 20px;
             border-color: yellow;
+            border-style: solid;
             position: relative;
             display: inline-block;
         }
 
         .percentages {
             height: 15%;
-            border-color: red;
-            border-width: 3px;
             position: relative;
             display: inline-block;
         }
@@ -31,7 +30,6 @@
 
         .names {
             height: 30%;
-            border-color: red;
         }
 
         .ul_names li {
@@ -46,6 +44,7 @@
             font-size: 25px;
             position: absolute;
             bottom: 0;
+            font-weight: bold;
         }
 
         .ul_perc li {
@@ -60,6 +59,7 @@
             font-size: 15px;
             position: absolute;
             bottom: 0;
+            font-weight: normal;
         }
 
         .ul_bars li {
@@ -81,8 +81,10 @@
         }
     </style>
     <script type="text/javascript">
-        function changeColor() {
-
+        function changeHeights() {
+            document.getElementById("divBarA").style.height = "10%";
+            document.getElementById("divBarB").style.height = "20%";
+            document.getElementById("divBarC").style.height = "100%";
         }
     </script>
     <script type='text/javascript' src="static/lib/jquery-3.6.0.min.js"></script>
@@ -101,14 +103,14 @@
         </div>
         <div class="bars">
             <ul class="ul_bars">
-                <li><div class="bar"></div></li>
-                <li><div class="bar"></div></li>
-                <li><div class="bar"></div></li>
+                <li><div id="divBarA" class="bar"></div></li>
+                <li><div id="divBarB" class="bar"></div></li>
+                <li><div id="divBarC" class="bar"></div></li>
                 <li><div class="bar"></div></li>
             </ul>
         </div>
         <div class="names" >
-            <ul class="ul_names" style="margin-left: 10px">
+            <ul class="ul_names" style="margin-left: 7px">
                 <li><span>A</span></li>
                 <li><span>B</span></li>
                 <li><span>C</span></li>
@@ -116,5 +118,6 @@
             </ul>
         </div>
     </div>
+    <button onclick="changeHeights()">Change Heights</button>
 </body>
 </html>

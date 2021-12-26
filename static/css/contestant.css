@@ -62,7 +62,6 @@
     top: 12%;
     right: 5%;
     position: absolute;
-    text-align: center;
 }
 
 #div_timer {
@@ -99,4 +98,7 @@
 #sp_won_amount {
     font-size: 50px;
     line-height: 80px;
+    color: black;
+    font-weight: bold;
 }
+

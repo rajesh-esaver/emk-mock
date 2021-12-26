@@ -76,7 +76,8 @@ socket.on('audience_poll_data', function(audiencePollData) {
     console.log(audiencePollData);
     //showHideDivSection(divLifelines, false);
     showHideLifelinesDivSection(false);
-    showAudiencePollData(audiencePollData);
+    //showAudiencePollData(audiencePollData);
+    showAudiencePollChart(audiencePollData);
 });
 
 function showHideTableDiv(show) {
@@ -153,9 +154,38 @@ function activateLifeline5050(removedIndexes) {
     }
 }
 
+function showAudiencePollChart(audienceData) {
+    //audienceData = [10,0,1,1];
+
+    showHideDivSection(divAudiencePoll, true);
+    var totVotes = 0;
+    for(let i=0; i<audienceData.length; i++) {
+        totVotes += audienceData[i];
+    }
+
+    const barPercentages = [0, 0, 0, 0]
+    if(totVotes > 0) {
+        for(let i=0; i<audienceData.length; i++) {
+            var optionPerc = (audienceData[i]/totVotes)*100;
+            optionPerc = Math.round(optionPerc);
+            barPercentages[i] = optionPerc;
+        }
+    }
+
+    document.getElementById("div_bar_a").style.height = String(barPercentages[0])+"%";
+    document.getElementById("div_bar_b").style.height = String(barPercentages[1])+"%";
+    document.getElementById("div_bar_c").style.height = String(barPercentages[2])+"%";
+    document.getElementById("div_bar_d").style.height = String(barPercentages[3])+"%";
+
+    document.getElementById("sp_perc_a").innerHTML = String(barPercentages[0])+"%";
+    document.getElementById("sp_perc_b").innerHTML = String(barPercentages[1])+"%";
+    document.getElementById("sp_perc_c").innerHTML = String(barPercentages[2])+"%";
+    document.getElementById("sp_perc_d").innerHTML = String(barPercentages[3])+"%";
+}
+
 function showAudiencePollData(audienceData) {
     //audienceData = [10,0,1,1];
-    showHideDivSection(div_audience_poll, true);
+    //showHideDivSection(div_audience_poll, true);
 
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Option');
@@ -345,6 +375,7 @@ $(document).ready(function() {
     //showHideDivSection(divLifelines, false);
     showHideLifelinesDivSection(false);
     showHideDivSection(divWonAmount, false);
+    showHideDivSection(divAudiencePoll, false);
     google.charts.load('current', {packages: ['corechart', 'bar']});
     //google.charts.setOnLoadCallback(showAudiencePollData);
 
