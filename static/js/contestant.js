@@ -1,12 +1,16 @@
 
 //var url = 'http://192.168.1.48:5000';
-var url = base_url;
+var url = getServerBaseUrl();
 var socket = io.connect(url);
 var divTable = "";
-var divOptionA, divOptionB, divOptionC, divOptionD;
-var pOptionA, pOptionB, pOptionC, pOptionD;
-var divQuestion, divWonAmount, pQuestion;
+var divWonAmount;
+
+var divQuestionBack, divQuestionText;
+var divOptionABack, divOptionBBack, divOptionCBack, divOptionDBack;
+var divOptionAText, divOptionBText, divOptionCText, divOptionDText;
+
 var divLifelines, imgLifeline1, imgLifeline2, imgLifeline3;
+var divAudiencePoll;
 var divLogo;
 var currLockedOptionIdx = "";
 var divTimer, spTimer, spWonAmount;
@@ -56,6 +60,9 @@ socket.on('lifelines', function(lifelinesObj) {
     // {'isUsed': True, 'name': 'Dial A Dost'}], 'showLifeLines': False}
     console.log(lifelinesObj);
     showLifeLines(lifelinesObj);
+    if(!lifelinesObj.showLifeLines) {
+        showHideDivSection(divAudiencePoll, false);
+    }
 });
 
 socket.on('lifeline_5050', function(removedIndexes) {
@@ -65,11 +72,26 @@ socket.on('lifeline_5050', function(removedIndexes) {
     activateLifeline5050(removedIndexes);
 });
 
+socket.on('audience_poll_data', function(audiencePollData) {
+    console.log(audiencePollData);
+    //showHideDivSection(divLifelines, false);
+    showHideLifelinesDivSection(false);
+    //showAudiencePollData(audiencePollData);
+    showAudiencePollChart(audiencePollData);
+});
+
 function showHideTableDiv(show) {
     if(show) {
         divTable.style.display = "block";
+        //$("#div_question_back").show(1000);
+        //$("#div_table").slideDown(1000);
+        //$("#div_question_back").slideDown(1000);
+
     } else {
         divTable.style.display = "none";
+        //$("#div_table").hide();
+        //$("#div_question_back").slideUp();
+        //$("#div_table").slideUp();
     }
 }
 
@@ -81,20 +103,36 @@ function showHideDivSection(div, show) {
     }
 }
 
+function showHideLifelinesDivSection(show) {
+    const trOption1 = document.getElementById("tr_option_row_1");
+    const trOption2 = document.getElementById("tr_option_row_2");
+    const trLifelines = document.getElementById("tr_lifelines");
+
+    if(show) {
+        trOption1.setAttribute("hidden", "hidden");
+        trOption2.setAttribute("hidden", "hidden");
+        trLifelines.removeAttribute("hidden");
+    } else {
+        trLifelines.setAttribute("hidden", "hidden");
+        trOption1.removeAttribute("hidden");
+        trOption2.removeAttribute("hidden");
+    }
+}
+
 function revealAnswer(answerObj) {
     const optionDiv = getOptionDivByIndex(currLockedOptionIdx);
     if(currLockedOptionIdx != answerObj.correctOptionIdx) {
         // wrong answer, stop
         // marking current selected option as wrong
-        applyWrongAnswerStyle(optionDiv);
+        applyWrongAnswerStyle(optionDiv, currLockedOptionIdx);
         // marking correct option as answer
-        applyCorrectAnswerStyle(getOptionDivByIndex(answerObj.correctOptionIdx));
+        applyCorrectAnswerStyle(getOptionDivByIndex(answerObj.correctOptionIdx), answerObj.correctOptionIdx);
         // show amount won
         window.setTimeout(showWonAmount, showAnswerAfterSeconds, answerObj.amountWon);
     } else {
         // right answer, show won amount
         // marking current selected option as right
-        applyCorrectAnswerStyle(optionDiv);
+        applyCorrectAnswerStyle(optionDiv, currLockedOptionIdx);
         //showHideTableDiv(false);
         window.setTimeout(showWonAmount, showAnswerAfterSeconds, answerObj.amountWon);
     }
@@ -112,11 +150,80 @@ function showWonAmount(amount) {
 function activateLifeline5050(removedIndexes) {
     for(let i=0; i<removedIndexes.length; i++) {
         let indexToRemove = removedIndexes[i];
-        getOptionEleByIndex(indexToRemove).innerHTML = "";
+        getOptionTextDivByIndex(indexToRemove).innerHTML = "";
     }
 }
 
+function showAudiencePollChart(audienceData) {
+    //audienceData = [10,0,1,1];
+
+    showHideDivSection(divAudiencePoll, true);
+    var totVotes = 0;
+    for(let i=0; i<audienceData.length; i++) {
+        totVotes += audienceData[i];
+    }
+
+    const barPercentages = [0, 0, 0, 0]
+    if(totVotes > 0) {
+        for(let i=0; i<audienceData.length; i++) {
+            var optionPerc = (audienceData[i]/totVotes)*100;
+            optionPerc = Math.round(optionPerc);
+            barPercentages[i] = optionPerc;
+        }
+    }
+
+    document.getElementById("div_bar_a").style.height = String(barPercentages[0])+"%";
+    document.getElementById("div_bar_b").style.height = String(barPercentages[1])+"%";
+    document.getElementById("div_bar_c").style.height = String(barPercentages[2])+"%";
+    document.getElementById("div_bar_d").style.height = String(barPercentages[3])+"%";
+
+    document.getElementById("sp_perc_a").innerHTML = String(barPercentages[0])+"%";
+    document.getElementById("sp_perc_b").innerHTML = String(barPercentages[1])+"%";
+    document.getElementById("sp_perc_c").innerHTML = String(barPercentages[2])+"%";
+    document.getElementById("sp_perc_d").innerHTML = String(barPercentages[3])+"%";
+}
+
+function showAudiencePollData(audienceData) {
+    //audienceData = [10,0,1,1];
+    //showHideDivSection(div_audience_poll, true);
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Option');
+    data.addColumn('number', 'Percentage');
+    data.addColumn({ role: 'style' }, 'style');
+    data.addColumn({ role: 'annotation' }, 'annotation');
+
+    var totVotes = 0;
+    for(let i=0; i<audienceData.length; i++) {
+        totVotes += audienceData[i];
+    }
+
+    const optionNames = ['A', 'B', 'C', 'D'];
+
+    for(let i=0; i<audienceData.length; i++) {
+        var optionPerc = (audienceData[i]/totVotes)*100;
+        optionPerc = Math.round(optionPerc);
+
+        barStyle = 'stroke-color: #232366; stroke-opacity: 0.6; stroke-width: 2; fill-color: #273296;'
+        const val = [optionNames[i], optionPerc, barStyle, String(optionPerc)+"%"];
+        data.addRow(val);
+    }
+    
+    var options = {'title':'Audience Poll',
+        vAxis: {
+            minValue: 0,
+            maxValue: 100
+        },
+        'width':400,
+        'height':300};
+
+    // Instantiate and draw the chart.
+    var chart = new google.visualization.ColumnChart(document.getElementById('div_audience_poll_chart'));
+    chart.draw(data, options);
+}
+
 function showQuestion(question) {
+    showHideTableDiv(true);
     showHideDivSection(divLogo, false);
 
     if(question.maxSeconds == 0) {
@@ -125,29 +232,22 @@ function showQuestion(question) {
         showHideDivSection(divTimer, true);
     }
 
-    divOptionA.style.backgroundColor = "lightblue";
-    divOptionB.style.backgroundColor = "lightblue";
-    divOptionC.style.backgroundColor = "lightblue";
-    divOptionD.style.backgroundColor = "lightblue";
+    divOptionABack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
+    divOptionBBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
+    divOptionCBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
+    divOptionDBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
 
-    //divQuestion.innerHTML = question.question;
-    pQuestion.innerHTML = question.question;
+    divQuestionText.innerHTML = question.question;
 
-    // prefixes = ['-o-', '-ms-', '-moz-', '-webkit-'];
-    divOptionA.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
-    divOptionB.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
-    divOptionC.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
-    divOptionD.style.background = "-webkit-linear-gradient(#232366 15%, #273296 90%, #232366)";
+    divOptionAText.style.color = "white";
+    divOptionBText.style.color = "white";
+    divOptionCText.style.color = "white";
+    divOptionDText.style.color = "white";
 
-    divOptionA.style.color = "white";
-    divOptionB.style.color = "white";
-    divOptionC.style.color = "white";
-    divOptionD.style.color = "white";
-
-    pOptionA.innerHTML = "A. " + question.options[0];
-    pOptionB.innerHTML = "B. " + question.options[1];
-    pOptionC.innerHTML = "C. " + question.options[2];
-    pOptionD.innerHTML = "D. " + question.options[3];
+    divOptionAText.innerHTML = "A. " + question.options[0];
+    divOptionBText.innerHTML = "B. " + question.options[1];
+    divOptionCText.innerHTML = "C. " + question.options[2];
+    divOptionDText.innerHTML = "D. " + question.options[3];
 
     // marking time empty initially
     updateTimer("");
@@ -155,47 +255,53 @@ function showQuestion(question) {
 
 function showLifeLines(lifelinesObj) {
     if(!lifelinesObj.showLifeLines) {
-        showHideDivSection(divLifelines, false);
+        //showHideDivSection(divLifelines, false);
+        showHideLifelinesDivSection(false);
         return;
     }
-    showHideDivSection(divLifelines, true);
+
+    //showHideDivSection(divLifelines, true);
+    showHideLifelinesDivSection(true);
     const lineHideOpacity = 0.3;
     if(lifelinesObj.lifelines[0].isUsed) {
-        imgLifeline1.style.opacity = lineHideOpacity;
+        //imgLifeline1.style.opacity = lineHideOpacity;
+        imgLifeline1.src = "static/images/audience_poll_used.png"
     }
     if(lifelinesObj.lifelines[1].isUsed) {
         // it's 50:50, remove 2 options
-        imgLifeline2.style.opacity = lineHideOpacity;
+        //imgLifeline2.style.opacity = lineHideOpacity;
+        imgLifeline2.src = "static/images/lifeline_5050_used.png"
     }
     if(lifelinesObj.lifelines[2].isUsed) {
-        imgLifeline3.style.opacity = lineHideOpacity;
+        //imgLifeline3.style.opacity = lineHideOpacity;
+        imgLifeline3.src = "static/images/lifeline_call_used.png"
     }
 }
 
 function getOptionDivByIndex(optionIdx) {
     var selectedDiv = "";
     if(optionIdx == 0) {
-        selectedDiv = divOptionA;
+        selectedDiv = divOptionABack;
     } else if(optionIdx == 1) {
-        selectedDiv = divOptionB;
+        selectedDiv = divOptionBBack;
     } else if(optionIdx == 2) {
-        selectedDiv = divOptionC;
+        selectedDiv = divOptionCBack;
     } else if(optionIdx == 3) {
-        selectedDiv = divOptionD;
+        selectedDiv = divOptionDBack;
     }
     return selectedDiv;
 }
 
-function getOptionEleByIndex(optionIdx) {
+function getOptionTextDivByIndex(optionIdx) {
     var selectedEle = "";
     if(optionIdx == 0) {
-        selectedEle = pOptionA;
+        selectedEle = divOptionAText;
     } else if(optionIdx == 1) {
-        selectedEle = pOptionB;
+        selectedEle = divOptionBText;
     } else if(optionIdx == 2) {
-        selectedEle = pOptionC;
+        selectedEle = divOptionCText;
     } else if(optionIdx == 3) {
-        selectedEle = pOptionD;
+        selectedEle = divOptionDText;
     }
     return selectedEle;
 }
@@ -203,45 +309,48 @@ function getOptionEleByIndex(optionIdx) {
 function setLockedAnswer(selectedOptionIdx) {
     var selectedDiv = "";
     selectedDiv = getOptionDivByIndex(selectedOptionIdx);
-    applyLockedAnswerStyle(selectedDiv);
+    applyLockedAnswerStyle(selectedDiv, selectedOptionIdx);
 }
 
 function updateTimer(time) {
     spTimer.innerHTML = time;
 }
 
-function applyLockedAnswerStyle(optionDiv) {
+function applyLockedAnswerStyle(optionDiv, optionIndex) {
     //optionDiv.style.backgroundColor = "yellow";
-    optionDiv.style.background = "yellow";
-    optionDiv.style.color = "black";
+    optionDiv.style.backgroundImage = 'url(static/images/div_option_back_locked.svg)';
+    getOptionTextDivByIndex(optionIndex).style.color = "black";
 }
 
-function applyCorrectAnswerStyle(optionDiv) {
+function applyCorrectAnswerStyle(optionDiv, optionIndex) {
     //optionDiv.style.backgroundColor = "green";
-    optionDiv.style.background = "green";
-    optionDiv.style.color = "black";
+    optionDiv.style.backgroundImage = 'url(static/images/div_option_back_correct.svg)';
+    getOptionTextDivByIndex(optionIndex).style.color = "black";
 }
 
-function applyWrongAnswerStyle(optionDiv) {
+function applyWrongAnswerStyle(optionDiv, optionIndex) {
     //optionDiv.style.backgroundColor = "red";
-    optionDiv.style.background = "red";
-    optionDiv.style.color = "black";
+    optionDiv.style.backgroundImage = 'url(static/images/div_option_back_wrong.svg)';
+    getOptionTextDivByIndex(optionIndex).style.color = "black";
 }
 
 function readElements() {
     divTable = document.getElementById("div_table");
-    divQuestion = document.getElementById("div_question");
-    pQuestion = document.getElementById("p_question");
 
-    divOptionA = document.getElementById("div_option_a");
-    divOptionB = document.getElementById("div_option_b");
-    divOptionC = document.getElementById("div_option_c");
-    divOptionD = document.getElementById("div_option_d");
+    // question
+    divQuestionBack = document.getElementById("div_question_back");
+    divQuestionText = document.getElementById("div_question_text");
 
-    pOptionA = document.getElementById("p_option_a");
-    pOptionB = document.getElementById("p_option_b");
-    pOptionC = document.getElementById("p_option_c");
-    pOptionD = document.getElementById("p_option_d");
+    // options
+    divOptionABack = document.getElementById("div_option_a_back");
+    divOptionBBack = document.getElementById("div_option_b_back");
+    divOptionCBack = document.getElementById("div_option_c_back");
+    divOptionDBack = document.getElementById("div_option_d_back");
+
+    divOptionAText = document.getElementById("div_option_a_text");
+    divOptionBText = document.getElementById("div_option_b_text");
+    divOptionCText = document.getElementById("div_option_c_text");
+    divOptionDText = document.getElementById("div_option_d_text");
 
     divWonAmount = document.getElementById("div_won_amount");
 
@@ -256,11 +365,22 @@ function readElements() {
 
     divLogo = document.getElementById("div_logo");
     divTimer = document.getElementById("div_timer");
+
+    divAudiencePoll = document.getElementById("div_audience_poll");
 }
 
 $(document).ready(function() {
     readElements();
     showHideTableDiv(false);
-    showHideDivSection(divLifelines, false);
+    //showHideDivSection(divLifelines, false);
+    showHideLifelinesDivSection(false);
     showHideDivSection(divWonAmount, false);
+    showHideDivSection(divAudiencePoll, false);
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    //google.charts.setOnLoadCallback(showAudiencePollData);
+
+    /*const options = ["some long option which can ", "Option B", "Option C", "Option D"];
+    var question = new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10);
+    showQuestion(question);*/
+
 });

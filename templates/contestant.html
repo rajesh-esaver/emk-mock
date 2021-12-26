@@ -8,20 +8,49 @@
     <script type='text/javascript' src="static/js/constants.js"></script>
     <script type='text/javascript' src="static/js/contestant.js"></script>
     <link type="text/css" rel="stylesheet" href="static/css/contestant.css">
+    <link type="text/css" rel="stylesheet" href="static/css/audience_poll_chart.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <!--<script src="https://cdn.socket.io/4.3.2/socket.io.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>-->
+    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>-->
 </head>
 <body style="background-color:powderblue;">
-    <div id="div_lifelines">
-        <img id="img_line1" src="{{url_for('static', filename = 'images/audience_poll.png')}}" class="img_lifeline">
-        <img id="img_line2" src="{{url_for('static', filename = 'images/lifeline_5050.png')}}" class="img_lifeline">
-        <img id="img_line3" src="{{url_for('static', filename = 'images/lifeline_call.png')}}" class="img_lifeline">
-    </div>
     <div id="div_logo">
         <img id="img_logo" src="{{url_for('static', filename = 'images/mek_logo.jpg')}}" class="img_logo">
     </div>
+    <div id="div_audience_poll">
+        <div id="div_audience_poll_chart" >
+            <div class="chart_percentages" >
+                <ul class="ul_percentages" style="margin-left: 3px">
+                    <li><span id="sp_perc_a">0%</span></li>
+                    <li><span id="sp_perc_b">0%</span></li>
+                    <li><span id="sp_perc_c">0%</span></li>
+                    <li><span id="sp_perc_d">0%</span></li>
+                </ul>
+            </div>
+            <div class="chart_bars">
+                <ul class="ul_bars">
+                    <li><div id="div_bar_a" class="bar"></div></li>
+                    <li><div id="div_bar_b" class="bar"></div></li>
+                    <li><div id="div_bar_c" class="bar"></div></li>
+                    <li><div id="div_bar_d" class="bar"></div></li>
+                </ul>
+            </div>
+            <div class="chart_option_names" >
+                <ul class="ul_option_names" style="margin-left: 10px">
+                    <li><span>A</span></li>
+                    <li><span>B</span></li>
+                    <li><span>C</span></li>
+                    <li><span>D</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <div id="div_table" class="table bottom" style="width:100%; text-align: center; position: relative, bottom;">
-        <table style="width:60%; margin-left:auto; margin-right:auto; table-layout:fixed;">
+
+        <table style="width:60%; margin-left:auto; margin-right:auto; table-layout:fixed;border-collapse: collapse;
+            border-spacing: 0;" class="">
             <tr>
                 <td colspan="2" style="text-align: center;">
                     <center>
@@ -32,38 +61,60 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><div id="div_question" class="question">
-                    <p id="p_question"></p>
-                </div></td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="div_option_a" class="option">
-                        <p id="p_option_a"></p>
-                    </div>
-                </td>
-                <td>
-                    <div id="div_option_b" class="option">
-                        <p id="p_option_b"></p>
+                <td colspan="2">
+                    <div id="div_question_back" style="background-image: url({{url_for('static', filename = 'images/div_question_back.svg')}});
+                     background-size: cover;">
+                        <!--<p id="p_question"></p>-->
+                        <div id="div_question_text"></div>
                     </div>
                 </td>
             </tr>
-            <tr>
+            <tr id="tr_option_row_1">
                 <td>
-                    <div id="div_option_c" class="option">
-                        <p id="p_option_c"></p>
+                    <div id="div_option_a_back" class="div_option_back"
+                         style="background-image: url({{url_for('static', filename = 'images/div_option_back.svg')}});
+                     background-size: cover;">
+                        <div id="div_option_a_text" class="div_option_text"></div>
                     </div>
                 </td>
                 <td>
-                    <div id="div_option_d" class="option">
-                        <p id="p_option_d"></p>
+                    <div id="div_option_b_back" class="div_option_back"
+                         style="background-image: url({{url_for('static', filename = 'images/div_option_back.svg')}});
+                     background-size: cover;">
+                        <div id="div_option_b_text" class="div_option_text"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr id="tr_option_row_2">
+                <td >
+                    <div id="div_option_c_back" class="div_option_back"
+                         style="background-image: url({{url_for('static', filename = 'images/div_option_back.svg')}});
+                     background-size: cover;">
+                        <div id="div_option_c_text" class="overlay div_option_text"></div>
+                    </div>
+                </td>
+                <td >
+                    <div id="div_option_d_back" class="div_option_back"
+                         style="background-image: url({{url_for('static', filename = 'images/div_option_back.svg')}});
+                     background-size: cover;">
+                        <div id="div_option_d_text" class="overlay div_option_text"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr id="tr_lifelines">
+                <td colspan="2">
+                    <div id="div_lifelines" style="background-image: url({{url_for('static', filename = 'images/div_question_back.svg')}});
+                     background-size: cover;">
+                        <img id="img_line1" src="{{url_for('static', filename = 'images/audience_poll.png')}}" class="img_lifeline">
+                        <img id="img_line2" src="{{url_for('static', filename = 'images/lifeline_5050.png')}}" class="img_lifeline">
+                        <img id="img_line3" src="{{url_for('static', filename = 'images/lifeline_call.png')}}" class="img_lifeline">
                     </div>
                 </td>
             </tr>
         </table>
     </div>
-    <div id="div_won_amount">
-        <span id="sp_won_amount" style="font-size: 50px;"></span>
+    <div id="div_won_amount" style="background-image: url({{url_for('static', filename = 'images/div_won_amount_back.svg')}})">
+        <span id="sp_won_amount" style=""></span>
     </div>
 </body>
 </html>

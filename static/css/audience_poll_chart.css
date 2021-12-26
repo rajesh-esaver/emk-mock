@@ -1,0 +1,78 @@
+
+/* chart styles */
+#div_audience_poll_chart {
+    width: 250px;
+    height: 300px;
+    background-image: linear-gradient(#232366 15%, #273296 90%, #232366);
+    border-radius: 20px;
+    border-color: yellow;
+    border-style: solid;
+    position: relative;
+    display: inline-block;
+}
+
+.chart_percentages {
+    height: 15%;
+    position: relative;
+    display: inline-block;
+}
+
+.chart_bars {
+    height: 55%;
+    width: 100%;
+    position: relative;
+    display: inline-block;
+}
+
+.chart_option_names {
+    height: 30%;
+    position: relative;
+    display: inline-block;
+}
+
+.ul_option_names li {
+    display: table-cell;
+    width: 50px;
+    height: 45px;
+    position: relative;
+}
+
+.ul_option_names span {
+    color: white;
+    font-size: 25px;
+    position: absolute;
+    bottom: 0;
+    font-weight: bold;
+}
+
+.ul_percentages li {
+    display: table-cell;
+    width: 50px;
+    height: 45px;
+    position: relative;
+}
+
+.ul_percentages span {
+    color: white;
+    font-size: 18px;
+    position: absolute;
+    top: 0;
+    font-weight: bold;
+}
+
+.ul_bars li {
+    display: table-cell;
+    width: 50px;
+    height: 165px;
+    position: relative;
+}
+
+.ul_bars .bar{
+    display: block;
+    height: 10%;
+    width: 70%;
+    position: absolute;
+    bottom: 0;
+    border-radius: 3px;
+    background-image: linear-gradient(to right, #425251 0%, #f8ffb5 42%, #8f783a 89%, #967c53 100%);
+}

@@ -1,35 +1,33 @@
 /* CSS */
 
-.option {
-    background-color: lightblue;
-    background-image: linear-gradient(#232366 15%, #273296 90%, #232366);
-    border-radius: 10% / 50%;
-    height: 60px;
-    text-align: left;
-    font-size: 1vw;
-    line-height: normal;
-    padding: 1px 15px 1px 30px;
-
-    color: white;
-    border-style: solid;
-    border-color: orange;
-    border-width: 2px;
+#div_question_back {
+    min-height: 120px;
+    text-align: center;
+    padding: 10px 25px 10px 25px;
+    font-size: 1.2vw;
 }
 
-.question {
-    background-color: #273296;
-    background-image: linear-gradient(#232366 15%, #273296 90%, #232366);
-    border-radius: 10% / 50%;
-    min-height: 80px;
+#div_question_text {
     text-align: center;
-    line-height: 120%;
-    padding: 10px 15px 10px 15px;
-    font-size: 1.5vw;
-
+    font-size: 1.4vw;
+    padding: 10px 25px 10px 25px;
+    margin-top: 20px;
+    margin-bottom: 5px;
     color: white;
-    border-style: solid;
-    border-color: orange;
-    border-width: 2px;
+}
+
+.div_option_back {
+    min-height: 50px;
+    text-align: left;
+    padding: 10px 25px 10px 25px;
+}
+
+.div_option_text {
+    text-align: left;
+    font-size: 1.2vw;
+    color: white;
+    top: 20%;
+    padding: 10px 25px 10px 25px;
 }
 
 .bottom {
@@ -60,6 +58,12 @@
     text-align: center;
 }
 
+#div_audience_poll {
+    top: 12%;
+    right: 5%;
+    position: absolute;
+}
+
 #div_timer {
     height: 100px;
     width: 200px;
@@ -79,22 +83,22 @@
     font-weight: bold;
 }
 
-#div_lifelines {
-    top: 25%;
-    left: 10px;
-    right: 10px;
-    position: absolute;
-    text-align: center;
-}
-
 #div_won_amount {
-    width: 70%;
-    height: 60px;
+    width: 60%;
+    height: 80px;
     margin: auto;
-    bottom: 20%;
+    bottom: 15%;
     position: absolute;
     left: 0;
     right: 0;
     text-align: center;
-    background-color: yellow;
+    //background-color: yellow;
 }
+
+#sp_won_amount {
+    font-size: 50px;
+    line-height: 80px;
+    color: black;
+    font-weight: bold;
+}
+

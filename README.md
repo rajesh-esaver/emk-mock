@@ -1,6 +1,6 @@
 #### Running:
 python app.py <br>
-Update server url in static/js/constants.js(base_url) file
+Update server url in static/js/constants.js(BASE_URL) file
 
 Host needs to open: <br>
 <base_url>/home_start<br>
@@ -9,9 +9,15 @@ Host needs to open: <br>
 Contestant needs to open: <br>
 <base_url>/
 
+Audience can open: <br>
+<base_url>/spectator
+
+Url codes can be shown in: <br>
+<base_url>/url_qr
+
 
 #### events
-######Contestant side:<br/>
+###### Contestant side:<br/>
 
 question: to receive the current question
 
@@ -24,7 +30,7 @@ answer: to receive the current answer(right/wrong)<br>
 
 lifelines: to receive the list of lifelines 
 
-######Host side:<br/>
+###### Host side:<br/>
 
 set_question: to set the current question
 

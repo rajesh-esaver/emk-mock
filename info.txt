@@ -1,0 +1,8 @@
+- mustice before question
+- first show placeholder after 0.5 sec show question
+- count down starts as soon as option appears.
+- after question read complete, load options
+- after answer reveal, no celebration music, it's audience claps music.
+- question pacelholder slowly fades and then wining amount shown.
+- once audience poll activated, show chart and show options(lifeline hide).
+- lifeline mark as used(x), hide animation.

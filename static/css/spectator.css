@@ -1,0 +1,26 @@
+
+#div_question_back {
+    min-height: 80px;
+    text-align: center;
+}
+
+#div_question_text {
+    text-align: center;
+    padding: 10px 15px 10px 15px;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.div_option_back {
+    min-height: 50px;
+    text-align: left;
+    padding: 10px 25px 10px 25px;
+}
+
+.div_option_text {
+    text-align: left;
+    color: white;
+    top: 20%;
+    padding: 10px 25px 10px 25px;
+}
