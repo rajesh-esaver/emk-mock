@@ -74,15 +74,23 @@ socket.on('lifeline_5050', function(removedIndexes) {
 
 socket.on('audience_poll_data', function(audiencePollData) {
     console.log(audiencePollData);
-    showHideDivSection(divLifelines, false);
+    //showHideDivSection(divLifelines, false);
+    showHideLifelinesDivSection(false);
     showAudiencePollData(audiencePollData);
 });
 
 function showHideTableDiv(show) {
     if(show) {
         divTable.style.display = "block";
+        //$("#div_question_back").show(1000);
+        //$("#div_table").slideDown(1000);
+        //$("#div_question_back").slideDown(1000);
+
     } else {
         divTable.style.display = "none";
+        //$("#div_table").hide();
+        //$("#div_question_back").slideUp();
+        //$("#div_table").slideUp();
     }
 }
 
@@ -91,6 +99,22 @@ function showHideDivSection(div, show) {
         div.style.display = "block";
     } else {
         div.style.display = "none";
+    }
+}
+
+function showHideLifelinesDivSection(show) {
+    const trOption1 = document.getElementById("tr_option_row_1");
+    const trOption2 = document.getElementById("tr_option_row_2");
+    const trLifelines = document.getElementById("tr_lifelines");
+
+    if(show) {
+        trOption1.setAttribute("hidden", "hidden");
+        trOption2.setAttribute("hidden", "hidden");
+        trLifelines.removeAttribute("hidden");
+    } else {
+        trLifelines.setAttribute("hidden", "hidden");
+        trOption1.removeAttribute("hidden");
+        trOption2.removeAttribute("hidden");
     }
 }
 
@@ -125,7 +149,7 @@ function showWonAmount(amount) {
 function activateLifeline5050(removedIndexes) {
     for(let i=0; i<removedIndexes.length; i++) {
         let indexToRemove = removedIndexes[i];
-        getOptionEleByIndex(indexToRemove).innerHTML = "";
+        getOptionTextDivByIndex(indexToRemove).innerHTML = "";
     }
 }
 
@@ -201,20 +225,26 @@ function showQuestion(question) {
 
 function showLifeLines(lifelinesObj) {
     if(!lifelinesObj.showLifeLines) {
-        showHideDivSection(divLifelines, false);
+        //showHideDivSection(divLifelines, false);
+        showHideLifelinesDivSection(false);
         return;
     }
-    showHideDivSection(divLifelines, true);
+
+    //showHideDivSection(divLifelines, true);
+    showHideLifelinesDivSection(true);
     const lineHideOpacity = 0.3;
     if(lifelinesObj.lifelines[0].isUsed) {
-        imgLifeline1.style.opacity = lineHideOpacity;
+        //imgLifeline1.style.opacity = lineHideOpacity;
+        imgLifeline1.src = "static/images/audience_poll_used.png"
     }
     if(lifelinesObj.lifelines[1].isUsed) {
         // it's 50:50, remove 2 options
-        imgLifeline2.style.opacity = lineHideOpacity;
+        //imgLifeline2.style.opacity = lineHideOpacity;
+        imgLifeline2.src = "static/images/lifeline_5050_used.png"
     }
     if(lifelinesObj.lifelines[2].isUsed) {
-        imgLifeline3.style.opacity = lineHideOpacity;
+        //imgLifeline3.style.opacity = lineHideOpacity;
+        imgLifeline3.src = "static/images/lifeline_call_used.png"
     }
 }
 
@@ -232,7 +262,7 @@ function getOptionDivByIndex(optionIdx) {
     return selectedDiv;
 }
 
-function getOptionEleByIndex(optionIdx) {
+function getOptionTextDivByIndex(optionIdx) {
     var selectedEle = "";
     if(optionIdx == 0) {
         selectedEle = divOptionAText;
@@ -259,22 +289,19 @@ function updateTimer(time) {
 function applyLockedAnswerStyle(optionDiv, optionIndex) {
     //optionDiv.style.backgroundColor = "yellow";
     optionDiv.style.backgroundImage = 'url(static/images/div_option_back_locked.svg)';
-    //optionDiv.style.color = "black";
-    getOptionEleByIndex(optionIndex).style.color = "black";
+    getOptionTextDivByIndex(optionIndex).style.color = "black";
 }
 
 function applyCorrectAnswerStyle(optionDiv, optionIndex) {
     //optionDiv.style.backgroundColor = "green";
     optionDiv.style.backgroundImage = 'url(static/images/div_option_back_correct.svg)';
-    //optionDiv.style.color = "black";
-    getOptionEleByIndex(optionIndex).style.color = "black";
+    getOptionTextDivByIndex(optionIndex).style.color = "black";
 }
 
 function applyWrongAnswerStyle(optionDiv, optionIndex) {
     //optionDiv.style.backgroundColor = "red";
     optionDiv.style.backgroundImage = 'url(static/images/div_option_back_wrong.svg)';
-    //optionDiv.style.color = "black";
-    getOptionEleByIndex(optionIndex).style.color = "black";
+    getOptionTextDivByIndex(optionIndex).style.color = "black";
 }
 
 function readElements() {
@@ -315,7 +342,8 @@ function readElements() {
 $(document).ready(function() {
     readElements();
     showHideTableDiv(false);
-    showHideDivSection(divLifelines, false);
+    //showHideDivSection(divLifelines, false);
+    showHideLifelinesDivSection(false);
     showHideDivSection(divWonAmount, false);
     google.charts.load('current', {packages: ['corechart', 'bar']});
     //google.charts.setOnLoadCallback(showAudiencePollData);

@@ -13,12 +13,16 @@ var isLifeLinesBeingShowed = true;
 var revealAnswerButton;
 var answerUpdateObj;
 var lifeLines = ["Line 1", "Line 2", "Line 3"];
-var pOptionA, pOptionB, pOptionC, pOptionD;
-var divOptionA, divOptionB, divOptionC, divOptionD;
-var divQuestion, divAnswer, pQuestion;
+
+
+var divQuestionBack, divQuestionText;
+var divOptionABack, divOptionBBack, divOptionCBack, divOptionDBack;
+var divOptionAText, divOptionBText, divOptionCText, divOptionDText;
+var divAnswer, divQuestionTable;
+
 var tableQuestionsList, btnNextQuestion;
 var lifeline1, lifeline2, lifeline3, btnShowLifelines, btnHideLifelines, diveLifelines;
-var btnShowAudienceData;
+var btnShowAudienceData, btnActivate5050;
 var divAudiencePoll, divAudiencePollChart;
 var lastViewedQuestionIdx = -1;
 var lifeLinesInfo;
@@ -173,6 +177,7 @@ function addEventListeners() {
         lifeLinesInfo.showLifeLines = true;
         isLifeLinesBeingShowed = !isLifeLinesBeingShowed;
         socket.emit("set_lifelines", lifeLinesInfo);
+        showImageLifeLinesInfo(lifeLinesInfo);
     });
 
     btnHideLifelines.addEventListener("click", (e) => {
@@ -181,11 +186,18 @@ function addEventListeners() {
         isLifeLinesBeingShowed = !isLifeLinesBeingShowed;
         showHideAudiencePollChart(false);
         socket.emit("set_lifelines", lifeLinesInfo);
+        showImageLifeLinesInfo(lifeLinesInfo);
     });
 
     btnShowAudienceData.addEventListener("click", (e) => {
         // send event
         socket.emit("get_audience_poll_data");
+    });
+
+    btnActivate5050.addEventListener("click", (e) => {
+        // send event
+        btnActivate5050.disabled = true;
+        activate5050();
     });
 
     lifeline1.addEventListener("click", (e) => {
@@ -194,6 +206,7 @@ function addEventListeners() {
         lifeLinesInfo.lifelines[0].isUsed = true;
         lifeLinesInfo.showLifeLines = true;
         socket.emit("set_lifelines", lifeLinesInfo);
+        showImageLifeLinesInfo(lifeLinesInfo);
     });
 
     lifeline2.addEventListener("click", (e) => {
@@ -203,7 +216,8 @@ function addEventListeners() {
         lifeLinesInfo.lifelines[1].isUsed = true;
         lifeLinesInfo.showLifeLines = true;
         socket.emit("set_lifelines", lifeLinesInfo);
-        activate5050();
+        //activate5050();
+        showImageLifeLinesInfo(lifeLinesInfo);
     });
 
     lifeline3.addEventListener("click", (e) => {
@@ -212,6 +226,7 @@ function addEventListeners() {
         lifeLinesInfo.lifelines[2].isUsed = true;
         lifeLinesInfo.showLifeLines = true;
         socket.emit("set_lifelines", lifeLinesInfo);
+        showImageLifeLinesInfo(lifeLinesInfo);
     });
 
 }
@@ -276,11 +291,6 @@ function revealAnswerToContestant() {
 }
 
 function showCorrectAnswerToHost(selectedOptionIdx) {
-    const option_a = document.getElementById("option_a");
-    const option_b = document.getElementById("option_b");
-    const option_c = document.getElementById("option_c");
-    const option_d = document.getElementById("option_d");
-
     const txtAnswerStat = document.getElementById("txt_answer_stat");
     const txtTrivia = document.getElementById("txt_trivia");
     showHideDivSection(divAnswer, true);
@@ -294,13 +304,13 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
     if(selectedOptionIdx == correctOptionIdx) {
         txtAnswerStat.innerHTML = "Right Answer, won - Rs."+String(currQuestion.winAmount);
         answerUpdateObj.isAnsweredCorrectly = true;
-        applyCorrectAnswerStyle(getOptionDivByIndex(selectedOptionIdx));
+        applyCorrectAnswerStyle(getOptionDivByIndex(selectedOptionIdx), selectedOptionIdx);
     } else {
         txtAnswerStat.innerHTML = "Wrong Answer, won - Rs."+String(currQuestion.amountWonForWrong);
         answerUpdateObj.isAnsweredCorrectly = false;
         answerUpdateObj.amountWon = currQuestion.amountWonForWrong;
-        applyWrongAnswerStyle(getOptionDivByIndex(selectedOptionIdx));
-        applyCorrectAnswerStyle(getOptionDivByIndex(correctOptionIdx));
+        applyWrongAnswerStyle(getOptionDivByIndex(selectedOptionIdx), selectedOptionIdx);
+        applyCorrectAnswerStyle(getOptionDivByIndex(correctOptionIdx), correctOptionIdx);
     }
 }
 
@@ -359,6 +369,14 @@ function showHideAudiencePollChart(show) {
     }
 }
 
+function showHideTableDiv(show) {
+    if(show) {
+        divQuestionTable.style.display = "block";
+    } else {
+        divQuestionTable.style.display = "none";
+    }
+}
+
 function showHideDivSection(div, show) {
     if(show) {
         div.style.display = "block";
@@ -367,30 +385,46 @@ function showHideDivSection(div, show) {
     }
 }
 
+function showHideLifelinesDivSection(show) {
+    const trOption1 = document.getElementById("tr_option_row_1");
+    const trOption2 = document.getElementById("tr_option_row_2");
+    const trLifelines = document.getElementById("tr_lifelines");
+
+    if(show) {
+        trOption1.setAttribute("hidden", "hidden");
+        trOption2.setAttribute("hidden", "hidden");
+        trLifelines.removeAttribute("hidden");
+    } else {
+        trLifelines.setAttribute("hidden", "hidden");
+        trOption1.removeAttribute("hidden");
+        trOption2.removeAttribute("hidden");
+    }
+}
+
 function getOptionDivByIndex(optionIdx) {
     var selectedDiv = "";
     if(optionIdx == 0) {
-        selectedDiv = divOptionA;
+        selectedDiv = divOptionABack;
     } else if(optionIdx == 1) {
-        selectedDiv = divOptionB;
+        selectedDiv = divOptionBBack;
     } else if(optionIdx == 2) {
-        selectedDiv = divOptionC;
+        selectedDiv = divOptionCBack;
     } else if(optionIdx == 3) {
-        selectedDiv = divOptionD;
+        selectedDiv = divOptionDBack;
     }
     return selectedDiv;
 }
 
-function getOptionEleByIndex(optionIdx) {
+function getOptionTextDivByIndex(optionIdx) {
     var selectedEle = "";
     if(optionIdx == 0) {
-        selectedEle = pOptionA;
+        selectedEle = divOptionAText;
     } else if(optionIdx == 1) {
-        selectedEle = pOptionB;
+        selectedEle = divOptionBText;
     } else if(optionIdx == 2) {
-        selectedEle = pOptionC;
+        selectedEle = divOptionCText;
     } else if(optionIdx == 3) {
-        selectedEle = pOptionD;
+        selectedEle = divOptionDText;
     }
     return selectedEle;
 }
@@ -420,16 +454,22 @@ function questionListener(button, question) {
 }
 
 function clearExistingQuestion() {
-    divOptionA.style.backgroundColor = "lightblue";
-    divOptionB.style.backgroundColor = "lightblue";
-    divOptionC.style.backgroundColor = "lightblue";
-    divOptionD.style.backgroundColor = "lightblue";
+    divOptionABack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
+    divOptionBBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
+    divOptionCBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
+    divOptionDBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
 
-    pQuestion.innerHTML = "";
-    pOptionA.innerHTML = "";
-    pOptionB.innerHTML = "";
-    pOptionC.innerHTML = "";
-    pOptionD.innerHTML = "";
+    divQuestionText.innerHTML = "";
+
+    divOptionAText.style.color = "white";
+    divOptionBText.style.color = "white";
+    divOptionCText.style.color = "white";
+    divOptionDText.style.color = "white";
+
+    divOptionAText.innerHTML = "";
+    divOptionBText.innerHTML = "";
+    divOptionCText.innerHTML = "";
+    divOptionDText.innerHTML = "";
 
     // hiding answer text and reveal button
     const txtAnswerStat = document.getElementById("txt_answer_stat");
@@ -442,26 +482,58 @@ function clearExistingQuestion() {
 
 function showQuestion(question) {
     currQuestion = question;
-    divOptionA.style.backgroundColor = "lightblue";
-    divOptionB.style.backgroundColor = "lightblue";
-    divOptionC.style.backgroundColor = "lightblue";
-    divOptionD.style.backgroundColor = "lightblue";
 
-    pQuestion.innerHTML = question.question;
-    pOptionA.innerHTML = question.options[0];
-    pOptionB.innerHTML = question.options[1];
-    pOptionC.innerHTML = question.options[2];
-    pOptionD.innerHTML = question.options[3];
+    divOptionABack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
+    divOptionBBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
+    divOptionCBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
+    divOptionDBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
+
+    divQuestionText.innerHTML = question.question;
+
+    divOptionAText.style.color = "white";
+    divOptionBText.style.color = "white";
+    divOptionCText.style.color = "white";
+    divOptionDText.style.color = "white";
+
+    divOptionAText.innerHTML = "A. " + question.options[0];
+    divOptionBText.innerHTML = "B. " + question.options[1];
+    divOptionCText.innerHTML = "C. " + question.options[2];
+    divOptionDText.innerHTML = "D. " + question.options[3];
 
     // hiding answer text and reveal button
     const txtAnswerStat = document.getElementById("txt_answer_stat");
     txtAnswerStat.innerHTML = "";
     revealAnswerButton.disabled = true;
 
-    optionListener(divOptionA, 0);
-    optionListener(divOptionB, 1);
-    optionListener(divOptionC, 2);
-    optionListener(divOptionD, 3);
+    optionListener(divOptionABack, 0);
+    optionListener(divOptionBBack, 1);
+    optionListener(divOptionCBack, 2);
+    optionListener(divOptionDBack, 3);
+}
+
+function showImageLifeLinesInfo(lifelinesObj) {
+    if(!lifelinesObj.showLifeLines) {
+        //showHideDivSection(divLifelines, false);
+        showHideLifelinesDivSection(false);
+        return;
+    }
+
+    //showHideDivSection(divLifelines, true);
+    showHideLifelinesDivSection(true);
+    const lineHideOpacity = 0.3;
+    if(lifelinesObj.lifelines[0].isUsed) {
+        //imgLifeline1.style.opacity = lineHideOpacity;
+        imgLifeline1.src = "static/images/audience_poll_used.png"
+    }
+    if(lifelinesObj.lifelines[1].isUsed) {
+        // it's 50:50, remove 2 options
+        //imgLifeline2.style.opacity = lineHideOpacity;
+        imgLifeline2.src = "static/images/lifeline_5050_used.png"
+    }
+    if(lifelinesObj.lifelines[2].isUsed) {
+        //imgLifeline3.style.opacity = lineHideOpacity;
+        imgLifeline3.src = "static/images/lifeline_call_used.png"
+    }
 }
 
 function arrayRemove(arr, value) {
@@ -488,7 +560,7 @@ function activate5050() {
     // remove for host
     for(let i=0; i<removedIndexes.length; i++) {
         let indexToRemove = removedIndexes[i];
-        getOptionEleByIndex(indexToRemove).innerHTML = "";
+        getOptionTextDivByIndex(indexToRemove).innerHTML = "";
     }
 }
 
@@ -546,37 +618,39 @@ function loadNextQuestion() {
     window.setTimeout(startTimer, startTimerAfterSeconds, currQuestion.maxSeconds);
 }
 
-function applyLockedAnswerStyle(optionDiv) {
-    optionDiv.style.backgroundColor = "yellow";
+function applyLockedAnswerStyle(optionDiv, optionIndex) {
+    optionDiv.style.backgroundImage = 'url(static/images/div_option_back_locked.svg)';
+    getOptionTextDivByIndex(optionIndex).style.color = "black";
 }
 
-function applyCorrectAnswerStyle(optionDiv) {
-    optionDiv.style.backgroundColor = "green";
+function applyCorrectAnswerStyle(optionDiv, optionIndex) {
+    optionDiv.style.backgroundImage = 'url(static/images/div_option_back_correct.svg)';
+    getOptionTextDivByIndex(optionIndex).style.color = "black";
 }
 
-function applyWrongAnswerStyle(optionDiv) {
-    optionDiv.style.backgroundColor = "red";
+function applyWrongAnswerStyle(optionDiv, optionIndex) {
+    optionDiv.style.backgroundImage = 'url(static/images/div_option_back_wrong.svg)';
+    getOptionTextDivByIndex(optionIndex).style.color = "black";
 }
 
 function readElements() {
-    divTable = document.getElementById("div_table");
+    divQuestionTable = document.getElementById("div_table");
     btnNextQuestion = document.getElementById("btn_next_question");
 
     // question
-    divQuestion = document.getElementById("div_question");
-    pQuestion = document.getElementById("p_question");
+    divQuestionBack = document.getElementById("div_question_back");
+    divQuestionText = document.getElementById("div_question_text");
 
     // options
-    divOptionA = document.getElementById("div_option_a");
-    divOptionB = document.getElementById("div_option_b");
-    divOptionC = document.getElementById("div_option_c");
-    divOptionD = document.getElementById("div_option_d");
+    divOptionABack = document.getElementById("div_option_a_back");
+    divOptionBBack = document.getElementById("div_option_b_back");
+    divOptionCBack = document.getElementById("div_option_c_back");
+    divOptionDBack = document.getElementById("div_option_d_back");
 
-    pOptionA = document.getElementById("p_option_a");
-    pOptionB = document.getElementById("p_option_b");
-    pOptionC = document.getElementById("p_option_c");
-    pOptionD = document.getElementById("p_option_d");
-
+    divOptionAText = document.getElementById("div_option_a_text");
+    divOptionBText = document.getElementById("div_option_b_text");
+    divOptionCText = document.getElementById("div_option_c_text");
+    divOptionDText = document.getElementById("div_option_d_text");
 
     // answer
     divAnswer = document.getElementById("div_answer");
@@ -584,13 +658,19 @@ function readElements() {
     tableQuestionsList = document.getElementById("table_questions_list");
 
     // lifelines
-    diveLifelines = document.getElementById("div_lifelines");
     btnShowLifelines = document.getElementById("btn_show_lifelines");
     btnHideLifelines = document.getElementById("btn_hide_lifelines");
     btnShowAudienceData = document.getElementById("btn_show_audience_data");
+    btnActivate5050 = document.getElementById("btn_activate_5050");
     lifeline1 = document.getElementById("lifeline_1");
     lifeline2 = document.getElementById("lifeline_2");
     lifeline3 = document.getElementById("lifeline_3");
+
+    // lifelines images
+    divLifelines = document.getElementById("div_lifelines");
+    imgLifeline1 = document.getElementById("img_line1");
+    imgLifeline2 = document.getElementById("img_line2");
+    imgLifeline3 = document.getElementById("img_line3");
 
     divAudiencePoll = document.getElementById("div_audience_poll");
     divAudiencePollChart = document.getElementById("div_audience_poll_chart");
@@ -621,6 +701,7 @@ function read_file_name_and_load() {
 
 $(document).ready(function() {
     readElements();
+    showHideLifelinesDivSection(false);
     addEventListeners();
     read_file_name_and_load();
     loadLifeLines();
