@@ -28,9 +28,11 @@ class QuestionSet:
     json_amount_won_for_wrong_key = "amountWonForWrong"
     json_trivia_key = "trivia"
     json_max_seconds_key = "maxSeconds"
+    json_safe_level_key = "isSafeLevel"
 
     # constructor(question, options, correctOptionIdx, winAmount, amountWonForWrong, trivia, maxSeconds)
-    def __init__(self, question, options, correct_option_idx, win_amount, amount_won_for_wrong, trivia, max_seconds):
+    def __init__(self, question, options, correct_option_idx, win_amount, amount_won_for_wrong, trivia,
+                 max_seconds, is_safe_level):
         self.question = question
         self.options = options
         self.correct_option_idx = correct_option_idx
@@ -38,6 +40,7 @@ class QuestionSet:
         self.amount_won_for_wrong = amount_won_for_wrong
         self.trivia = trivia
         self.max_seconds = max_seconds
+        self.is_safe_level = is_safe_level
 
     def get_dict_format(self):
         return {
@@ -47,7 +50,8 @@ class QuestionSet:
             QuestionSet.json_win_amount_key: self.win_amount,
             QuestionSet.json_amount_won_for_wrong_key: self.amount_won_for_wrong,
             QuestionSet.json_trivia_key: self.trivia,
-            QuestionSet.json_max_seconds_key: self.max_seconds
+            QuestionSet.json_max_seconds_key: self.max_seconds,
+            QuestionSet.json_safe_level_key: self.is_safe_level
         }
 
 
@@ -90,7 +94,8 @@ def create_question_set(row):
                                 row[QuestionSet.amount_for_correct_answer_key],
                                 row[QuestionSet.amount_for_wrong_answer_key],
                                 row[QuestionSet.trivia_key],
-                                row[QuestionSet.seconds_limit])
+                                row[QuestionSet.seconds_limit],
+                                row[QuestionSet.safe_level_key])
     return questions_set
 
 

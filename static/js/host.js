@@ -103,7 +103,8 @@ socket.on('get_question_set', function(questions_set) {
             question_set.winAmount,
             question_set.amountWonForWrong,
             question_set.trivia,
-            question_set.maxSeconds)
+            question_set.maxSeconds,
+            question_set.isSafeLevel)
         //console.log(question);
         questions.push(question);
     }
@@ -570,11 +571,17 @@ function addQuestionsToTable() {
         var row = tableQuestionsList.insertRow(-1);
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
 
         // question number
         cell1.innerHTML = i+1;
         // amount
         cell2.innerHTML = "Rs. " +question.winAmount;
+        // time
+        cell3.innerHTML = question.maxSeconds;
+        // safe level
+        cell4.innerHTML = question.isSafeLevel;
     }
 }
 
