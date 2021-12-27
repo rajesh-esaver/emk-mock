@@ -121,6 +121,17 @@ function showHideLifelinesDivSection(show) {
 
 function revealAnswer(answerObj) {
     const optionDiv = getOptionDivByIndex(currLockedOptionIdx);
+    //console.log(answerObj.correctOptionIdx);
+    if(String(answerObj.correctOptionIdx) == "") {
+        // no right answer given, so marking current option as wrong and returning
+        // marking current selected option as wrong
+        applyWrongAnswerStyle(optionDiv, currLockedOptionIdx);
+        //showHideTableDiv(false);
+        window.setTimeout(showWonAmount, showAnswerAfterSeconds, answerObj.amountWon);
+        return;
+    }
+
+    // showing the correct answer & current option
     if(currLockedOptionIdx != answerObj.correctOptionIdx) {
         // wrong answer, stop
         // marking current selected option as wrong
@@ -380,7 +391,8 @@ $(document).ready(function() {
     //google.charts.setOnLoadCallback(showAudiencePollData);
 
     /*const options = ["some long option which can ", "Option B", "Option C", "Option D"];
-    var question = new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10);
+    var question = new Question("Question 1, some long question to see how it's gonna display", options, [0], 100, 0,
+     "explanation", 10, 0);
     showQuestion(question);*/
 
 });
