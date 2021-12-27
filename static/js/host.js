@@ -12,6 +12,7 @@ var currQuestion = "";
 var isLifeLinesBeingShowed = true;
 var revealAnswerButton;
 var answerUpdateObj;
+var currLockedOptionIdx, currRightOptionIdx;
 var lifeLines = ["Line 1", "Line 2", "Line 3"];
 
 
@@ -74,13 +75,6 @@ class LifeLinesInfo {
 // questions
 const options = ["Option A", "Option B", "Option C", "Option D"];
 const questions = []
-/*
-questions.push(new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10))
-questions.push(new Question("Question 2, what is it", options, 1, 10, 0, "right is 2", 10))
-questions.push(new Question("Question 3, which of it is", options, 2, 100, 0, "answer 3", 15))
-questions.push(new Question("Question 4, pick the one", options, 3, 1000, 0, "correct 4", 15))
-questions.push(new Question("Question 5, which one", options, 1, 2000, 1000, "it's 5", 0))
-*/
 
 var socket = io.connect(url);
 var isSocketConnected = false;
@@ -296,13 +290,32 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
     const txtTrivia = document.getElementById("txt_trivia");
     showHideDivSection(divAnswer, true);
 
-    const correctOptionIdx = currQuestion.correctOptionIdx;
+    const correctOptionIndexes = currQuestion.correctOptionIdx;
 
     // showing answer trivia
     txtTrivia.innerHTML = currQuestion.trivia;
-    answerUpdateObj = new AnswerUpdate(false, correctOptionIdx, currQuestion.winAmount);
+    answerUpdateObj = new AnswerUpdate(false, null, currQuestion.winAmount);
 
-    if(selectedOptionIdx == correctOptionIdx) {
+    if(correctOptionIndexes.length == 0) {
+        currRightOptionIdx = null;
+        txtAnswerStat.innerHTML = "Wrong Answer, won - Rs."+String(currQuestion.amountWonForWrong);
+        answerUpdateObj.isAnsweredCorrectly = false;
+        answerUpdateObj.amountWon = currQuestion.amountWonForWrong;
+        applyWrongAnswerStyle(getOptionDivByIndex(selectedOptionIdx), selectedOptionIdx);
+        return;
+    }
+
+    var isAnsweredCorrectly = false;
+    for(let i=0; i<correctOptionIndexes.length; i++) {
+        currRightOptionIdx = correctOptionIndexes[i];
+        if(correctOptionIndexes[i] == selectedOptionIdx) {
+            isAnsweredCorrectly = true;
+            break;
+        }
+    }
+
+    answerUpdateObj.correctOptionIdx = currRightOptionIdx;
+    if(isAnsweredCorrectly) {
         txtAnswerStat.innerHTML = "Right Answer, won - Rs."+String(currQuestion.winAmount);
         answerUpdateObj.isAnsweredCorrectly = true;
         applyCorrectAnswerStyle(getOptionDivByIndex(selectedOptionIdx), selectedOptionIdx);
@@ -311,7 +324,7 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
         answerUpdateObj.isAnsweredCorrectly = false;
         answerUpdateObj.amountWon = currQuestion.amountWonForWrong;
         applyWrongAnswerStyle(getOptionDivByIndex(selectedOptionIdx), selectedOptionIdx);
-        applyCorrectAnswerStyle(getOptionDivByIndex(correctOptionIdx), correctOptionIdx);
+        applyCorrectAnswerStyle(getOptionDivByIndex(currRightOptionIdx), currRightOptionIdx);
     }
 }
 

@@ -72,7 +72,7 @@ def get_file_names():
 
 
 def get_option_idx_by_name(option_name):
-    option_idx = 4
+    option_idx = ""
     if option_name == OptionsEnum.A.name:
         option_idx = OptionsEnum.A.value
     elif option_name == OptionsEnum.B.name:
@@ -87,10 +87,21 @@ def get_option_idx_by_name(option_name):
 def create_question_set(row):
     options = [row[QuestionSet.option_a_key], row[QuestionSet.option_b_key],
                row[QuestionSet.option_c_key], row[QuestionSet.option_d_key]]
-    correct_option_idx = get_option_idx_by_name(row[QuestionSet.correct_option_key])
+
+    correct_options = row[QuestionSet.correct_option_key]
+    correct_options = str(correct_options).split(",")
+    correct_option_indexes = []
+    for correct_option in correct_options:
+        if correct_option.strip() == "":
+            continue
+        correct_option_idx = get_option_idx_by_name(correct_option.strip())
+        if correct_option_idx != "":
+            correct_option_indexes.append(correct_option_idx)
+    # correct_option_idx = get_option_idx_by_name(row[QuestionSet.correct_option_key])
+
     questions_set = QuestionSet(row[QuestionSet.question_key],
                                 options,
-                                correct_option_idx,
+                                correct_option_indexes,
                                 row[QuestionSet.amount_for_correct_answer_key],
                                 row[QuestionSet.amount_for_wrong_answer_key],
                                 row[QuestionSet.trivia_key],
