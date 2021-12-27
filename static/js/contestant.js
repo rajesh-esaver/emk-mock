@@ -121,6 +121,17 @@ function showHideLifelinesDivSection(show) {
 
 function revealAnswer(answerObj) {
     const optionDiv = getOptionDivByIndex(currLockedOptionIdx);
+    console.log(answerObj.correctOptionIdx);
+    if(String(answerObj.correctOptionIdx) == "") {
+        // no right answer given, so marking current option as wrong and returning
+        // marking current selected option as wrong
+        applyWrongAnswerStyle(optionDiv, currLockedOptionIdx);
+        //showHideTableDiv(false);
+        window.setTimeout(showWonAmount, showAnswerAfterSeconds, answerObj.amountWon);
+        return;
+    }
+
+    // showing the correct answer & current option
     if(currLockedOptionIdx != answerObj.correctOptionIdx) {
         // wrong answer, stop
         // marking current selected option as wrong

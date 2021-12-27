@@ -294,10 +294,10 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
 
     // showing answer trivia
     txtTrivia.innerHTML = currQuestion.trivia;
-    answerUpdateObj = new AnswerUpdate(false, null, currQuestion.winAmount);
+    answerUpdateObj = new AnswerUpdate(false, "", currQuestion.winAmount);
 
     if(correctOptionIndexes.length == 0) {
-        currRightOptionIdx = null;
+        currRightOptionIdx = "";
         txtAnswerStat.innerHTML = "Wrong Answer, won - Rs."+String(currQuestion.amountWonForWrong);
         answerUpdateObj.isAnsweredCorrectly = false;
         answerUpdateObj.amountWon = currQuestion.amountWonForWrong;
