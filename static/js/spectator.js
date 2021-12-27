@@ -118,10 +118,24 @@ function sendUserSelectedOption(lockOptionIdx) {
 
 function revealAnswer(answerObj) {
     if(currLockedOptionIdx == null) {
-        applyCorrectAnswerStyle(getOptionDivByIndex(answerObj.correctOptionIdx), answerObj.correctOptionIdx);
+        if(String(answerObj.correctOptionIdx) == "") {
+            // user not selected an option neither we received a correct option, ignoring
+            return;
+        } else {
+            // user not selected an option but we received a correct option
+            applyCorrectAnswerStyle(getOptionDivByIndex(answerObj.correctOptionIdx), answerObj.correctOptionIdx);
+            return;
+        }
+    }
+
+    const optionDiv = getOptionDivByIndex(currLockedOptionIdx);
+    if(String(answerObj.correctOptionIdx) == "") {
+        // user selected an option but didn't we received a correct option
+        // so marking current selection as wrong
+        applyWrongAnswerStyle(optionDiv, currLockedOptionIdx);
         return;
     }
-    const optionDiv = getOptionDivByIndex(currLockedOptionIdx);
+
     if(currLockedOptionIdx != answerObj.correctOptionIdx) {
         // wrong answer, stop
         // marking current selected option as wrong

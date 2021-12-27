@@ -12,7 +12,7 @@ var currQuestion = "";
 var isLifeLinesBeingShowed = true;
 var revealAnswerButton;
 var answerUpdateObj;
-var currLockedOptionIdx, currRightOptionIdx;
+var currRightOptionIdx, isLockedCurrQuestion = false;
 var lifeLines = ["Line 1", "Line 2", "Line 3"];
 
 
@@ -432,8 +432,12 @@ function getOptionTextDivByIndex(optionIdx) {
 
 function optionListener(button, selectedOptionIdx) {
     button.onclick = function() {
+        if(isLockedCurrQuestion) {
+            return;
+        }
+        isLockedCurrQuestion = true;
         pauseTimer();
-        button.disabled = true;
+        //button.disabled = true;
         playOptionLockSound();
         showCorrectAnswerToHost(selectedOptionIdx)
         socket.emit("set_locked_answer", selectedOptionIdx);
@@ -483,6 +487,7 @@ function clearExistingQuestion() {
 
 function showQuestion(question) {
     currQuestion = question;
+    isLockedCurrQuestion = false;
 
     divOptionABack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
     divOptionBBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';

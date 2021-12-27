@@ -121,7 +121,7 @@ function showHideLifelinesDivSection(show) {
 
 function revealAnswer(answerObj) {
     const optionDiv = getOptionDivByIndex(currLockedOptionIdx);
-    console.log(answerObj.correctOptionIdx);
+    //console.log(answerObj.correctOptionIdx);
     if(String(answerObj.correctOptionIdx) == "") {
         // no right answer given, so marking current option as wrong and returning
         // marking current selected option as wrong
