@@ -391,7 +391,8 @@ $(document).ready(function() {
     //google.charts.setOnLoadCallback(showAudiencePollData);
 
     /*const options = ["some long option which can ", "Option B", "Option C", "Option D"];
-    var question = new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10);
+    var question = new Question("Question 1, some long question to see how it's gonna display", options, [0], 100, 0,
+     "explanation", 10, 0);
     showQuestion(question);*/
 
 });

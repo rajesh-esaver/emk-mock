@@ -568,7 +568,7 @@ function activate5050() {
 
     const index2 = Math.floor(Math.random()*tmpOptions.length);
     removedIndexes.push(tmpOptions[index2]);
-    console.log(removedIndexes);
+    //console.log(removedIndexes);
     // send it to client
     socket.emit("set_5050", removedIndexes);
     // remove for host
