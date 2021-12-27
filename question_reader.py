@@ -23,7 +23,7 @@ class QuestionSet:
 
     json_question_key = "question"
     json_options_key = "options"
-    json_correct_option_key = "correctOptionIdx"
+    json_correct_option_key = "correctOptionIndexes"
     json_win_amount_key = "winAmount"
     json_amount_won_for_wrong_key = "amountWonForWrong"
     json_trivia_key = "trivia"
@@ -31,11 +31,11 @@ class QuestionSet:
     json_safe_level_key = "isSafeLevel"
 
     # constructor(question, options, correctOptionIdx, winAmount, amountWonForWrong, trivia, maxSeconds)
-    def __init__(self, question, options, correct_option_idx, win_amount, amount_won_for_wrong, trivia,
+    def __init__(self, question, options, correct_option_indexes, win_amount, amount_won_for_wrong, trivia,
                  max_seconds, is_safe_level):
         self.question = question
         self.options = options
-        self.correct_option_idx = correct_option_idx
+        self.correct_option_indexes = correct_option_indexes
         self.win_amount = win_amount
         self.amount_won_for_wrong = amount_won_for_wrong
         self.trivia = trivia
@@ -46,7 +46,7 @@ class QuestionSet:
         return {
             QuestionSet.json_question_key: self.question,
             QuestionSet.json_options_key: self.options,
-            QuestionSet.json_correct_option_key: self.correct_option_idx,
+            QuestionSet.json_correct_option_key: self.correct_option_indexes,
             QuestionSet.json_win_amount_key: self.win_amount,
             QuestionSet.json_amount_won_for_wrong_key: self.amount_won_for_wrong,
             QuestionSet.json_trivia_key: self.trivia,

@@ -32,19 +32,6 @@ var showQuestionAfterSeconds = 4000;
 var startTimerAfterSeconds = 3000;
 var timerSound;
 
-/*class Question {
-    // correctOptionIdx 0,1,2,3
-    constructor(question, options, correctOptionIdx, winAmount, amountWonForWrong, trivia, maxSeconds) {
-        this.question = question;
-        this.options = options;
-        this.correctOptionIdx = correctOptionIdx;
-        this.winAmount = winAmount;
-        this.amountWonForWrong = amountWonForWrong;
-        this.trivia = trivia;
-        this.maxSeconds = maxSeconds;
-    }
-}*/
-
 class AnswerUpdate {
 
     constructor(isAnsweredCorrectly, correctOptionIdx, amountWon) {
@@ -93,7 +80,7 @@ socket.on('get_question_set', function(questions_set) {
     for(let i=0; i < questions_set.length; i++) {
         const question_set = questions_set[i];
         question = new Question(question_set.question, question_set.options,
-            question_set.correctOptionIdx,
+            question_set.correctOptionIndexes,
             question_set.winAmount,
             question_set.amountWonForWrong,
             question_set.trivia,
@@ -290,7 +277,7 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
     const txtTrivia = document.getElementById("txt_trivia");
     showHideDivSection(divAnswer, true);
 
-    const correctOptionIndexes = currQuestion.correctOptionIdx;
+    const correctOptionIndexes = currQuestion.correctOptionIndexes;
 
     // showing answer trivia
     txtTrivia.innerHTML = currQuestion.trivia;
@@ -557,11 +544,19 @@ function arrayRemove(arr, value) {
 }
 
 function activate5050() {
-    const correctOptionIdx = currQuestion.correctOptionIdx;
+    const correctOptionIndexes = currQuestion.correctOptionIndexes;
+    var correctOptionIdx = "";
+    if(correctOptionIndexes.length == 0) {
+        correctOptionIdx = 0;
+    } else {
+        correctOptionIdx = correctOptionIndexes[0];
+    }
+
+    //const correctOptionIdx = currQuestion.correctOptionIdx;
     var tmpOptions = [0, 1, 2, 3];
     tmpOptions.splice(correctOptionIdx, 1);
 
-    var removedIndexes = []
+    var removedIndexes = [];
     const index1 = Math.floor(Math.random()*tmpOptions.length);
     removedIndexes.push(tmpOptions[index1]);
     tmpOptions.splice(index1, 1);
@@ -576,6 +571,26 @@ function activate5050() {
         let indexToRemove = removedIndexes[i];
         getOptionTextDivByIndex(indexToRemove).innerHTML = "";
     }
+
+    // updating the new correct option indexes as one of the option might removed from 5050
+    var newCorrectOptionIndexes = [];
+    for(let j=0; j<currQuestion.correctOptionIndexes.length; j++) {
+        var isIndexRemoved = false;
+        var correctOptionIdx = currQuestion.correctOptionIndexes[j];
+        for(let i=0; i<removedIndexes.length; i++) {
+            let indexRemoved = removedIndexes[i];
+            if(indexRemoved == correctOptionIdx) {
+                isIndexRemoved = true;
+                break;
+            }
+        }
+
+        if(!isIndexRemoved) {
+            newCorrectOptionIndexes.push(correctOptionIdx);
+        }
+    }
+    //console.log(newCorrectOptionIndexes);
+    currQuestion.correctOptionIndexes = newCorrectOptionIndexes;
 }
 
 function addQuestionsToTable() {

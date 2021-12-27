@@ -10,10 +10,10 @@ var URL_QRU_ENDPOINT = "/url_qr";
 
 class Question {
     // correctOptionIdx 0,1,2,3
-    constructor(question, options, correctOptionIdx, winAmount, amountWonForWrong, trivia, maxSeconds, isSafeLevel) {
+    constructor(question, options, correctOptionIndexes, winAmount, amountWonForWrong, trivia, maxSeconds, isSafeLevel) {
         this.question = question;
         this.options = options;
-        this.correctOptionIdx = correctOptionIdx;
+        this.correctOptionIndexes = correctOptionIndexes;
         this.winAmount = winAmount;
         this.amountWonForWrong = amountWonForWrong;
         this.trivia = trivia;
