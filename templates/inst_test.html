@@ -19,12 +19,44 @@
             padding: 1px;
             border-radius: 1cm;
         }
+
+        .inst_id {
+            color: orange;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .inst_amount {
+            color: orange;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: right;
+            padding-right: 40px;
+        }
     </style>
     <script type="text/javascript">
+        function loadRows() {
+            const amounts = ["1 Crore", "50,00,000", "10,000", "1000", "1 Crore", "50,00,000", "10,000", "1000", "1 Crore", "50,00,000", "10,000", "1000"];
+            var tableQuestionsList = document.getElementById("table_questions_list");
+            for(let i=amounts.length-1; i >= 0; i--) {
+                let amount = amounts[i];
+                var row = tableQuestionsList.insertRow(-1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+
+                // question number
+                cell1.innerHTML = i+1;
+                cell1.classList.add('inst_id');
+
+                // amount
+                cell3.innerHTML = "Rs. " +amount;
+                cell3.classList.add('inst_amount');
+            }
+        }
         function changeHeights() {
-            document.getElementById("divBarA").style.height = "10%";
-            document.getElementById("divBarB").style.height = "20%";
-            document.getElementById("divBarC").style.height = "100%";
+            loadRows();
         }
     </script>
     <script type='text/javascript' src="static/lib/jquery-3.6.0.min.js"></script>
@@ -33,19 +65,31 @@
 </head>
 <body>
     <div class="inst">
-        <div class="lifelines" style="margin-top: 50px;margin-left: 30px;">
-            <img id="img_line1" src="{{url_for('static', filename = 'images/audience_poll.png')}}" class="img_lifeline">
-            <img id="img_line2" src="{{url_for('static', filename = 'images/lifeline_5050.png')}}" class="img_lifeline">
-            <img id="img_line3" src="{{url_for('static', filename = 'images/lifeline_call.png')}}" class="img_lifeline">
-        </div>
-        <div class="questions">
-            <table id="table_questions_list" style="margin-left: 20px; width: 70%; border: 1px solid black;">
+        <div class="lifelines" style="margin-top: 50px;margin-left: 30px; width: 400px">
+            <table style="width: 400px;">
                 <tr>
-                    <td>15</td>
-                    <td></td>
-                    <td>1 Rupee</td>
+                    <td>
+                        <img id="img_line1" src="{{url_for('static', filename = 'images/audience_poll.png')}}" class="img_lifeline">
+                    </td>
+                    <td>
+                        <img id="img_line2" src="{{url_for('static', filename = 'images/lifeline_5050.png')}}" class="img_lifeline">
+                    </td>
+                    <td>
+                        <img id="img_line3" src="{{url_for('static', filename = 'images/lifeline_call.png')}}" class="img_lifeline">
+                    </td>
                 </tr>
             </table>
+
+            <table id="table_questions_list" style="margin-left: 0px; margin-top: 30px; width: 400px; border: 1px solid black;">
+                <!--<tr>
+                    <td class="inst_amount">15</td>
+                    <td></td>
+                    <td class="inst_amount" style="text-align: right; padding-right: 40px;">1 Rupee</td>
+                </tr>-->
+            </table>
+        </div>
+        <div class="questions">
+
         </div>
     </div>
     <button onclick="changeHeights()">Change Heights</button>

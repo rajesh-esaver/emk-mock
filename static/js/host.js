@@ -23,6 +23,7 @@ var divAnswer, divQuestionTable;
 
 var tableQuestionsList, btnNextQuestion;
 var lifeline1, lifeline2, lifeline3, btnShowLifelines, btnHideLifelines, diveLifelines;
+var btnShowRules, btnHideRules;
 var btnShowAudienceData, btnActivate5050;
 var divAudiencePoll, divAudiencePollChart;
 var lastViewedQuestionIdx = -1;
@@ -61,7 +62,9 @@ class LifeLinesInfo {
 
 // questions
 const options = ["Option A", "Option B", "Option C", "Option D"];
-const questions = []
+const questions = [];
+const questionsAmountInfo = [];
+var rulesInfo = new RulesInfo(true, []);
 
 var socket = io.connect(url);
 var isSocketConnected = false;
@@ -85,11 +88,16 @@ socket.on('get_question_set', function(questions_set) {
             question_set.amountWonForWrong,
             question_set.trivia,
             question_set.maxSeconds,
-            question_set.isSafeLevel)
+            question_set.isSafeLevel);
         //console.log(question);
         questions.push(question);
+
+        const questionAmountInfo = new QuestionAmountInfo(i+1, question_set.winAmount, question_set.isSafeLevel);
+        questionsAmountInfo.push(questionAmountInfo);
     }
     addQuestionsToTable();
+    rulesInfo = new RulesInfo(true, questionsAmountInfo);
+    //console.log(questionsAmountInfo);
 });
 
 function startTimer(currMaxSeconds) {
@@ -169,6 +177,22 @@ function addEventListeners() {
         showHideAudiencePollChart(false);
         socket.emit("set_lifelines", lifeLinesInfo);
         showImageLifeLinesInfo(lifeLinesInfo);
+    });
+
+    btnShowRules.addEventListener("click", (e) => {
+        // send event
+        rulesInfo.isShowRules = true;
+        socket.emit("set_game_rules", rulesInfo);
+        btnShowRules.disabled = true;
+        btnHideRules.disabled = false;
+    });
+
+    btnHideRules.addEventListener("click", (e) => {
+        // send event
+        rulesInfo.isShowRules = false;
+        socket.emit("set_game_rules", rulesInfo);
+        btnShowRules.disabled = false;
+        btnHideRules.disabled = true;
     });
 
     btnShowAudienceData.addEventListener("click", (e) => {
@@ -705,6 +729,10 @@ function readElements() {
     lifeline1 = document.getElementById("lifeline_1");
     lifeline2 = document.getElementById("lifeline_2");
     lifeline3 = document.getElementById("lifeline_3");
+
+    // rules
+    btnShowRules = document.getElementById("btn_show_rules");
+    btnHideRules = document.getElementById("btn_hide_rules");
 
     // lifelines images
     divLifelines = document.getElementById("div_lifelines");

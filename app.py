@@ -36,8 +36,8 @@ def add_audience_vote(locked_option_idx):
 @app.route("/")
 @app.route("/contestant")
 def get_contestant():
-    # return render_template("contestant.html")
-    return render_template("inst_test.html")
+    return render_template("contestant.html")
+    # return render_template("inst_test.html")
     # return render_template("graph_test.html")
 
 
@@ -105,6 +105,12 @@ def set_answer(question_obj):
     print("question : " + str(question_obj))
     clear_votes()
     emit("question", question_obj, broadcast=True)
+
+
+@socketio.on("set_game_rules")
+def set_game_rules(rules_info):
+    print("rules info: " + str(rules_info))
+    emit("game_rules", rules_info, broadcast=True)
 
 
 @socketio.on("set_locked_answer")

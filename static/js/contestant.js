@@ -32,6 +32,10 @@ socket.on('curr_timer', function(time) {
     updateTimer(time);
 });
 
+socket.on('game_rules', function(rulesInfo) {
+    console.log(rulesInfo);
+});
+
 socket.on('question', function(questionObj) {
     // show question
     //console.log(questionObj);

@@ -24,6 +24,21 @@ class Question {
     }
 }
 
+class RulesInfo {
+    constructor(isShowRules, questionsAmountInfo) {
+        this.isShowRules = isShowRules;
+        this.questionsAmountInfo = questionsAmountInfo;
+    }
+}
+
+class QuestionAmountInfo {
+    constructor(questionNo, winAmount, isSafeLevel) {
+        this.questionNo = questionNo;
+        this.winAmount = winAmount;
+        this.isSafeLevel = isSafeLevel;
+    }
+}
+
 function getServerBaseUrl() {
     /*let tmpBaseUrl = localStorage.getItem("base_url");
     if(tmpBaseUrl == null) {
