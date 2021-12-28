@@ -32,6 +32,11 @@ socket.on('curr_timer', function(time) {
     updateTimer(time);
 });
 
+socket.on('game_rules', function(rulesInfo) {
+    console.log(rulesInfo);
+    showGameRulesInfo(rulesInfo);
+});
+
 socket.on('question', function(questionObj) {
     // show question
     //console.log(questionObj);
@@ -286,6 +291,45 @@ function showLifeLines(lifelinesObj) {
     if(lifelinesObj.lifelines[2].isUsed) {
         //imgLifeline3.style.opacity = lineHideOpacity;
         imgLifeline3.src = "static/images/lifeline_call_used.png"
+    }
+}
+
+function showGameRulesInfo(rulesInfo) {
+    const divGameRules = document.getElementById("div_game_rules");
+    var tableAmounts = document.getElementById("table_amounts_info");
+    if(!rulesInfo.isShowRules) {
+        divGameRules.style.display = "none";
+        return;
+    }
+    divGameRules.style.display = "block";
+
+    /*// if table already filled, returning
+    if(tableAmounts.rows.length > 0) {
+        return;
+    }*/
+    // removing previous rows
+    $("#table_amounts_info tr").remove();
+
+    for(let i=rulesInfo.questionsAmountInfo.length-1; i >= 0; i--) {
+        let questionAmountInfo = rulesInfo.questionsAmountInfo[i];
+
+        var row = tableAmounts.insertRow(-1);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+
+        // question number
+        cell1.innerHTML = questionAmountInfo.questionNo;
+        cell1.classList.add('rule_question_id');
+
+        // amount
+        cell3.innerHTML = "Rs. " +questionAmountInfo.winAmount;
+        cell3.classList.add('rule_question_amount');
+
+        if(questionAmountInfo.isSafeLevel == "1") {
+            cell1.style.color = "white";
+            cell3.style.color = "white";
+        }
     }
 }
 

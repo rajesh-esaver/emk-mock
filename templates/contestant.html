@@ -18,9 +18,34 @@
     <link rel="preload" as="image" href="static/images/div_option_back_correct.svg">
     <link rel="preload" as="image" href="static/images/div_option_back_wrong.svg">
 </head>
-<body style="background-color:powderblue;">
+<body style="background-color:powderblue; margin-top: 0px;">
     <div id="div_logo">
         <img id="img_logo" src="{{url_for('static', filename = 'images/mek_logo.jpg')}}" class="img_logo">
+    </div>
+    <div id="div_game_rules" style="display: none;">
+        <div style="margin-top: 50px;margin-left: 30px; width: 400px">
+            <table style="">
+                <tr>
+                    <td>
+                        <img src="{{url_for('static', filename = 'images/audience_poll.png')}}" class="img_lifeline_rule">
+                    </td>
+                    <td>
+                        <img src="{{url_for('static', filename = 'images/lifeline_5050.png')}}" class="img_lifeline_rule">
+                    </td>
+                    <td>
+                        <img src="{{url_for('static', filename = 'images/lifeline_call.png')}}" class="img_lifeline_rule">
+                    </td>
+                </tr>
+            </table>
+
+            <table id="table_amounts_info" style="margin-left: 0px; margin-top: 30px; width: 100%;">
+                <!--<tr>
+                    <td class="rule_question_id">15</td>
+                    <td></td>
+                    <td class="rule_question_amount">1 Rupee</td>
+                </tr>-->
+            </table>
+        </div>
     </div>
     <div id="div_audience_poll">
         <div id="div_audience_poll_chart" >
