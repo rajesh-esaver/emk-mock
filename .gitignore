@@ -16,4 +16,5 @@ env.bak/
 venv.bak/
 
 # out
+samples/
 emk.zip
