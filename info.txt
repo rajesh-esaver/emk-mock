@@ -6,3 +6,9 @@
 - question pacelholder slowly fades and then wining amount shown.
 - once audience poll activated, show chart and show options(lifeline hide).
 - lifeline mark as used(x), hide animation.
+
+Generate zip file out of branch:
+git archive --format zip --output emk.zip dev
+
+Unzip to a directory:
+unzip <file_name>.zip -d <folder_name>

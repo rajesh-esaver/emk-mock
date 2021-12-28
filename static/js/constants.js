@@ -1,7 +1,9 @@
 
-var BASE_URL = 'http://192.168.0.108:5000';
+var BASE_URL = '';
+//var BASE_URL = 'http://192.168.0.108:5000';
 //var BASE_URL = 'http://192.168.1.9:5000';
 //var BASE_URL = 'http://localhost:5000';
+var PORT = 8000;
 
 var AUDIENCE_ENDPOINT = "/spectator";
 var CONTESTANT_ENDPOINT = "/contestant";
@@ -35,3 +37,9 @@ function saveServerBaseUrl(serverUrl) {
     BASE_URL = serverUrl;
     localStorage.setItem("base_url", serverUrl);
 }
+
+$(document).ready(function() {
+    var newUrl = "http://" + window.location.hostname + ":" + PORT;
+    console.log(newUrl);
+    BASE_URL = newUrl;
+});
