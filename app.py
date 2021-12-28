@@ -36,8 +36,9 @@ def add_audience_vote(locked_option_idx):
 @app.route("/")
 @app.route("/contestant")
 def get_contestant():
-    return render_template("contestant.html")
-    # return render_template("test.html")
+    # return render_template("contestant.html")
+    return render_template("inst_test.html")
+    # return render_template("graph_test.html")
 
 
 @app.route("/host")
