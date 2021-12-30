@@ -23,31 +23,35 @@ class QuestionSet:
 
     json_question_key = "question"
     json_options_key = "options"
-    json_correct_option_key = "correctOptionIdx"
+    json_correct_option_key = "correctOptionIndexes"
     json_win_amount_key = "winAmount"
     json_amount_won_for_wrong_key = "amountWonForWrong"
     json_trivia_key = "trivia"
     json_max_seconds_key = "maxSeconds"
+    json_safe_level_key = "isSafeLevel"
 
     # constructor(question, options, correctOptionIdx, winAmount, amountWonForWrong, trivia, maxSeconds)
-    def __init__(self, question, options, correct_option_idx, win_amount, amount_won_for_wrong, trivia, max_seconds):
+    def __init__(self, question, options, correct_option_indexes, win_amount, amount_won_for_wrong, trivia,
+                 max_seconds, is_safe_level):
         self.question = question
         self.options = options
-        self.correct_option_idx = correct_option_idx
+        self.correct_option_indexes = correct_option_indexes
         self.win_amount = win_amount
         self.amount_won_for_wrong = amount_won_for_wrong
         self.trivia = trivia
         self.max_seconds = max_seconds
+        self.is_safe_level = is_safe_level
 
     def get_dict_format(self):
         return {
             QuestionSet.json_question_key: self.question,
             QuestionSet.json_options_key: self.options,
-            QuestionSet.json_correct_option_key: self.correct_option_idx,
+            QuestionSet.json_correct_option_key: self.correct_option_indexes,
             QuestionSet.json_win_amount_key: self.win_amount,
             QuestionSet.json_amount_won_for_wrong_key: self.amount_won_for_wrong,
             QuestionSet.json_trivia_key: self.trivia,
-            QuestionSet.json_max_seconds_key: self.max_seconds
+            QuestionSet.json_max_seconds_key: self.max_seconds,
+            QuestionSet.json_safe_level_key: self.is_safe_level
         }
 
 
@@ -68,7 +72,7 @@ def get_file_names():
 
 
 def get_option_idx_by_name(option_name):
-    option_idx = 4
+    option_idx = ""
     if option_name == OptionsEnum.A.name:
         option_idx = OptionsEnum.A.value
     elif option_name == OptionsEnum.B.name:
@@ -83,14 +87,26 @@ def get_option_idx_by_name(option_name):
 def create_question_set(row):
     options = [row[QuestionSet.option_a_key], row[QuestionSet.option_b_key],
                row[QuestionSet.option_c_key], row[QuestionSet.option_d_key]]
-    correct_option_idx = get_option_idx_by_name(row[QuestionSet.correct_option_key])
+
+    correct_options = row[QuestionSet.correct_option_key]
+    correct_options = str(correct_options).split(",")
+    correct_option_indexes = []
+    for correct_option in correct_options:
+        if correct_option.strip() == "":
+            continue
+        correct_option_idx = get_option_idx_by_name(correct_option.strip())
+        if correct_option_idx != "":
+            correct_option_indexes.append(correct_option_idx)
+    # correct_option_idx = get_option_idx_by_name(row[QuestionSet.correct_option_key])
+
     questions_set = QuestionSet(row[QuestionSet.question_key],
                                 options,
-                                correct_option_idx,
+                                correct_option_indexes,
                                 row[QuestionSet.amount_for_correct_answer_key],
                                 row[QuestionSet.amount_for_wrong_answer_key],
                                 row[QuestionSet.trivia_key],
-                                row[QuestionSet.seconds_limit])
+                                row[QuestionSet.seconds_limit],
+                                row[QuestionSet.safe_level_key])
     return questions_set
 
 

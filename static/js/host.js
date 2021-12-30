@@ -12,6 +12,7 @@ var currQuestion = "";
 var isLifeLinesBeingShowed = true;
 var revealAnswerButton;
 var answerUpdateObj;
+var currRightOptionIdx, isLockedCurrQuestion = false;
 var lifeLines = ["Line 1", "Line 2", "Line 3"];
 
 
@@ -22,6 +23,7 @@ var divAnswer, divQuestionTable;
 
 var tableQuestionsList, btnNextQuestion;
 var lifeline1, lifeline2, lifeline3, btnShowLifelines, btnHideLifelines, diveLifelines;
+var btnShowRules, btnHideRules;
 var btnShowAudienceData, btnActivate5050;
 var divAudiencePoll, divAudiencePollChart;
 var lastViewedQuestionIdx = -1;
@@ -30,19 +32,6 @@ var barChart;
 var showQuestionAfterSeconds = 4000;
 var startTimerAfterSeconds = 3000;
 var timerSound;
-
-/*class Question {
-    // correctOptionIdx 0,1,2,3
-    constructor(question, options, correctOptionIdx, winAmount, amountWonForWrong, trivia, maxSeconds) {
-        this.question = question;
-        this.options = options;
-        this.correctOptionIdx = correctOptionIdx;
-        this.winAmount = winAmount;
-        this.amountWonForWrong = amountWonForWrong;
-        this.trivia = trivia;
-        this.maxSeconds = maxSeconds;
-    }
-}*/
 
 class AnswerUpdate {
 
@@ -73,14 +62,9 @@ class LifeLinesInfo {
 
 // questions
 const options = ["Option A", "Option B", "Option C", "Option D"];
-const questions = []
-/*
-questions.push(new Question("Question 1, some long question to see how it's gonna display", options, 0, 1, 0, "explanation", 10))
-questions.push(new Question("Question 2, what is it", options, 1, 10, 0, "right is 2", 10))
-questions.push(new Question("Question 3, which of it is", options, 2, 100, 0, "answer 3", 15))
-questions.push(new Question("Question 4, pick the one", options, 3, 1000, 0, "correct 4", 15))
-questions.push(new Question("Question 5, which one", options, 1, 2000, 1000, "it's 5", 0))
-*/
+const questions = [];
+const questionsAmountInfo = [];
+var rulesInfo = new RulesInfo(true, []);
 
 var socket = io.connect(url);
 var isSocketConnected = false;
@@ -99,15 +83,21 @@ socket.on('get_question_set', function(questions_set) {
     for(let i=0; i < questions_set.length; i++) {
         const question_set = questions_set[i];
         question = new Question(question_set.question, question_set.options,
-            question_set.correctOptionIdx,
+            question_set.correctOptionIndexes,
             question_set.winAmount,
             question_set.amountWonForWrong,
             question_set.trivia,
-            question_set.maxSeconds)
+            question_set.maxSeconds,
+            question_set.isSafeLevel);
         //console.log(question);
         questions.push(question);
+
+        const questionAmountInfo = new QuestionAmountInfo(i+1, question_set.winAmount, question_set.isSafeLevel);
+        questionsAmountInfo.push(questionAmountInfo);
     }
     addQuestionsToTable();
+    rulesInfo = new RulesInfo(true, questionsAmountInfo);
+    //console.log(questionsAmountInfo);
 });
 
 function startTimer(currMaxSeconds) {
@@ -187,6 +177,22 @@ function addEventListeners() {
         showHideAudiencePollChart(false);
         socket.emit("set_lifelines", lifeLinesInfo);
         showImageLifeLinesInfo(lifeLinesInfo);
+    });
+
+    btnShowRules.addEventListener("click", (e) => {
+        // send event
+        rulesInfo.isShowRules = true;
+        socket.emit("set_game_rules", rulesInfo);
+        btnShowRules.disabled = true;
+        btnHideRules.disabled = false;
+    });
+
+    btnHideRules.addEventListener("click", (e) => {
+        // send event
+        rulesInfo.isShowRules = false;
+        socket.emit("set_game_rules", rulesInfo);
+        btnShowRules.disabled = false;
+        btnHideRules.disabled = true;
     });
 
     btnShowAudienceData.addEventListener("click", (e) => {
@@ -295,13 +301,32 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
     const txtTrivia = document.getElementById("txt_trivia");
     showHideDivSection(divAnswer, true);
 
-    const correctOptionIdx = currQuestion.correctOptionIdx;
+    const correctOptionIndexes = currQuestion.correctOptionIndexes;
 
     // showing answer trivia
     txtTrivia.innerHTML = currQuestion.trivia;
-    answerUpdateObj = new AnswerUpdate(false, correctOptionIdx, currQuestion.winAmount);
+    answerUpdateObj = new AnswerUpdate(false, "", currQuestion.winAmount);
 
-    if(selectedOptionIdx == correctOptionIdx) {
+    if(correctOptionIndexes.length == 0) {
+        currRightOptionIdx = "";
+        txtAnswerStat.innerHTML = "Wrong Answer, won - Rs."+String(currQuestion.amountWonForWrong);
+        answerUpdateObj.isAnsweredCorrectly = false;
+        answerUpdateObj.amountWon = currQuestion.amountWonForWrong;
+        applyWrongAnswerStyle(getOptionDivByIndex(selectedOptionIdx), selectedOptionIdx);
+        return;
+    }
+
+    var isAnsweredCorrectly = false;
+    for(let i=0; i<correctOptionIndexes.length; i++) {
+        currRightOptionIdx = correctOptionIndexes[i];
+        if(correctOptionIndexes[i] == selectedOptionIdx) {
+            isAnsweredCorrectly = true;
+            break;
+        }
+    }
+
+    answerUpdateObj.correctOptionIdx = currRightOptionIdx;
+    if(isAnsweredCorrectly) {
         txtAnswerStat.innerHTML = "Right Answer, won - Rs."+String(currQuestion.winAmount);
         answerUpdateObj.isAnsweredCorrectly = true;
         applyCorrectAnswerStyle(getOptionDivByIndex(selectedOptionIdx), selectedOptionIdx);
@@ -310,7 +335,7 @@ function showCorrectAnswerToHost(selectedOptionIdx) {
         answerUpdateObj.isAnsweredCorrectly = false;
         answerUpdateObj.amountWon = currQuestion.amountWonForWrong;
         applyWrongAnswerStyle(getOptionDivByIndex(selectedOptionIdx), selectedOptionIdx);
-        applyCorrectAnswerStyle(getOptionDivByIndex(correctOptionIdx), correctOptionIdx);
+        applyCorrectAnswerStyle(getOptionDivByIndex(currRightOptionIdx), currRightOptionIdx);
     }
 }
 
@@ -431,8 +456,12 @@ function getOptionTextDivByIndex(optionIdx) {
 
 function optionListener(button, selectedOptionIdx) {
     button.onclick = function() {
+        if(isLockedCurrQuestion) {
+            return;
+        }
+        isLockedCurrQuestion = true;
         pauseTimer();
-        button.disabled = true;
+        //button.disabled = true;
         playOptionLockSound();
         showCorrectAnswerToHost(selectedOptionIdx)
         socket.emit("set_locked_answer", selectedOptionIdx);
@@ -482,6 +511,7 @@ function clearExistingQuestion() {
 
 function showQuestion(question) {
     currQuestion = question;
+    isLockedCurrQuestion = false;
 
     divOptionABack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
     divOptionBBack.style.backgroundImage = 'url(static/images/div_option_back.svg)';
@@ -543,18 +573,26 @@ function arrayRemove(arr, value) {
 }
 
 function activate5050() {
-    const correctOptionIdx = currQuestion.correctOptionIdx;
+    const correctOptionIndexes = currQuestion.correctOptionIndexes;
+    var correctOptionIdx = "";
+    if(correctOptionIndexes.length == 0) {
+        correctOptionIdx = 0;
+    } else {
+        correctOptionIdx = correctOptionIndexes[0];
+    }
+
+    //const correctOptionIdx = currQuestion.correctOptionIdx;
     var tmpOptions = [0, 1, 2, 3];
     tmpOptions.splice(correctOptionIdx, 1);
 
-    var removedIndexes = []
+    var removedIndexes = [];
     const index1 = Math.floor(Math.random()*tmpOptions.length);
     removedIndexes.push(tmpOptions[index1]);
     tmpOptions.splice(index1, 1);
 
     const index2 = Math.floor(Math.random()*tmpOptions.length);
     removedIndexes.push(tmpOptions[index2]);
-    console.log(removedIndexes);
+    //console.log(removedIndexes);
     // send it to client
     socket.emit("set_5050", removedIndexes);
     // remove for host
@@ -562,6 +600,26 @@ function activate5050() {
         let indexToRemove = removedIndexes[i];
         getOptionTextDivByIndex(indexToRemove).innerHTML = "";
     }
+
+    // updating the new correct option indexes as one of the option might removed from 5050
+    var newCorrectOptionIndexes = [];
+    for(let j=0; j<currQuestion.correctOptionIndexes.length; j++) {
+        var isIndexRemoved = false;
+        var correctOptionIdx = currQuestion.correctOptionIndexes[j];
+        for(let i=0; i<removedIndexes.length; i++) {
+            let indexRemoved = removedIndexes[i];
+            if(indexRemoved == correctOptionIdx) {
+                isIndexRemoved = true;
+                break;
+            }
+        }
+
+        if(!isIndexRemoved) {
+            newCorrectOptionIndexes.push(correctOptionIdx);
+        }
+    }
+    //console.log(newCorrectOptionIndexes);
+    currQuestion.correctOptionIndexes = newCorrectOptionIndexes;
 }
 
 function addQuestionsToTable() {
@@ -570,11 +628,17 @@ function addQuestionsToTable() {
         var row = tableQuestionsList.insertRow(-1);
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
 
         // question number
         cell1.innerHTML = i+1;
         // amount
         cell2.innerHTML = "Rs. " +question.winAmount;
+        // time
+        cell3.innerHTML = question.maxSeconds;
+        // safe level
+        cell4.innerHTML = question.isSafeLevel;
     }
 }
 
@@ -665,6 +729,10 @@ function readElements() {
     lifeline1 = document.getElementById("lifeline_1");
     lifeline2 = document.getElementById("lifeline_2");
     lifeline3 = document.getElementById("lifeline_3");
+
+    // rules
+    btnShowRules = document.getElementById("btn_show_rules");
+    btnHideRules = document.getElementById("btn_hide_rules");
 
     // lifelines images
     divLifelines = document.getElementById("div_lifelines");

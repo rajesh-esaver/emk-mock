@@ -37,7 +37,8 @@ def add_audience_vote(locked_option_idx):
 @app.route("/contestant")
 def get_contestant():
     return render_template("contestant.html")
-    # return render_template("test.html")
+    # return render_template("inst_test.html")
+    # return render_template("graph_test.html")
 
 
 @app.route("/host")
@@ -106,6 +107,12 @@ def set_answer(question_obj):
     emit("question", question_obj, broadcast=True)
 
 
+@socketio.on("set_game_rules")
+def set_game_rules(rules_info):
+    print("rules info: " + str(rules_info))
+    emit("game_rules", rules_info, broadcast=True)
+
+
 @socketio.on("set_locked_answer")
 def set_locked_answer(option_idx):
     print("locked answer: "+str(option_idx))
@@ -143,7 +150,7 @@ if __name__ == "__main__":
     # clear_votes()
     # url = ngrok.connect(5000).public_url
     # print(' * Tunnel URL:', url)
-    socketio.run(app, debug=True, host="0.0.0.0", port=5000)
+    socketio.run(app, debug=True, host="0.0.0.0", port=8000)
     # socketio.run(app, host="0.0.0.0", port=5000)
 
 
